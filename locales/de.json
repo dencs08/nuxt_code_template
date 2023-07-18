@@ -1,0 +1,15 @@
+{
+    "welcome": "DE",
+    "TBD": "To be determined",
+    "layouts": {
+        "default": {
+            "title": "This is the title: {title}"
+        }
+    },
+    "pages": {
+        "index": {
+            "title": "German page title",
+            "description": "German page description"
+        }
+    }
+}

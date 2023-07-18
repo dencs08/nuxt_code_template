@@ -1,0 +1,15 @@
+{
+    "welcome": "EN",
+    "TBD": "To be determined",
+    "layouts": {
+        "default": {
+            "title": "English default layout title"
+        }
+    },
+    "pages": {
+        "index": {
+            "title": "English page title",
+            "description": "English page description"
+        }
+    }
+}

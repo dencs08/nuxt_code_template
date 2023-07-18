@@ -1,0 +1,15 @@
+{
+    "welcome": "PL",
+    "TBD": "To be determined",
+    "layouts": {
+        "default": {
+            "title": "Polish default layout title"
+        }
+    },
+    "pages": {
+        "index": {
+            "title": "Polish page title",
+            "description": "Polish page description"
+        }
+    }
+}
