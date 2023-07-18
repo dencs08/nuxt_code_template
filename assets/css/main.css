@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@300;400;500&display=swap");
+
+@import "./utilities.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #ffffff;
+  /*background-image: linear-gradient(#ffffff, #f1f1f1);*/
+}
+
+@layer base {
+  h1 {
+    @apply text-8xl;
+    font-family: "Archivo", sans-serif;
+  }
+  h2 {
+    @apply text-5xl;
+    font-family: "Archivo", sans-serif;
+  }
+  h3 {
+    font-size: clamp(2rem, 3.6vw, 10rem);
+    /* @apply text-primary; */
+    @apply font-semibold;
+  }
+  h4 {
+    @apply text-xl;
+  }
+  h5 {
+    @apply text-xl;
+  }
+  h6 {
+    @apply text-xl;
+  }
+
+  img {
+    @apply rounded-none;
+  }
+
+  ul {
+    @apply list-decimal;
+    @apply list-inside;
+  }
+}
