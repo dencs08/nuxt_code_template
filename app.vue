@@ -1,7 +1,7 @@
 <template>
   <div>
     <Toast />
-    <NuxtLayout class="bg-gray-50">
+    <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
