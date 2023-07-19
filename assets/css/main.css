@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Oswald&family=Poppins:wght@400;500;600;700;800;900&display=swap");
 
 @import "./utilities.css";
 
@@ -10,25 +10,17 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-color: #ffffff;
-  /*background-image: linear-gradient(#ffffff, #f1f1f1);*/
 }
 
 @layer base {
+  body{
+    @apply h-full bg-gray-50 text-gray-900 font-body font-medium;
+  }
   h1 {
-    @apply text-8xl;
-    font-family: "Archivo", sans-serif;
+    @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
   }
   h2 {
     @apply text-5xl;
-    font-family: "Archivo", sans-serif;
   }
   h3 {
     font-size: clamp(2rem, 3.6vw, 10rem);
