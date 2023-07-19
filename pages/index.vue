@@ -1,8 +1,14 @@
 <template>
-    <section class="min-h-screen grid place-content-center">
-      <p>{{ t('pages.index.description') }}</p>
-      <p>{{ t('pages.index.title') }}</p>
-      <p>{{ $t('welcome') }}</p>
+    <section class="container mx-auto min-h-screen grid place-content-center">
+      <h1 v-motion="slideLeft({delay: 250})">
+        {{ t('pages.index.title') }}
+      </h1>
+      <p class="font-body text-3xl font-bold" v-motion="fade({delay: 250})">
+        {{ t('pages.index.description') }}
+      </p>
+      <p class="font-accent text-2xl font-black" v-motion="slideBottom({delay: 325})">
+        {{ $t('welcome') }}
+      </p>
     </section>
 </template>
 
@@ -27,6 +33,8 @@ useHead({
     // { property: 'og:image', content: 'https://nuxt.com/social.jpg' },
   ]
 })
+
+const { slideTop, slideLeft, slideRight,fade, slideBottom} = useAnimations();
 
 // const el = ref(null);
 // onMounted(() => {
