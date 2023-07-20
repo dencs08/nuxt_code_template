@@ -25,6 +25,9 @@ const title = computed(() => t('layouts.default.title', { title: t(route.meta.ti
       <main>
         <Navbar />
         <slot></slot>
+        <section>
+          <Footer/>
+        </section>
       </main>
     </Body>
     </Html>
