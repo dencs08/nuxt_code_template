@@ -1,6 +1,6 @@
 <template>
     <div @click="toggle" ref="toggleButton">
-        <NuxtLink :to="{ name: to }"
+        <NuxtLink :to="to"
             class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-white hover:text-gray-700 transition-colors duration-200">
             <Icon v-if="icon" :name="icon" class="h-6 w-auto" />
             <span v-if="!icon && !noIcon"
@@ -18,7 +18,7 @@
         <div v-if="list.length > 0" class="absolute right-0 -translate-y-1/2" v-auto-animate>
             <div v-if="toggleValue" class="absolute -bottom-3 left-0 bg-white shadow-lg min-w-[150px] z-99 rounded-md"
                 ref="dropdown">
-                <NuxtLink v-for="(  item, index  ) in   list  " :key="index" :to="{ name: item.href }"
+                <NuxtLink v-for="(  item, index  ) in   list  " :key="index" :to="item.href"
                     class="block px-4 py-3 hover:bg-gray-200 rounded-md">
                     <Icon v-if="item.icon" :name="item.icon" class="h-4 w-4 mr-2 inline-block" />
                     {{ item.name }}
