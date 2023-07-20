@@ -1,31 +1,34 @@
 <template>
-    <img :src="logoPath" alt="Logo" />
+  <nuxt-img :src="logoPath" @error="handleImageError" alt="Logo" quality="10" />
 </template>
 
 <script setup lang="ts">
 const props = defineProps({
-    type: {
-        type: String,
-        default: 'default',
-    },
-    color: {
-        type: String,
-        default: 'color',
-    },
+  type: {
+    type: String,
+    default: 'logo',
+  },
+  color: {
+    type: String,
+    default: 'color',
+  },
 });
 
 const allowedColors = ['black', 'white', 'color'];
-const allowedTypes = ['logo', 'symbol', 'logotype'];
+const allowedTypes = ['logo', 'symbol'];
 
-const logoPath = computed(() => {
-    const color = allowedColors.includes(props.color) ? props.color : 'color';
-    const type = allowedTypes.includes(props.type) ? props.type : 'logo';
+const logoPath = ref('');  // Make it a ref so that we can change its value
 
-    // noviva uses different naming convention for logo files thus this if statement
-    if (type === 'logotype') {
-        return `/img/logos/color_logotype_${color}.svg`;
-    }
+// Generate the correct path every time props.color or props.type changes
+watchEffect(() => {
+  const color = allowedColors.includes(props.color) ? props.color : 'color';
+  const type = allowedTypes.includes(props.type) ? props.type : 'logo';
 
-    return `/img/logos/${color}_${type}.svg`;
+  logoPath.value = `/img/logos/${type}_${color}.jpg`;
 });
+
+// If the image fails to load, change the source to a placeholder
+const handleImageError = () => {
+  // logoPath.value = '/img/placeholder.jpg';
+};
 </script>
