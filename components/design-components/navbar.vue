@@ -2,7 +2,7 @@
     <header class="z-[9999] fixed w-full transition-transform duration-300 ease-in-out bg-white shadow"
         :class="{ '-translate-y-full': !showHeader }">
         <nav class="container mx-auto flex items-center justify-between py-5" aria-label="Global">
-                <NuxtLink to="/">
+                <NuxtLink :to="localePath('index')">
                     <Logo type="logotype" color="black" class="h-5 w-auto" />
                 </NuxtLink>
             <div class="flex lg:hidden">
@@ -13,9 +13,15 @@
                 </button>
             </div>
             <div class="hidden lg:flex items-center lg:gap-x-12">
-                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
-                    class="text-sm font-semibold leading-6 text-gray-900">{{ item.name }}</NuxtLink>
-                <LangSwitcher />
+                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" class="text-sm font-semibold leading-6 text-gray-900">
+                  {{ item.name }}
+                </NuxtLink>
+
+                <NuxtLink :to="localePath('/login')">
+                  <Button size="xs">
+                    Login
+                  </Button>
+                </NuxtLink>
             </div>
         </nav>
         <Transition name="slide">
@@ -33,10 +39,10 @@
                     <div class="mt-6 flow-root">
                         <div class="-my-6 divide-y divide-gray-500/10">
                             <div class="space-y-2 py-6">
-                                <NuxtLink v-for="item in navigation" :key="item.name"
-                                    @click.prevent="mobileMenuOpen = false"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50  cursor-pointer">{{
-                                        item.name }}</NuxtLink>
+                                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 cursor-pointer">
+                                  {{ item.name }}
+                                </NuxtLink>
                             </div>
                             <div class="py-6">
                                 <LangSwitcher />
@@ -52,6 +58,7 @@
 <script setup>
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 
+const localePath = useLocalePath()
 const { navigation } = useNavigation();
 const { scrollToElement } = useSmoothScroll();
 
