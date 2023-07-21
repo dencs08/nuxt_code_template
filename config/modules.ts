@@ -2,6 +2,7 @@
 
 export default [
     "@nuxt/devtools",
+    "@vite-pwa/nuxt",
     // "nuxt-gtag",
     "@nuxtjs/robots",
     '@nuxt/image',

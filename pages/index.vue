@@ -1,4 +1,5 @@
 <template>
+  <div>
     <section class="container mx-auto min-h-screen grid place-content-center">
       <h1 v-motion="slideLeft({delay: 250})">
         {{ t('pages.index.title') }}
@@ -10,6 +11,7 @@
         {{ $t('welcome') }}
       </p>
     </section>
+  </div>
 </template>
 
 <script setup>
