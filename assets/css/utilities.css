@@ -5,3 +5,7 @@
 .section-pb {
   margin-bottom: clamp(3.5rem, 5vw, 20rem);
 }
+
+.text-db-h2{
+  @apply font-heading font-semibold capitalize text-xl;
+}

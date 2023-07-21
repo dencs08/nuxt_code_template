@@ -20,12 +20,12 @@ body {
     @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
   }
   h2 {
-    @apply text-5xl;
+    @apply text-5xl font-heading;
   }
   h3 {
     font-size: clamp(2rem, 3.6vw, 10rem);
     /* @apply text-primary; */
-    @apply font-semibold;
+    @apply font-semibold font-heading;
   }
   h4 {
     @apply text-xl;

@@ -1,20 +1,28 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
 import { generateColorVariants } from './custom_tailwindcss/colors.js';
 import generateFontSizeVariants from './custom_tailwindcss/fontSizes.js';
 
+//!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
 const colorDefinitions = [
   { colorName: 'primary', mainHex: '#0E50F1' },
   { colorName: 'secondary', mainHex: '#01FFD1' },
   { colorName: 'dark', mainHex: '#575757' },
   { colorName: 'light', mainHex: '#E5E5E5' },
 ];
-const colorVariants = generateColorVariants(colorDefinitions);
-const fontSizeVariants = generateFontSizeVariants(1, 1.618);
 const fontFamilyVariants = {
   'heading': ['Poppins', 'Poppins', 'sans-serif'],
   'body': ['Inter', 'Inter', 'sans-serif'],
   'accent': ['Oswald', 'Oswald', 'sans-serif'],
 }
+const screenSizes = {
+  xs: '350px',
+  ...defaultTheme.screens
+};
+
+const colorVariants = generateColorVariants(colorDefinitions);
+const fontSizeVariants = generateFontSizeVariants(1, 1.618);
+
 module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
@@ -29,16 +37,7 @@ module.exports = {
     container: false,
   },
   theme: {
-    container: {
-      screens: {
-        sm: '500px',
-        md: '600px',
-        lg: '700px',
-        xl: '900px',
-        '2xl': '1440px',
-        '4xl': '1900px',
-      },
-    },
+    screens: screenSizes,
     extend: {
       colors: colorVariants,
       fontSize: fontSizeVariants,
@@ -76,4 +75,5 @@ module.exports = {
       })
     }
   ]
+
 }
