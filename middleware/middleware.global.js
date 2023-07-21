@@ -7,4 +7,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
     // if (pathNames.includes(to.name as string)) {
     //     return navigateTo({ name: "PageInProgress" });
     // }
+
+    if (to.path === "/dashboard/" || to.path === "/dashboard") {
+        return navigateTo('/dashboard/home');
+    }
 });
