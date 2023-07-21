@@ -6,6 +6,7 @@ import runtime from './config/runtime';
 import modules from './config/modules';
 import components from './config/components';
 import hooks from './config/hooks';
+import pwa from './config/pwa';
 
 export default defineNuxtConfig({
   runtime,
@@ -14,6 +15,7 @@ export default defineNuxtConfig({
   i18n,
   auth,
   hooks,
+  pwa,
 
   css: ['@/assets/css/main.css'],
 
