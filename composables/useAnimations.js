@@ -12,9 +12,9 @@ export function useAnimations() {
             transition: {
                 delay: (delay + (100 * index + 1)),
                 type: 'easeInOut',
-                stiffness: 500,
-                damping: 25,
-                mass: 0.5,
+                stiffness: 1250,
+                damping: 100,
+                mass: 0.2,
                 opacity: {
                     delay: (delay + (100 * index + 1)),
                     duration: type === 'fade' ? 500 : 250,
