@@ -33,8 +33,11 @@
     "@pinia/nuxt": "^0.4.11",
     "@vueuse/core": "^10.2.1",
     "@vueuse/motion": "^2.0.0",
+    "firebase": "^10.1.0",
     "gsap": "^3.12.2",
     "pinia": "^2.1.4",
-    "sass": "^1.63.6"
+    "primevue": "^3.31.0",
+    "sass": "^1.63.6",
+    "zod": "^3.21.4"
   }
 }
