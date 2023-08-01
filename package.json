@@ -8,9 +8,13 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "overrides": {
+    "vue": "latest"
+  },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/i18n": "^8.0.0-beta.13",
+    "@nuxtjs/supabase": "^0.3.6",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@sidebase/nuxt-auth": "^0.6.0-beta.3",
     "@tailwindcss/forms": "^0.5.4",
@@ -33,9 +37,8 @@
     "@pinia/nuxt": "^0.4.11",
     "@vueuse/core": "^10.2.1",
     "@vueuse/motion": "^2.0.0",
-    "firebase": "^10.1.0",
     "gsap": "^3.12.2",
-    "pinia": "^2.1.4",
+    "pinia": "^2.1.6",
     "primevue": "^3.31.0",
     "sass": "^1.63.6",
     "zod": "^3.21.4"
