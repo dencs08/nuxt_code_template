@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+import supabase from './config/supabase';
 import i18n from './config/i18n';
 import runtime from './config/runtime';
 import modules from './config/modules';
@@ -10,12 +11,13 @@ import auth from './config/auth'; //this is sidebase auth
 
 export default defineNuxtConfig({
   runtime,
+  supabase,
   modules,
   components,
   i18n,
   hooks,
-  // pwa,
-  // auth,
+  // pwa, //when using nuxt pwa module
+  // auth, //when using nuxt auth module
 
   css: ['@/assets/css/main.css'],
 
