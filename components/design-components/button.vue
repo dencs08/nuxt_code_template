@@ -67,19 +67,14 @@ const computedSize = computed(() => {
 }
 
 .btn-primary {
-    background: linear-gradient(60deg,
-            #0E50F1 0%,
-            #0E50F1 50%,
-            #01FFD1 100%);
+  @apply bg-gradient-to-r from-primary-500 via-primary-500 to-85% to-secondary-300;
+  @apply bg-[length:150%_150%] bg-[0px_0px];
+  @apply transition-all duration-150;
+}
 
-    background-size: 125% 125%;
-    background-position: 10% 0;
-
-    transition: all 0.5s;
-
-    &:hover {
-        background-position: 100% 0;
-    }
+.btn-primary:hover {
+  //@apply bg-[30%_30%];
+  @apply saturate-150 shadow-md shadow-gray-900/20;
 }
 
 .btn-danger {
