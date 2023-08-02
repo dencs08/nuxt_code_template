@@ -5,8 +5,9 @@ import generateFontSizeVariants from './custom_tailwindcss/fontSizes.js';
 
 //!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
 const colorDefinitions = [
-  { colorName: 'primary', mainHex: '#0E50F1' },
-  { colorName: 'secondary', mainHex: '#01FFD1' },
+  { colorName: 'primary', mainHex: '#00ACD4' },
+  { colorName: 'secondary', mainHex: '#0FB182' },
+  { colorName: 'accent', mainHex: '#FFEA31' },
   { colorName: 'dark', mainHex: '#575757' },
   { colorName: 'light', mainHex: '#E5E5E5' },
 ];
@@ -45,7 +46,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    // require('@tailwindcss/forms'),
     function ({ addComponents }) {
       addComponents({
         '.container': {
