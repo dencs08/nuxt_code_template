@@ -1,14 +1,23 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    // console.log(from.name + " > " + to.name);
-    // if (to.name === "Start") {
-    // return navigateTo("/");
-    // }
-    // const pathNames: string[] = ["Login", "Calendar", "Register", "konto"];
-    // if (pathNames.includes(to.name as string)) {
-    //     return navigateTo({ name: "PageInProgress" });
-    // }
+    const localePath = useLocalePath()
+    const segments = to.path.split('/')
 
-    if (to.path === "/dashboard/" || to.path === "/dashboard") {
-        return navigateTo('/dashboard/home');
+    // Get the language segment and the rest of the path
+    let pathAfterLanguagePrefix
+
+    // Check if the path contains language prefix
+    if (segments[1].length === 2 && segments.length > 2) {
+        pathAfterLanguagePrefix = '/' + segments.slice(2).join('/')
+    } else {
+        pathAfterLanguagePrefix = to.path
     }
-});
+
+    // If the path is dashboard or dashboard/ after the language prefix
+    if (
+        pathAfterLanguagePrefix === '/dashboard' ||
+        pathAfterLanguagePrefix === '/dashboard/'
+    ) {
+        // Navigate to the dashboard/home in the same language
+        return navigateTo(localePath('/dashboard/home'))
+    }
+})
