@@ -32,10 +32,48 @@ export function useAuthentication() {
         const {error} = await client.auth.signOut();
     }
 
+    const lostPassword = async (email) => {
+        try {
+            const { data, error } = await client.auth.resetPasswordForEmail(email);
+            if (error) throw new Error(error.message);
+            return "Reset password instructions has been sent to your email.";
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    const updatePassword = async (password) => {
+        try {
+            const { data, error } = await client.auth.updateUser({
+                password: password,
+            })
+            if (error) throw new Error(error.message);
+            return "Reset password instructions has been sent to your email.";
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    const updateEmail = async (email) => {
+        try {
+            const { data, error } = await client.auth.updateUser({
+                email: email,
+                data: { route: 'world' }
+            })
+            if (error) throw new Error(error.message);
+            return "Reset password instructions has been sent to your email.";
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
     return {
         signIn,
         signInWithOAuth,
         signUp,
-        signOut
+        signOut,
+        lostPassword,
+        updatePassword,
+        updateEmail
     };
 }
