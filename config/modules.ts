@@ -3,6 +3,8 @@
 export default [
     '@nuxtjs/supabase',
     "@nuxt/devtools",
+    '@formkit/nuxt',
+    '@sfxcode/nuxt-primevue',
     "@nuxtjs/robots",
     '@nuxt/image',
     "@nuxtjs/i18n",
