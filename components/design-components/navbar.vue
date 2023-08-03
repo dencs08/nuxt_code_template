@@ -1,5 +1,5 @@
 <template>
-    <header class="z-[9999] fixed w-full transition-transform duration-300 ease-in-out bg-white shadow"
+    <header class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white shadow"
         :class="{ '-translate-y-full': !showHeader }">
         <nav class="container mx-auto flex items-center justify-between py-5" aria-label="Global">
                 <NuxtLink :to="localePath('index')">
