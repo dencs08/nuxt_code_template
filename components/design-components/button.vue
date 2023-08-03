@@ -37,12 +37,13 @@ const computedSize = computed(() => {
 </script>
   
 
-<style lang="scss" scoped>
+<style lang="scss">
 .btn {
     padding-top: clamp(0.7em, 0.6vw, 1.5em);
     padding-right: clamp(1.75em, 2vw, 2.5em);
     padding-bottom: clamp(0.7em, 0.6vw, 1.5em);
     padding-left: clamp(1.75em, 2vw, 2.5em);
+    @apply transition-all duration-75;
 }
 
 .btn-xs {
@@ -69,7 +70,6 @@ const computedSize = computed(() => {
 .btn-primary {
   @apply bg-gradient-to-r from-primary-500 via-primary-500 to-85% to-secondary-300;
   @apply bg-[length:150%_150%] bg-[0px_0px];
-  @apply transition-all duration-150;
 }
 
 .btn-primary:hover {
@@ -78,7 +78,7 @@ const computedSize = computed(() => {
 }
 
 .btn-danger {
-    @apply bg-red-500
+    @apply bg-red-500 hover:bg-red-600
 }
 
 .btn-disabled {
@@ -86,14 +86,14 @@ const computedSize = computed(() => {
 }
 
 .btn-light {
-    @apply border border-gray-200 text-gray-600 bg-gray-100
+    @apply border border-gray-200 text-gray-800 bg-white hover:bg-gray-200
 }
 
 .btn-dark {
-    @apply border border-gray-500 text-gray-100 bg-gray-700
+    @apply border border-gray-500 text-gray-100 bg-gray-700 hover:bg-gray-800
 }
 
 .btn-success {
-    @apply bg-secondary-700;
+    @apply bg-green-600 hover:bg-green-700;
 }
 </style>
