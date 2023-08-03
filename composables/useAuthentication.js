@@ -3,8 +3,8 @@ export function useAuthentication() {
 
     async function signIn(email,password){
         const { error } = await client.auth.signInWithPassword({
-            email: email.value,
-            password: password.value,
+            email: email,
+            password: password,
         });
         if (error) {
             throw error;
@@ -14,8 +14,8 @@ export function useAuthentication() {
     async function signUp(email, password) {
         try {
             const { data, error } = await client.auth.signUp({
-                email: email.value,
-                password: password.value,
+                email: email,
+                password: password,
             });
             if (error) throw new Error(error.message);
             return "Check your email to confirm your account.";
@@ -48,7 +48,7 @@ export function useAuthentication() {
                 password: password,
             })
             if (error) throw new Error(error.message);
-            return "Reset password instructions has been sent to your email.";
+            return "Password has been updated.";
         } catch (error) {
             throw new Error(error.message);
         }
@@ -61,7 +61,7 @@ export function useAuthentication() {
                 data: { route: 'world' }
             })
             if (error) throw new Error(error.message);
-            return "Reset password instructions has been sent to your email.";
+            return "Email has been updated.";
         } catch (error) {
             throw new Error(error.message);
         }
