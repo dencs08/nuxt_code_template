@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Toast />
+    <Toast class="top-36 z-[9999]"/>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
