@@ -1,10 +1,16 @@
-<script setup lang="ts">
+<script setup>
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: '/dashboard/home'
   }
 })
+
+const customFunction = (event, session) => {
+  window.location.reload();
+};
+const {handleAuthStateChange} = useAuthListeners();
+handleAuthStateChange('SIGNED_IN', customFunction)
 </script>
 
 <template>
