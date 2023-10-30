@@ -5,6 +5,7 @@ interface IAuthenticationService {
     signIn: (email: string, password: string) => Promise<any>;
     signUp: (email: string, password: string) => Promise<any>;
     signInWithOAuth: (provider: OAuthProvider) => Promise<any>;
+    signInWithOAuthWithPopup: (provider: OAuthProvider) => Promise<any>;
     signOut: () => Promise<any>;
     resetPassword: (email: string) => Promise<any>;
     updateUser: (payload: any) => Promise<any>;
@@ -36,6 +37,7 @@ export function authenticationService(provider: AuthProvider): IAuthenticationSe
         signIn: (email, password) => client.auth.signInWithPassword({ email, password }),
         signUp: (email, password) => client.auth.signUp({ email, password }),
         signInWithOAuth: (oauthProvider: OAuthProvider) => client.auth.signInWithOAuth({ provider: oauthProvider }),
+        signInWithOAuthWithPopup: (oauthProvider: OAuthProvider) => client.auth.signInWithOAuth({ provider: oauthProvider, options: {skipBrowserRedirect: true}}),
         signOut: () => client.auth.signOut(),
         resetPassword: (email) => client.auth.resetPasswordForEmail(email),
         updateUser: (payload) => client.auth.updateUser(payload),
