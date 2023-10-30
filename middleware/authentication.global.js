@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const user = useSupabaseUser();
     const auth = to.meta.auth;
 
-    // If `auth` is set to `false`, allow all users regardless of authentication state.
+    // If `auth` on a route is set to `false`, allow all users regardless of authentication state.
     if (auth === false) return;
 
     try {
