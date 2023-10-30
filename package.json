@@ -23,7 +23,7 @@
     "@vite-pwa/nuxt": "^0.1.0",
     "@vueuse/nuxt": "^10.2.1",
     "eslint": "^8.45.0",
-    "nuxt": "^3.6.3",
+    "nuxt": "^3.8.0",
     "nuxt-gtag": "^0.5.7",
     "nuxt-icon": "^0.4.2",
     "nuxt-simple-sitemap": "^3.0.11"
