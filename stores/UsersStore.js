@@ -16,23 +16,24 @@ export const useUsersStore = defineStore({
     },
 
     actions: {
-        fetchUsers: withErrorHandler(async function() {
+        fetchUsers: withErrorHandler(async function () {
             this.loading = true;
             const client = useSupabaseClient();
-            const { data, error } = await client.from('users').select('*');
 
-            if (error) {
-                throw error;
+            // Fetch user records from own 'users' table.
+            let { data: userData, error: userError } = await client.from('users').select('*');
+            if (userError) {
+                throw userError;
             }
 
-            this.users = data;
+            this.users = userData;
             this.loading = false;
         }),
         addUser() {
         },
         deleteUser() {
         },
-        updateUser(){
+        updateUser() {
 
         }
     }
