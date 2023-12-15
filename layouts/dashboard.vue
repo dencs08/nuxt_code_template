@@ -4,7 +4,7 @@
         <div class="lg:pl-56">
             <main class="pt-20 min-h-screen">
                 <div class="px-4 sm:px-6 lg:px-8 pb-8">
-                    <Breadcrumbs class="mb-2"/>
+                    <Breadcrumbs class="mb-2" />
                     <slot></slot>
                 </div>
             </main>
@@ -13,6 +13,17 @@
 </template>
 
 <script setup>
+const { handleAuthListener } = useAuthListeners();
+const user = useSupabaseUser();
+// const unsubscribe = handleAuthListener('SIGNED_IN', (event, session) => {
+//     console.log(user.id);
+//     const { data, pending, error, refresh } = useFetch('/api/update-user', {
+//         method: 'POST',
+//         body: {
+//             "id": user.id
+//         }
+//     })
+// });
 </script>
 
 <style lang="scss" scoped></style>

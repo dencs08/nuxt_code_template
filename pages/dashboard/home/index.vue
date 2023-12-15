@@ -2,6 +2,7 @@
     <div class="flex flex-col lg:flex-row gap-8">
         <div class="w-full lg:w-4/6 space-y-8">
             <div class="space-y-2">
+                <h5>Hi, {{user?.email}}</h5>
                 <h2 class="text-db-h2">Main information</h2>
                 <div class="flex gap-4 flex-wrap justify-center">
 <!--                    <NuxtLink v-for="element in information" class="flex flex-col flex-grow w-1/2 sm:w-1/3 xl:w-1/4"-->
@@ -41,9 +42,10 @@ definePageMeta({
     layout: "dashboard",
 });
 
-const loading = ref(true);
+const user = useSupabaseUser();
 
-const information = ref([{
+const information = ref([
+    {
     label: "Opened recruitments",
     icon: "ic:round-supervisor-account",
     // link: "DashboardSettings",
@@ -84,7 +86,7 @@ onMounted(async () => {
         // },
     ]
 
-    loading.value = false;
+    // loading.value = false;
 })
 
 const quickActions = [

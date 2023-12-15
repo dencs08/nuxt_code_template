@@ -1,6 +1,6 @@
 export function useFeed() {
     const { authorizedAxiosInstance, loading } = useAxios();
-    const { addToast } = useToast();
+    // const { addToast } = useToast();
     const error = ref(null)
     const feed = ref(null)
 
@@ -12,7 +12,7 @@ export function useFeed() {
             // console.log(response);
             // return response;
         } catch (err) {
-            addToast({ message: 'Something went wrong while fetching feed data.', type: 'danger' });
+            // addToast({ message: 'Something went wrong while fetching feed data.', type: 'danger' });
             error.value = err;
         }
     };

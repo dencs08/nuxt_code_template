@@ -2,6 +2,10 @@
     display:block !important;
 }
 
+.p-checkbox{
+    vertical-align: middle !important;
+}
+
 .formkit-outer[data-disabled='true'] input.p-component {
     @apply pointer-events-none select-none bg-gray-200/25 text-gray-400/75;
 }

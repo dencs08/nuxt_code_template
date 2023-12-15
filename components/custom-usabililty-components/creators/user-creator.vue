@@ -28,13 +28,13 @@ let newUser = ref({
 })
 
 const { createUser, error } = useUsers();
-const { addToast } = useToast();
+// const { addToast } = useToast();
 const addUser = async () => {
     console.log('newUser');
     const response = await createUser(newUser.value);
     if (!error.value) {
         // navigateTo({ name: 'DashboardRecruitmentIndex', params: { id: response.data.id } })
-        addToast({ message: "User created!", type: "success" })
+        // addToast({ message: "User created!", type: "success" })
     }
 }
 </script>

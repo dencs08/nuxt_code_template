@@ -32,10 +32,10 @@ definePageMeta({
 const route = useRoute()
 const { id } = route.params;
 
-const { user, fetchUser } = useUsers();
+// const { user, fetchUser } = useUsers();
 const loading = ref(true);
 onMounted(async () => {
-    await fetchUser(id);
+    // await fetchUser(id);
     loading.value = false;
 })
 </script>

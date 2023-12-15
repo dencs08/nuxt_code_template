@@ -34,7 +34,6 @@ const props = defineProps({
     }
 });
 
-
 const toggleButton = ref(null);
 const dropdownVisible = ref(false);
 const dropdown = ref(null);

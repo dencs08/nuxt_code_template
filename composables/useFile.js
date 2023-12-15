@@ -1,6 +1,6 @@
 export function useFile() {
     const { axiosInstance, authorizedAxiosInstance, loading } = useAxios();
-    const { addToast } = useToast();
+    // const { addToast } = useToast();
     const error = ref(null);
 
     const downloadFile = async (filename) => {
@@ -13,7 +13,7 @@ export function useFile() {
             document.body.appendChild(link);
             link.click();
         } catch (err) {
-            addToast({ message: 'Something went wrong while downloading your file(s)', duration: 3000, type: 'danger' });
+            // addToast({ message: 'Something went wrong while downloading your file(s)', duration: 3000, type: 'danger' });
             // console.log(err);
             error.value = err;
         }
@@ -31,7 +31,7 @@ export function useFile() {
             });
             return response.data;
         } catch (err) {
-            addToast({ message: 'Something went wrong while uploading your file(s)', duration: 3000, type: 'danger' });
+            // addToast({ message: 'Something went wrong while uploading your file(s)', duration: 3000, type: 'danger' });
             error.value = err;
         }
     };

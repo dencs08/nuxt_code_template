@@ -1,14 +1,10 @@
 <template>
-  <div
-      class="scrollable-container pb-3"
-      :class="{ 'is-scrollable': isScrollable }"
-  >
+  <div class="scrollable-container pb-3" :class="{ 'is-scrollable': isScrollable }">
     <slot></slot>
   </div>
 </template>
 
 <script setup>
-
 const props = defineProps({
   breakpoint: {
     type: Number,
@@ -16,12 +12,12 @@ const props = defineProps({
   }
 })
 
-const windowWidth = ref(window.innerWidth)
-const isScrollable = computed(() => windowWidth.value <= props.breakpoint)
-
 let resizeHandler
 
 onMounted(() => {
+  const windowWidth = ref(window.innerWidth)
+  const isScrollable = computed(() => windowWidth.value <= props.breakpoint)
+
   resizeHandler = () => {
     windowWidth.value = window.innerWidth
   }
