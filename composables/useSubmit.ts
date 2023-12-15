@@ -11,7 +11,7 @@ export function useSubmit() {
 
     const defaultErrorHandler = (error: any) => {
         const errorMessage = error.message || 'An unknown error occurred.';
-        addToast('error', 'Error', errorMessage);
+        addToast('error', 'Error', errorMessage, 30000);
     };
 
     async function handleSubmit(
