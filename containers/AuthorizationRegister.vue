@@ -7,24 +7,41 @@
 
     <div class="mt-5">
       <div>
-        <form action="#" @submit.prevent="handleSubmit" class="space-y-6">
-          <div>
-            <InputCustom type="email" label="Email" name="email" v-model="email" required></InputCustom>
-          </div>
+        <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Register">
+          <template #default="{ getNode }">
+            <div class="space-y-2 mb-5">
+              <FormKit
+                  class="w-full"
+                  type='primeInputText'
+                  name= 'email'
+                  validation= 'required|email'
+                  placeholder= 'Email'
+                  @node="getNode">
+              </FormKit>
 
-          <div>
-            <InputCustom v-model="password" type="password" label="Password" name="password"></InputCustom>
-          </div>
+              <FormKit
+                  class="w-full"
+                  type='primePassword'
+                  name= 'password'
+                  validation= 'required'
+                  toggleMask
+                  :feedback="true"
+                  placeholder= 'Password'
+                  @node="getNode">
+              </FormKit>
 
-          <div>
-            <p v-if="errorMsg" class="text-sm mb-2 text-red-600">{{ errorMsg }}</p>
-            <p v-else-if="successMsg" class="text-sm mb-2 text-green-600">{{ successMsg }}</p>
-            <Button type="submit" class="w-full h-9" size="xs">
-              Sign up
-            </Button>
-          </div>
-        </form>
-
+              <FormKit
+                  class="w-full"
+                  type='primePassword'
+                  name= 'password_confirm'
+                  validation= 'required|confirm'
+                  toggleMask
+                  placeholder= 'Repeat password'
+                  @node="getNode">
+              </FormKit>
+            </div>
+          </template>
+        </FormWrapper>
         <div>
           <div class="relative mt-7">
             <div class="absolute inset-0 flex items-center" aria-hidden="true">
@@ -50,20 +67,10 @@
 
 <script setup>
 const localePath = useLocalePath()
-const { addToast } = useToast();
-
 const {signUp} = useAuthentication();
+const {handleSubmit} = useSubmit();
 
-const email = ref('');
-const password = ref('');
-const errorMsg = ref(null)
-const successMsg = ref(null)
-
-async function handleSubmit() {
-  try {
-    successMsg.value = await signUp(email, password);
-  } catch (error) {
-    errorMsg.value = error;
-  }
+async function handleForm(data) {
+  await handleSubmit(signUp, { email: data.email, password: data.password }, 'Registration link sent!');
 }
 </script>
