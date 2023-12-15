@@ -2,8 +2,7 @@
 
 export default {
     redirect: false,
-    url:process.env.SUPABASE_URL,
-    key:process.env.SUPABASE_KEY,
-    client:{
-    }
-}
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_SERVICE_KEY,
+    client: {},
+};
