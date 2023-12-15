@@ -1,25 +1,10 @@
-<script setup lang="ts">
+<script setup>
 const localePath = useLocalePath()
-
 const {updatePassword} = useAuthentication();
+const {handleSubmit} = useSubmit();
 
-const password = ref(null);
-const repeat = ref(null);
-const errorMessage = ref(null);
-
-async function handleSubmit() {
-  if(password.value !== repeat.value) {
-    errorMessage.value = "Passwords do not match!";
-    return;
-  }
-  try {
-    await updatePassword(password.value);
-    errorMessage.value = null;
-    console.log('success')
-  } catch (error) {
-    // addToast({ message: error.message, duration: 3000, type: 'danger' });
-    console.log(error)
-  }
+async function handleForm(data) {
+  await handleSubmit(updatePassword, { password: data.password }, 'Password updated');
 }
 </script>
 
@@ -30,16 +15,32 @@ async function handleSubmit() {
     </div>
 
     <div class="space-y-3">
-      <form action="#" @submit.prevent="handleSubmit" class="space-y-3 mb-2 w-full">
-        <Password id="password" v-model="password" inputClass="w-full" class="w-full" placeholder="New password" toggleMask />
-        <Password id="repeat" v-model="repeat" inputClass="w-full" class="w-full" placeholder="Repeat new password" :feedback="false" />
-        <p v-if="errorMessage" class="text-red-500">{{errorMessage}}</p>
-        <Button styling="dark" class="w-full" submit>Reset password</Button>
-      </form>
-      <NuxtLink :to="localePath('/login')" class="flex items-center justify-center gap-1 text-gray-600 text-sm group">
-        <Icon name="ic:round-arrow-back" class="h-auto w-5 group-hover:-translate-x-1 transition-transform duration-150"/>
-        <span>Back to log in</span>
-      </NuxtLink>
+      <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Reset">
+        <template #default="{ getNode }">
+          <div class="space-y-2 mb-3">
+            <FormKit
+                class="w-full"
+                type='primePassword'
+                name= 'password'
+                validation= 'required'
+                toggleMask
+                :feedback="true"
+                placeholder= 'Password'
+                @node="getNode">
+            </FormKit>
+
+            <FormKit
+                class="w-full"
+                type='primePassword'
+                name= 'password_confirm'
+                validation= 'required|confirm'
+                toggleMask
+                placeholder= 'Repeat password'
+                @node="getNode">
+            </FormKit>
+          </div>
+        </template>
+      </FormWrapper>
     </div>
   </div>
 </template>
