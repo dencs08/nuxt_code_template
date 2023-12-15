@@ -1,15 +1,19 @@
 <template>
   <div>
-    <section class="container mx-auto min-h-screen grid place-content-center">
-      <h1 v-motion="slideLeft({delay: 250})">
+    <section class="container mx-auto min-h-screen grid place-content-center text-center">
+      <h1 v-motion="slideTop({delay: 400})">
         {{ t('pages.index.title') }}
       </h1>
-      <p class="font-body text-3xl font-bold" v-motion="fade({delay: 250})">
+      <p class="font-body text-3xl font-bold" v-motion="fade({delay: 425})">
         {{ t('pages.index.description') }}
       </p>
-      <p class="font-accent text-2xl font-black" v-motion="slideBottom({delay: 325})">
+      <p class="font-accent text-2xl font-black" v-motion="slideBottom({delay: 450})">
         {{ $t('welcome') }}
       </p>
+    </section>
+    <section>
+      Need to have for class registration of tailwind
+      <p class="hover:shadow-sm hover:bg-blue-700">a</p>
     </section>
   </div>
 </template>
@@ -37,9 +41,4 @@ useHead({
 })
 
 const { slideTop, slideLeft, slideRight,fade, slideBottom} = useAnimations();
-
-// const el = ref(null);
-// onMounted(() => {
-//   window.scrollTo({ top: el, behavior: 'smooth' })
-// })
 </script>
