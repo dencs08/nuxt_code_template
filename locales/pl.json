@@ -10,6 +10,10 @@
         "index": {
             "title": "Polish page title",
             "description": "Polish page description"
+        },
+        "contact": {
+            "title": "Polish contact title",
+            "description": "Polish page description"
         }
     }
 }
