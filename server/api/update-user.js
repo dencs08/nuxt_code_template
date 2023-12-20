@@ -2,17 +2,17 @@ import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server"
 
 export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
-    const body = await readBody(event);
+    // const body = await readBody(event);
     const userSession = await serverSupabaseUser(event);
 
-    //Check if requested id is = to a user session.
-    if (body.id != userSession.id) throw new Error('Error while checking the indentity. ' + body.id + " != " + userSession.id);
+    //Check if requested id is == to a user session.
+    // if (body.id != userSession.id) throw new Error('Error while checking the indentity. ' + body.id + " != " + userSession.id);
 
     try {
         const { data, error } = await client
             .from('users')
             .upsert({
-                id: body.id,
+                id: userSession.id,
                 name: userSession.user_metadata.full_name,
                 email: userSession.email,
                 phone: userSession.phone,
