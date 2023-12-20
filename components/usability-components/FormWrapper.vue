@@ -22,18 +22,28 @@ const reset = () => {
 
 const formSubmitted = (data) => {
   return new Promise((resolve, reject) => {
+    const start = Date.now();
+
     props.handleSubmit(data).then(() => {
-      reset();
-      resolve();
+      //always add fake 250ms time to request so formkit has time to show the spinner
+      const duration = Date.now() - start;
+      const delay = Math.max(0, 250 - duration);
+
+      setTimeout(() => {
+        reset();
+        resolve();
+      }, delay);
     }).catch((error) => {
       reject(error);
     });
   });
 };
+
 </script>
 
 <template>
-  <FormKit type="form" v-model="data" :submit-attrs="{ inputClass: 'w-full btn-dark' }" @submit="formSubmitted" :incomplete-message="false">
+  <FormKit type="form" v-model="data" :submit-attrs="{ inputClass: 'w-full btn-dark' }" @submit="formSubmitted"
+    :incomplete-message="false">
     <slot v-bind:getNode="getNode"></slot>
   </FormKit>
 </template>
