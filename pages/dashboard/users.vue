@@ -1,3 +1,37 @@
+<script setup>
+// import { UserRole } from '@/utils/UserRoles.ts';
+import { useUsersStore } from "~/stores/UsersStore";
+const userStore = useUsersStore();
+const selectedProduct = ref();
+
+definePageMeta({
+  layout: "dashboard",
+});
+
+onMounted(async () => {
+  await userStore.fetchUsers();
+  // console.log(toRaw(userStore.users[0]));
+})
+
+const createUser = async () => {
+  const userPayload = {
+    email: 'test@test.pl',
+    first_name: 'first name test',
+    last_name: 'lastName',
+    photo: 'avatar_url'
+  };
+
+  const { data, error } = await client
+    .from('users')
+    .insert([userPayload]);
+  if (error) {
+    console.error('Error inserting records:', error);
+  } else {
+    console.log('Inserted records:', data);
+  }
+}
+</script>
+
 <template>
   <div>
     <!--        <div v-if="loading">-->
@@ -31,42 +65,9 @@
       <Column field="role" header="Role" :sortable="true" style="width: 20%"></Column>
     </DataTable>
 
-    <Button @click="createUser">Create test user</Button>
+    <!-- <Button @click="createUser">Create test user</Button> -->
+    <!-- <Button @click="updateUser">Update user</Button> -->
+
+    <TestComponent />
   </div>
 </template>
-<script setup>
-// import { UserRole } from '@/utils/UserRoles.ts';
-
-import { useUsersStore } from "~/stores/UsersStore";
-
-definePageMeta({
-  layout: "dashboard",
-});
-
-const selectedProduct = ref();
-
-const userStore = useUsersStore();
-onMounted(async () => {
-  await userStore.fetchUsers();
-  console.log(toRaw(userStore.users[0]));
-})
-
-const client = useSupabaseClient();
-const createUser = async () => {
-  const userPayload = {
-    email: 'test@test.pl',
-    first_name: 'first name test',
-    last_name: 'lastName',
-    photo: 'avatar_url'
-  };
-
-  const { data, error } = await client
-    .from('users')
-    .insert([userPayload]);
-  if (error) {
-    console.error('Error inserting records:', error);
-  } else {
-    console.log('Inserted records:', data);
-  }
-}
-</script>
