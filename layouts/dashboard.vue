@@ -13,17 +13,6 @@
 </template>
 
 <script setup>
-const { handleAuthListener } = useAuthListeners();
-const user = useSupabaseUser();
-// const unsubscribe = handleAuthListener('SIGNED_IN', (event, session) => {
-//     console.log(user.id);
-//     const { data, pending, error, refresh } = useFetch('/api/update-user', {
-//         method: 'POST',
-//         body: {
-//             "id": user.id
-//         }
-//     })
-// });
 </script>
 
 <style lang="scss" scoped></style>
