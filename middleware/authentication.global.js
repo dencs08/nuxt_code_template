@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (auth === false) return;
 
     try {
-        // Handle routes that should only be accessed by unauthenticated users.
+        // Handle routes that should only be accessed by unauthenticated users. (i.e. login page)
         if (auth && auth.unauthenticatedOnly) {
             // If the user is authenticated, redirect them to a different route.
             if (user.value !== null) {
