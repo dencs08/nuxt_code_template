@@ -5,13 +5,6 @@ definePageMeta({
     navigateAuthenticatedTo: '/dashboard/home'
   }
 })
-
-const customFunction = (event, session) => {
-  // console.log('signed in');
-  // window.location.reload();
-};
-// const { handleAuthStateChange } = useAuthListeners();
-// handleAuthStateChange('SIGNED_IN', customFunction)
 </script>
 
 <template>
