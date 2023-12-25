@@ -1,40 +1,57 @@
 <template>
     <div>
-        <Button class="mr-0 ml-auto mb-3" @click="showForm = !showForm">
-            {{ showForm ? 'Close' : 'Add User' }}
-        </Button>
-        <div v-auto-animate>
-            <Card v-if="showForm" class="space-y-3">
-                <p>Add new user to the database</p>
-                <div class="grid grid-cols-2 gap-4 mb-2">
-                    <InputCustom v-model="newUser.name" label="Name" type="text" />
-                    <InputCustom v-model="newUser.email" label="Email" type="email" />
-                    <InputCustom v-model="newUser.password" label="Password" type="password" />
-                    <SelectRole v-model="newUser.role" />
+        <Button icon="pi pi-external-link" @click="visible = true">Add User</Button>
+
+        <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <template #header>
+                <div class="inline-flex align-items-center justify-content-center gap-2">
+                    <span class="font-bold white-space-nowrap">Create a new user</span>
                 </div>
-                <Button styling="success" @click="addUser(); showForm = false">Create!</Button>
-            </Card>
-        </div>
+            </template>
+            <div class="m-0">
+
+                <FormWrapper :handleSubmit="submitForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+                    submit-label="Create">
+                    <template #default="{ getNode }">
+                        <div class="space-y-2 mb-5">
+                            <FormKit class="w-full" type='primeInputText' name='email' validation='required|email'
+                                placeholder='Email' @node="getNode">
+                            </FormKit>
+                            <FormKit class="w-full" type='primeInputText' name='name' validation='required'
+                                placeholder='Name' @node="getNode">
+                            </FormKit>
+                            <FormKit class="w-full" type='primePassword' name='password' validation='required' toggleMask
+                                :feedback="true" placeholder='Password' @node="getNode">
+                            </FormKit>
+                            <FormKit class="w-full" type='primePassword' name='password_confirm'
+                                validation='required|confirm' toggleMask placeholder='Repeat password' @node="getNode">
+                            </FormKit>
+                            <FormKit class="w-full" type='primeDropdown' :options="roles" optionLabel="role"
+                                placeholder="Select user role" validation='required' @node="getNode"></FormKit>
+                        </div>
+                    </template>
+                </FormWrapper>
+
+            </div>
+        </Dialog>
+
     </div>
 </template>
 
 <script setup>
-let showForm = ref(false)
-let newUser = ref({
-    name: '',
-    email: '',
-    password: '',
-    role: ''
-})
+import { useUsersStore } from "~/stores/UsersStore";
+const { handleSubmit } = useSubmit();
+const userStore = useUsersStore();
 
-const { createUser, error } = useUsers();
-// const { addToast } = useToast();
-const addUser = async () => {
-    console.log('newUser');
-    const response = await createUser(newUser.value);
-    if (!error.value) {
-        // navigateTo({ name: 'DashboardRecruitmentIndex', params: { id: response.data.id } })
-        // addToast({ message: "User created!", type: "success" })
-    }
+const visible = ref(false);
+const roles = ref([
+    { role: 'User' },
+    { role: 'Admin' },
+]);
+
+const submitForm = async (data) => {
+    console.log(data);
+    // await handleSubmit(userStore.addUser, { data }, 'User successfully added');
 }
 </script>
