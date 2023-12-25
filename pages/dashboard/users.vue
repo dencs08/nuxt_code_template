@@ -65,9 +65,14 @@ const createUser = async () => {
       <Column field="role" header="Role" :sortable="true" style="width: 20%"></Column>
     </DataTable>
 
+    <!-- invite the user? -->
     <!-- <Button @click="createUser">Create test user</Button> -->
     <!-- <Button @click="updateUser">Update user</Button> -->
 
-    <TestComponent />
+    <div class="flex gap-4">
+      <TestComponent />
+      <UserCreator />
+    </div>
+
   </div>
 </template>
