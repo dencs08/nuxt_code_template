@@ -3,23 +3,31 @@ import { useUsersStore } from "~/stores/UsersStore";
 const userStore = useUsersStore();
 const { handleSubmit } = useSubmit();
 
-const handleForm = async (data) => {
+const updateUser = async (data) => {
     await handleSubmit(userStore.updateUser, { data }, 'User updated');
 };
 
-const fetchForm = async () => {
+const fetchUserSession = async () => {
     await handleSubmit(userStore.fetchUserSession, {}, 'User fetched');
+};
+
+const fetchUsers = async () => {
+    await handleSubmit(userStore.fetchUsers, {}, 'Users fetched');
 };
 
 const userSession = computed(() => userStore.getUserSession);
 </script>
 
 <template>
-    <div>
-        <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'btn-primary' }" submit-label="Update user">
+    <div class="flex gap-4 mt-4">
+        <FormWrapper :handleSubmit="updateUser" :submit-attrs="{ inputClass: 'btn-primary' }" submit-label="Update user">
         </FormWrapper>
 
-        <FormWrapper :handleSubmit="fetchForm" :submit-attrs="{ inputClass: 'btn-primary' }" submit-label="fetch user">
+        <FormWrapper :handleSubmit="fetchUserSession" :submit-attrs="{ inputClass: 'btn-primary' }"
+            submit-label="fetch user">
+        </FormWrapper>
+
+        <FormWrapper :handleSubmit="fetchUsers" :submit-attrs="{ inputClass: 'btn-primary' }" submit-label="fetch users">
         </FormWrapper>
     </div>
 </template>
