@@ -20,7 +20,7 @@ export const useUsersStore = defineStore({
     },
 
     actions: {
-        fetchUsers: withErrorHandler(async function () {
+        async fetchUsers() {
             this.loading = true;
             const client = useSupabaseClient();
 
@@ -29,7 +29,7 @@ export const useUsersStore = defineStore({
                     .from('users')
                     .select(`
                         *,
-                        user_roles!inner(
+                        user_roles (
                             role
                         )
                     `);
@@ -40,17 +40,35 @@ export const useUsersStore = defineStore({
 
                 this.users = userData.map(user => ({
                     ...user,
-                    role: user.user_roles.role,
-                    user_roles: undefined,
+                    role: user.user_roles ? user.user_roles.role : 'No role assigned',
                 }));
 
             } catch (error) {
-                throw error;
+                console.error(error);
             } finally {
                 this.loading = false;
             }
-        }),
-        addUser() {
+        },
+        async addUser(data) {
+            this.loading = true;
+            const client = useSupabaseClient();
+
+            try {
+                const { addResult, error } = await client.auth.signUp({
+                    email: data.email,
+                    password: data.passowrd,
+                    email_confirm: true,
+                })
+
+                if (error) {
+                    throw error;
+                }
+
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
         },
         deleteUser() {
         },
