@@ -56,7 +56,7 @@ export const useUsersStore = defineStore({
             try {
                 const { addResult, error } = await client.auth.signUp({
                     email: data.email,
-                    password: data.passowrd,
+                    password: data.password,
                     email_confirm: true,
                 })
 
@@ -64,13 +64,32 @@ export const useUsersStore = defineStore({
                     throw error;
                 }
 
+                this.users.push(user);
+
             } catch (error) {
                 console.error(error);
             } finally {
                 this.loading = false;
             }
         },
-        deleteUser() {
+        async deleteUser(userId) {
+            this.loading = true;
+            try {
+                const client = useSupabaseClient();
+                const { deleteResult, error } = await client.from('users').delete().eq('id', userId);
+
+                if (error) {
+                    throw error;
+                }
+
+                this.users = this.users.filter(user => user.id !== userId);
+
+                return { status: 'success' };
+            } catch (error) {
+                return { status: 'error', error };
+            } finally {
+                this.loading = false;
+            }
         },
         async updateUser(data) {
             this.loading = true;
