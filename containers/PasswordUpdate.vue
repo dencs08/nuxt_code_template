@@ -1,7 +1,7 @@
 <script setup>
 const localePath = useLocalePath()
-const {updatePassword} = useAuthentication();
-const {handleSubmit} = useSubmit();
+const { updatePassword } = useAuthentication();
+const { handleSubmit } = useSubmit();
 
 async function handleForm(data) {
   await handleSubmit(updatePassword, { password: data.password }, 'Password updated');
@@ -18,25 +18,12 @@ async function handleForm(data) {
       <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Reset">
         <template #default="{ getNode }">
           <div class="space-y-2 mb-3">
-            <FormKit
-                class="w-full"
-                type='primePassword'
-                name= 'password'
-                validation= 'required'
-                toggleMask
-                :feedback="true"
-                placeholder= 'Password'
-                @node="getNode">
+            <FormKit class="w-full" type='primePassword' name='password' validation='required' toggleMask :feedback="true"
+              placeholder='Password' @node="getNode">
             </FormKit>
 
-            <FormKit
-                class="w-full"
-                type='primePassword'
-                name= 'password_confirm'
-                validation= 'required|confirm'
-                toggleMask
-                placeholder= 'Repeat password'
-                @node="getNode">
+            <FormKit class="w-full" type='primePassword' name='password_confirm' validation='required|confirm' toggleMask
+              placeholder='Repeat password' @node="getNode">
             </FormKit>
           </div>
         </template>
