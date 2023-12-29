@@ -16,7 +16,6 @@
     "@nuxtjs/i18n": "^8.0.0-beta.13",
     "@nuxtjs/supabase": "^1.1.4",
     "@nuxtjs/tailwindcss": "^6.8.0",
-    "@sfxcode/nuxt-primevue": "^1.4.2",
     "@sidebase/nuxt-auth": "^0.6.0-beta.3",
     "@tailwindcss/forms": "^0.5.4",
     "@types/node": "^18.16.19",
@@ -26,6 +25,7 @@
     "nuxt": "^3.8.0",
     "nuxt-gtag": "^0.5.7",
     "nuxt-icon": "^0.4.2",
+    "nuxt-primevue": "^0.2.2",
     "nuxt-simple-sitemap": "^3.0.11"
   },
   "dependencies": {
@@ -41,11 +41,11 @@
     "@nuxt/image": "^1.0.0-rc.1",
     "@nuxtjs/robots": "^3.0.0",
     "@pinia/nuxt": "^0.5.1",
+    "@sfxcode/formkit-primevue": "^1.5.9",
     "@vueuse/core": "^10.2.1",
     "@vueuse/motion": "^2.0.0",
     "gsap": "^3.12.2",
     "pinia": "^2.1.6",
-    "primevue": "^3.45.0",
     "sass": "^1.63.6",
     "zod": "^3.21.4"
   }
