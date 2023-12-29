@@ -54,20 +54,36 @@ export const useUsersStore = defineStore({
             const client = useSupabaseClient();
 
             try {
-                const { addResult, error } = await client.auth.signUp({
+                const { data: user, error: userError } = await client.auth.signUp({
                     email: data.email,
                     password: data.password,
-                    email_confirm: true,
+                    email_confirm: false,
+                    options: {
+                        data: {
+                            full_name: data.name,
+                            avatar_url: data.photo
+                        }
+                    }
                 })
 
-                if (error) {
-                    throw error;
+                if (userError) {
+                    throw userError;
                 }
 
-                this.users.push(user);
+                this.users.push(user.user);
+
+                const { error: roleError } = await client
+                    .from('user_roles')
+                    .update({ role: data.role })
+                    .eq('user_id', user.user.id)
+
+                if (roleError) {
+                    throw roleError;
+                }
 
             } catch (error) {
                 console.error(error);
+                throw error;
             } finally {
                 this.loading = false;
             }
@@ -76,9 +92,12 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 const client = useSupabaseClient();
-                const { deleteResult, error } = await client.from('users').delete().eq('id', userId);
+                // const { data: deleteResult, error: error } = await client.from('users').delete().eq('id', userId);
+
+
 
                 if (error) {
+                    console.error(error);
                     throw error;
                 }
 
