@@ -1,17 +1,18 @@
 // config/modules.ts
 
 export default [
-    '@nuxtjs/supabase',
+    "@nuxtjs/supabase",
     "@nuxt/devtools",
-    '@formkit/nuxt',
-    '@sfxcode/nuxt-primevue',
+    "@formkit/nuxt",
+    // '@sfxcode/nuxt-primevue', //deprecated in favor of nuxt-primevue (no longer maintained npm package)
+    "nuxt-primevue",
     "@nuxtjs/robots",
-    '@nuxt/image',
+    "@nuxt/image",
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
     "@vueuse/nuxt",
-    'nuxt-simple-sitemap',
+    "nuxt-simple-sitemap",
     "nuxt-icon",
 
     // "@vite-pwa/nuxt", //uncomment for generating a PWA for mobiles.
