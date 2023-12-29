@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Oswald&family=Poppins:wght@400;500;600;700;800;900&display=swap");
 
-@import "./utilities.css";
+/* @import "./utilities.css"; */
+@import "./primeVue_theme.css";
+@import "primevue/resources/themes/lara-light-green/theme.css";
+@import "primeicons/primeicons.css";
 @import "./formKit-PrimeVue-overrides.css";
 
 @tailwind base;
@@ -9,41 +12,41 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 @layer base {
-  body{
-    @apply h-full bg-gray-50 text-gray-900 font-body font-medium;
-  }
-  h1 {
-    @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
-  }
-  h2 {
-    @apply text-5xl font-heading;
-  }
-  h3 {
-    font-size: clamp(2rem, 3.6vw, 10rem);
-    /* @apply text-primary; */
-    @apply font-semibold font-heading;
-  }
-  h4 {
-    @apply text-xl;
-  }
-  h5 {
-    @apply text-xl;
-  }
-  h6 {
-    @apply text-xl;
-  }
+    body {
+        @apply h-full bg-gray-50 text-gray-900 font-body font-medium;
+    }
+    h1 {
+        @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
+    }
+    h2 {
+        @apply text-5xl font-heading;
+    }
+    h3 {
+        font-size: clamp(2rem, 3.6vw, 10rem);
+        /* @apply text-primary; */
+        @apply font-semibold font-heading;
+    }
+    h4 {
+        @apply text-xl;
+    }
+    h5 {
+        @apply text-xl;
+    }
+    h6 {
+        @apply text-xl;
+    }
 
-  img {
-    @apply rounded-none;
-  }
+    img {
+        @apply rounded-none;
+    }
 
-  ul {
-    @apply list-decimal;
-    @apply list-inside;
-  }
+    ul {
+        @apply list-decimal;
+        @apply list-inside;
+    }
 }
