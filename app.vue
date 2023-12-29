@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Toast class="top-36 z-[9999]"/>
+    <Toast class="top-36 z-[9999]" />
+    <ConfirmPopup></ConfirmPopup>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
