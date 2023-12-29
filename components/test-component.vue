@@ -19,7 +19,7 @@ const userSession = computed(() => userStore.getUserSession);
 </script>
 
 <template>
-    <div class="flex gap-4 mt-4">
+    <div class="flex gap-4">
         <FormWrapper :handleSubmit="updateUser" :submit-attrs="{ inputClass: 'btn-primary' }" submit-label="Update user">
         </FormWrapper>
 
