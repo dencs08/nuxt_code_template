@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Button icon="pi pi-external-link" @click="visible = true">Add User</Button>
+        <MyButton styling="success" @click="visible = true">Add User</MyButton>
 
         <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
@@ -27,8 +27,10 @@
                             <FormKit class="w-full" type='primePassword' name='password_confirm'
                                 validation='required|confirm' toggleMask placeholder='Repeat password' @node="getNode">
                             </FormKit>
-                            <FormKit class="w-full" type='primeDropdown' :options="roles" optionLabel="role"
+                            <FormKit class="w-full" type='primeDropdown' :options="roles" name="role"
                                 placeholder="Select user role" validation='required' @node="getNode"></FormKit>
+                            <!-- <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
+                                @upload="onUpload" chooseLabel="Avatar" /> -->
                         </div>
                     </template>
                 </FormWrapper>
@@ -45,13 +47,19 @@ const { handleSubmit } = useSubmit();
 const userStore = useUsersStore();
 
 const visible = ref(false);
-const roles = ref([
-    { role: 'User' },
-    { role: 'Admin' },
+const roles = reactive([
+    {
+        "label": "User",
+        "value": "user"
+    },
+    {
+        "label": "Admin",
+        "value": "admin"
+    }
 ]);
 
 const submitForm = async (data) => {
-    console.log(data);
-    // await handleSubmit(userStore.addUser, { data }, 'User successfully added');
+    await handleSubmit(userStore.addUser, data, 'User successfully added');
 }
+
 </script>
