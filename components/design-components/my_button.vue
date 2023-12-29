@@ -39,11 +39,11 @@ const computedSize = computed(() => {
 
 <style lang="scss">
 .btn {
-    padding-top: clamp(0.7em, 0.6vw, 1.5em);
-    padding-right: clamp(1.75em, 2vw, 2.5em);
-    padding-bottom: clamp(0.7em, 0.6vw, 1.5em);
-    padding-left: clamp(1.75em, 2vw, 2.5em);
-    @apply transition-all duration-75;
+    padding-top: clamp(0.5em, 0.6vw, 1em);
+    padding-right: clamp(1.25em, 1.75vw, 2em);
+    padding-bottom: clamp(0.5em, 0.6vw, 1em);
+    padding-left: clamp(1.25em, 1.75vw, 2em);
+    @apply transition-all duration-75 font-medium;
 }
 
 .btn-xs {
@@ -60,7 +60,7 @@ const computedSize = computed(() => {
 }
 
 .btn-md {
-    font-size: clamp(0.8rem, 0.9vw, 2rem) !important;
+    font-size: clamp(0.8rem, 0.7vw, 2rem) !important;
 }
 
 .btn-lg {
@@ -68,13 +68,13 @@ const computedSize = computed(() => {
 }
 
 .btn-primary {
-  @apply bg-gradient-to-r from-primary-500 via-primary-500 to-85% to-secondary-300;
-  @apply bg-[length:150%_150%] bg-[0px_0px];
+    @apply bg-gradient-to-r from-primary-500 via-primary-500 to-85% to-secondary-300;
+    @apply bg-[length:150%_150%] bg-[0px_0px];
 }
 
 .btn-primary:hover {
-  //@apply bg-[30%_30%];
-  @apply saturate-150 shadow-md shadow-gray-900/20;
+    //@apply bg-[30%_30%];
+    @apply saturate-150 shadow-md shadow-gray-900/20;
 }
 
 .btn-danger {
