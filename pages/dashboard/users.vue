@@ -22,9 +22,7 @@ const confirm2 = (event) => {
     acceptClass: 'p-button-danger p-button-sm',
     accept: () => {
       const selectedIds = selected.value.map(user => user.id);
-      selectedIds.forEach(id => {
-        userStore.deleteUser(id);
-      });
+      userStore.deleteUsers(selectedIds);
       selected.value = [];
     },
     reject: () => {
