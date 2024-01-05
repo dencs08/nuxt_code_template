@@ -59,7 +59,10 @@ const roles = reactive([
 ]);
 
 const submitForm = async (data) => {
-    await handleSubmit(userStore.addUser, data, 'User successfully added');
+    const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+    if (!response.errors) {
+        visible.value = false;
+    }
 }
 
 </script>
