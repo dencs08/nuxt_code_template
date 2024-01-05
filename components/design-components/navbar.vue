@@ -2,9 +2,9 @@
     <header class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white shadow"
         :class="{ '-translate-y-full': !showHeader }">
         <nav class="container mx-auto flex items-center justify-between py-5" aria-label="Global">
-                <NuxtLink :to="localePath('index')">
-                    <Logo type="logotype" color="black" class="h-5 w-auto" />
-                </NuxtLink>
+            <NuxtLink :to="localePath('index')">
+                <Logo type="logotype" color="black" class="h-5 w-auto" />
+            </NuxtLink>
             <div class="flex lg:hidden">
                 <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
                     @click="mobileMenuOpen = true">
@@ -13,14 +13,15 @@
                 </button>
             </div>
             <div class="hidden lg:flex items-center lg:gap-x-12">
-                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to" class="text-sm font-semibold leading-6 text-gray-900">
-                  {{ item.name }}
+                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
+                    class="text-sm font-semibold leading-6 text-gray-900">
+                    {{ item.name }}
                 </NuxtLink>
 
                 <NuxtLink :to="localePath('/login')">
-                  <Button size="xs">
-                    Login
-                  </Button>
+                    <MyButton size="xs">
+                        Login
+                    </MyButton>
                 </NuxtLink>
             </div>
         </nav>
@@ -41,7 +42,7 @@
                             <div class="space-y-2 py-6">
                                 <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 cursor-pointer">
-                                  {{ item.name }}
+                                    {{ item.name }}
                                 </NuxtLink>
                             </div>
                             <div class="py-6">
