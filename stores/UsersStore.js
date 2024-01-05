@@ -51,35 +51,26 @@ export const useUsersStore = defineStore({
         },
         async addUser(data) {
             this.loading = true;
-            const client = useSupabaseClient();
-
             try {
-                const { data: user, error: userError } = await client.auth.signUp({
-                    email: data.email,
-                    password: data.password,
-                    email_confirm: false,
-                    options: {
-                        data: {
-                            full_name: data.name,
-                            avatar_url: data.photo
-                        }
+                const { data: user, error: userError, pending: pending, refresh: refresh } = await useFetch('/api/create-user', {
+                    method: 'POST',
+                    body: {
+                        "email": data.email,
+                        "password": data.password,
+                        "role": data.role,
+                        "photo": data.photo,
+                        "name": data.name,
                     }
-                })
+                });
 
-                if (userError) {
-                    throw userError;
+                if (userError.value) {
+                    throw userError.value;
                 }
 
+                await pending.value;
+
+                console.log(user.value.data);
                 this.users.push(user.user);
-
-                const { error: roleError } = await client
-                    .from('user_roles')
-                    .update({ role: data.role })
-                    .eq('user_id', user.user.id)
-
-                if (roleError) {
-                    throw roleError;
-                }
 
             } catch (error) {
                 console.error(error);
@@ -91,20 +82,51 @@ export const useUsersStore = defineStore({
         async deleteUser(userId) {
             this.loading = true;
             try {
-                const client = useSupabaseClient();
-                // const { data: deleteResult, error: error } = await client.from('users').delete().eq('id', userId);
+                const { data, pending, error, refresh } = await useFetch('/api/delete-user', {
+                    method: 'POST',
+                    body: {
+                        "userId": userId
+                    }
+                })
 
-
-
-                if (error) {
-                    console.error(error);
-                    throw error;
+                if (error.value) {
+                    console.error(error.value);
+                    throw new Error('Failed to delete user');
                 }
 
                 this.users = this.users.filter(user => user.id !== userId);
-
+                console.log(data.value);
                 return { status: 'success' };
             } catch (error) {
+                console.error(error);
+                return { status: 'error', error };
+            } finally {
+                this.loading = false;
+            }
+        },
+        async deleteUsers(userIds) {
+            this.loading = true;
+            try {
+                for (let userId of userIds) {
+                    const { data, pending, error, refresh } = await useFetch('/api/delete-user', {
+                        method: 'POST',
+                        body: {
+                            "userId": userId
+                        }
+                    })
+
+                    if (error.value) {
+                        console.error(error.value);
+                        throw new Error(`Failed to delete user with id ${userId}`);
+                    }
+
+                    this.users = this.users.filter(user => user.id !== userId);
+                }
+
+                console.log('Delete operation completed');
+                return { status: 'success' };
+            } catch (error) {
+                console.error(error);
                 return { status: 'error', error };
             } finally {
                 this.loading = false;
@@ -129,7 +151,7 @@ export const useUsersStore = defineStore({
             await pending.value;
 
             if (updateError.value) {
-                throw new Error(updateError.value.message || 'Error updating user');
+                throw new Error('Error updating user');
             }
 
             this.loading = false;
