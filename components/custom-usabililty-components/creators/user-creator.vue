@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <Button icon="pi pi-plus" severity="success" @click="visible = true"></Button>
+            <Button label="Add" icon="pi pi-plus" severity="success" @click="visible = true" />
         </div>
 
         <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }"
@@ -39,7 +39,6 @@
 
             </div>
         </Dialog>
-
     </div>
 </template>
 

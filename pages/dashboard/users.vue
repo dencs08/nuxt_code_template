@@ -62,5 +62,32 @@ const confirm2 = (event) => {
       <Column field="created_at" header="Created at" :sortable="true" style="width: 20%"></Column>
       <Column field="role" header="Role" :sortable="true" style="width: 20%"></Column>
     </DataTable>
+
+    <div class="bg-primary-0 h-50 w-50">.</div>
+    <div class="bg-primary-50 h-50 w-50">.</div>
+    <div class="bg-primary-100 h-50 w-50">.</div>
+    <div class="bg-primary-200 h-50 w-50">.</div>
+    <div class="bg-primary-300 h-50 w-50">.</div>
+    <div class="bg-primary-400 h-50 w-50">.</div>
+    <div class="bg-primary-500 h-50 w-50">.</div>
+    <div class="bg-primary-600 h-50 w-50">.</div>
+    <div class="bg-primary-700 h-50 w-50">.</div>
+    <div class="bg-primary-800 h-50 w-50">.</div>
+    <div class="bg-primary-900 h-50 w-50">.</div>
+    <div class="bg-primary-950 h-50 w-50">.</div>
+
+    <div class="bg-secondary-0 h-50 w-50">.</div>
+    <div class="bg-secondary-50 h-50 w-50">.</div>
+    <div class="bg-secondary-100 h-50 w-50">.</div>
+    <div class="bg-secondary-200 h-50 w-50">.</div>
+    <div class="bg-secondary-300 h-50 w-50">.</div>
+    <div class="bg-secondary-400 h-50 w-50">.</div>
+    <div class="bg-secondary-500 h-50 w-50">.</div>
+    <div class="bg-secondary-600 h-50 w-50">.</div>
+    <div class="bg-secondary-700 h-50 w-50">.</div>
+    <div class="bg-secondary-800 h-50 w-50">.</div>
+    <div class="bg-secondary-900 h-50 w-50">.</div>
+    <div class="bg-secondary-950 h-50 w-50">.</div>
+
   </div>
 </template>

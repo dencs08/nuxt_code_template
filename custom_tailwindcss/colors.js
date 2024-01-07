@@ -22,11 +22,20 @@ export function generateColorVariants(colorDefinitions) {
             // Skip the iteration if i is not a multiple of 100, except for 0, 50 and 950
             if (i % 100 !== 0 && i !== 50 && i !== 950) continue;
 
-            // Adjust the factor calculation to take into account the new range of variant numbers
-            const factor = (500 - i) / 1000;
-            const r = Math.max(Math.min(Math.round(baseRgb[0] + 255 * factor), 255), 0);
-            const g = Math.max(Math.min(Math.round(baseRgb[1] + 255 * factor), 255), 0);
-            const b = Math.max(Math.min(Math.round(baseRgb[2] + 255 * factor), 255), 0);
+            let r, g, b;
+            if (i <= 500) {
+                // Interpolate the base color with white for variants 0 to 500
+                const whiteFactor = (500 - i) / 500 * 0.85; // limit to 80% white
+                r = Math.round(baseRgb[0] * (1 - whiteFactor) + 255 * whiteFactor);
+                g = Math.round(baseRgb[1] * (1 - whiteFactor) + 255 * whiteFactor);
+                b = Math.round(baseRgb[2] * (1 - whiteFactor) + 255 * whiteFactor);
+            } else {
+                // Interpolate the base color with black for variants 500 to 950
+                const blackFactor = (i - 500) / 450 * 0.85; // limit to 80% black
+                r = Math.round(baseRgb[0] * (1 - blackFactor));
+                g = Math.round(baseRgb[1] * (1 - blackFactor));
+                b = Math.round(baseRgb[2] * (1 - blackFactor));
+            }
 
             variants[`${colorName}-${i}`] = rgbToHex(r, g, b);
         }
