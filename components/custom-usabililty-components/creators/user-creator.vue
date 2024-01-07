@@ -1,6 +1,8 @@
 <template>
     <div>
-        <MyButton styling="success" @click="visible = true">Add User</MyButton>
+        <div>
+            <Button icon="pi pi-plus" severity="success" @click="visible = true"></Button>
+        </div>
 
         <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
