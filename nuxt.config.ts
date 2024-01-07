@@ -21,11 +21,7 @@ export default defineNuxtConfig({
     // pwa, //when using nuxt pwa module
     // auth, //when using nuxt auth module
 
-    css: [
-        "@/assets/css/main.css",
-        // '@sfxcode/formkit-primevue/dist/sass/formkit-prime-inputs.scss',
-        // '@sfxcode/formkit-primevue/dist/sass/formkit-primevue.scss'
-    ],
+    css: ["@/assets/css/main.css"],
 
     //for sitemap generation
     site: {
@@ -39,6 +35,8 @@ export default defineNuxtConfig({
     app: {
         pageTransition: { name: "page", mode: "out-in" },
     },
+
+    // ssr: false, //for static site generation
 
     // nitro: {
     //   prerender: {
@@ -61,8 +59,6 @@ export default defineNuxtConfig({
         // // Redirects legacy urls
         // '/old-page': { redirect: '/new-page' }
     },
-
-    // ssr: false,
 
     pinia: {
         autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
