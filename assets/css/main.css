@@ -2,9 +2,9 @@
 
 @import "./utilities.css";
 /* @import "./modified_primeVue_theme.css"; */
-@import "./primeVue_theme.css";
-@import "primevue/resources/themes/lara-light-green/theme.css";
-@import "primeicons/primeicons.css";
+/* @import "./primeVue_theme.css"; */
+/* @import "primevue/resources/themes/lara-light-green/theme.css"; */
+/* @import "primeicons/primeicons.css"; */
 @import "./formKit-PrimeVue-overrides.css";
 
 @tailwind base;

@@ -1,12 +1,13 @@
 // config/primevue.ts
-
+import path from "path";
 export default {
     options: {
         ripple: true,
-        // inputStyle: "outlined", //wont work until primevue tailwind installed (not all components are supported yet) + main.css primevuetheme
+        // inputStyle: "outlined",
         // cssLayerOrder: "reset,primevue",
-        unstyled: false,
+        unstyled: true,
     },
+    importPT: { from: "@/assets/primevue/lara" }, //import and apply preset
     components: {
         // prefix: "prime", //breaks sfxformkit componenets...
         include: "*",

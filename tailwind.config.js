@@ -8,6 +8,7 @@ const colorDefinitions = [
   { colorName: 'primary', mainHex: '#00ACD4' },
   { colorName: 'secondary', mainHex: '#0FB182' },
   { colorName: 'accent', mainHex: '#FFEA31' },
+  { colorName: 'surface', mainHex: '#ff8da1' },
   { colorName: 'dark', mainHex: '#575757' },
   { colorName: 'light', mainHex: '#E5E5E5' },
 ];
@@ -22,9 +23,10 @@ const screenSizes = {
 };
 
 const colorVariants = generateColorVariants(colorDefinitions);
-const fontSizeVariants = generateFontSizeVariants(1, 1.618);
+const fontSizeVariants = generateFontSizeVariants(1, 1.618); //scale the font with the golden ratio
 
 module.exports = {
+  darkMode: 'class',
   content: [
     "./components/**/*.{js,vue,ts}",
     "./containers/**/*.{js,vue,ts}",
@@ -32,6 +34,7 @@ module.exports = {
     "./pages/**/*.vue",
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
+    "./assets/primevue/**/*.{js,vue,ts}"
   ],
   corePlugins: {
     // ...

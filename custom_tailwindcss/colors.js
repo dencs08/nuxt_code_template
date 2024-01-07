@@ -17,8 +17,13 @@ export function generateColorVariants(colorDefinitions) {
     colorDefinitions.forEach(({ colorName, mainHex }) => {
         const baseRgb = hexToRgb(mainHex);
 
-        for (let i = 100; i <= 900; i += 100) {
-            const factor = (500 - i) / 800;
+        // Start from 0, end at 950, increment by 50
+        for (let i = 0; i <= 950; i += 50) {
+            // Skip the iteration if i is not a multiple of 100, except for 0, 50 and 950
+            if (i % 100 !== 0 && i !== 50 && i !== 950) continue;
+
+            // Adjust the factor calculation to take into account the new range of variant numbers
+            const factor = (500 - i) / 1000;
             const r = Math.max(Math.min(Math.round(baseRgb[0] + 255 * factor), 255), 0);
             const g = Math.max(Math.min(Math.round(baseRgb[1] + 255 * factor), 255), 0);
             const b = Math.max(Math.min(Math.round(baseRgb[2] + 255 * factor), 255), 0);
