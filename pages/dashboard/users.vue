@@ -39,10 +39,13 @@ const confirm2 = (event) => {
     <!--        </div>-->
     <Toolbar class="mb-4">
       <template #start>
-        <UserCreator class="mr-2" />
-        <MyButton label="Delete" styling="danger" @click="confirm2" :disabled="!selected || !selected.length">
-          Delete
-        </MyButton>
+        <div class="flex gap-2">
+          <UserCreator />
+          <Button label="Delete" severity="danger" @click="confirm2" :disabled="!selected || !selected.length">
+            Delete
+          </Button>
+
+        </div>
       </template>
       <template #end>
         <TestComponent />
