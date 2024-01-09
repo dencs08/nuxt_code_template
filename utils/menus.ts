@@ -1,103 +1,143 @@
 export function useNavigation() {
-    const localePath = useLocalePath()
+    const localePath = useLocalePath();
 
-    const navigation = computed(() => [
-        { name: 'Kontakt', to: localePath('/contact') },
-    ])
+    const navigation = computed(() => [{ name: "Kontakt", to: localePath("/contact") }]);
 
     const legal = computed(() => [
-        { name: 'Polityka prywatności', href: localePath('/privacy-policy') },
-        { name: 'Warunki korzystania', href: localePath('/terms-and-conditions') },
-        { name: 'Polityka ciasteczek', href: localePath('/cookies-policy')},
-        { name: 'Ustawienia ciasteczek', href: localePath('/contact') },
-    ])
+        { name: "Polityka prywatności", href: localePath("/privacy-policy") },
+        { name: "Warunki korzystania", href: localePath("/terms-and-conditions") },
+        { name: "Polityka ciasteczek", href: localePath("/cookies-policy") },
+        { name: "Ustawienia ciasteczek", href: localePath("/contact") },
+    ]);
 
     const social = computed(() => [
         {
-            name: 'Facebook',
-            href: '#',
-            icon: 'ic:round-facebook'
+            name: "Facebook",
+            href: "#",
+            icon: "ic:round-facebook",
         },
         {
-            name: 'Instagram',
-            href: '#',
-            icon:  'mdi:instagram'
+            name: "Instagram",
+            href: "#",
+            icon: "mdi:instagram",
         },
 
         {
-            name: 'LinkedIn',
-            href: '#',
-            icon:  'mdi:linkedin'
+            name: "LinkedIn",
+            href: "#",
+            icon: "mdi:linkedin",
         },
-    ])
+    ]);
 
-    const dashboardNavigation = computed(() =>[
+    const dashboardNavigation = computed(() => [
         {
-            name: 'Main',
+            label: "Main",
+            icon: "pi pi-home",
+            command: () => {
+                navigateTo(localePath("/dashboard/home"));
+            },
+            // items: [
+            //     {
+            //         label: "Dashboard",
+            //         icon: "pi pi-eraser",
+            //         command: () => {
+            //             navigateTo(localePath("/dashboard/home"));
+            //         },
+            //     },
+            // ],
+        },
+        {
+            label: "Marketing",
+            icon: "pi pi-percentage",
+            badge: 5,
             items: [
                 {
-                    name: 'Dashboard',
-                    to: localePath('/dashboard/home'),
-                    icon: 'ic:round-home'
-                },
-                {
-                    name: 'Reports',
-                    to: localePath('/dashboard/reports'),
-                    icon: 'ic:round-data-saver-off',
-                    children: [
+                    label: "Mail",
+                    icon: "pi pi-envelope",
+                    items: [
                         {
-                            name: 'test',
-                            to: localePath('/dashboard/reports/test')
+                            label: "Compose",
+                            icon: "pi pi-file-edit",
+                            shortcut: "⌘+N",
                         },
                         {
-                            name: 'test2',
-                            to: localePath('/dashboard/reports/test2')
-                        }
-                    ]
+                            label: "Inbox",
+                            icon: "pi pi-inbox",
+                            command: () => {
+                                navigateTo(localePath("/dashboard/marketing"));
+                            },
+                            badge: 5,
+                        },
+                        {
+                            label: "Sent",
+                            icon: "pi pi-send",
+                            // shortcut: "⌘+S",
+                        },
+                        {
+                            label: "Trash",
+                            icon: "pi pi-trash",
+                            // shortcut: "⌘+T",
+                        },
+                    ],
                 },
                 {
-                    name: 'Marketing',
-                    to: localePath('/dashboard/marketing'),
-                    icon: 'ic:round-people'
+                    label: "Reports",
+                    icon: "pi pi-chart-bar",
+                    items: [
+                        {
+                            label: "test",
+                            icon: "pi pi-briefcase",
+                            command: () => {
+                                navigateTo(localePath("/dashboard/reports/test"));
+                            },
+                        },
+                        {
+                            label: "test2",
+                            icon: "pi pi-briefcase",
+                            command: () => {
+                                navigateTo(localePath("/dashboard/reports/test2"));
+                            },
+                        },
+                    ],
                 },
-            ]
+            ],
         },
         {
-            name: 'Administrative',
+            label: "Administrative",
+            icon: "pi pi-home",
             items: [
                 {
-                    name: 'Users',
-                    to: localePath('/dashboard/users'),
-                    icon: 'ic:round-data-saver-off',
-                    children: [
-                        {
-                            name: 'Create user',
-                            to: localePath('/dashboard/users')
-                        },
-                    ]
+                    label: "Users",
+                    icon: "pi pi-users",
+                    command: () => {
+                        navigateTo(localePath("/dashboard/users"));
+                    },
                 },
-            ]
-        }
-    ])
+            ],
+        },
+    ]);
 
-    const dashboardSettings = computed(() =>[
+    const dashboardSettings = computed(() => [
         {
-            name: 'Settings',
+            label: "Settings",
+            icon: "pi pi-cog",
             items: [
                 {
-                    name: 'Settings',
-                    to: localePath('/dashboard/settings'),
-                    icon: 'ic:round-settings',
-                    children: [
-                        {
-                            name: 'Sample settings',
-                            to: localePath('/dashboard/settings')
-                        },
-                    ]
+                    label: "Some setting..",
+                    icon: "pi pi-cog",
+                    command: () => {
+                        navigateTo(localePath("/dashboard/settings"));
+                    },
                 },
-            ]
-        }
-    ])
+            ],
+        },
+    ]);
 
-    return { navigation, legal, social, dashboardNavigation, dashboardSettings }
+    return {
+        navigation,
+        legal,
+        social,
+        dashboardNavigation,
+        dashboardSettings,
+    };
 }
