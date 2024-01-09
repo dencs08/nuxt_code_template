@@ -5,10 +5,10 @@ import generateFontSizeVariants from './custom_tailwindcss/fontSizes.js';
 
 //!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
 const colorDefinitions = [
-  { colorName: 'primary', mainHex: '#00ACD4' },
+  { colorName: 'primary', mainHex: '#00ACD4' }, //color used in the primeVue components
   { colorName: 'secondary', mainHex: '#0FB182' },
   { colorName: 'accent', mainHex: '#FFEA31' },
-  { colorName: 'surface', mainHex: '#ff8da1' },
+  { colorName: 'surface', mainHex: '#225486' }, //color used in the primeVue components best if based on primary or secondary
   { colorName: 'dark', mainHex: '#575757' },
   { colorName: 'light', mainHex: '#E5E5E5' },
 ];
