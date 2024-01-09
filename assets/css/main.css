@@ -20,7 +20,7 @@ body {
 
 @layer base {
     body {
-        @apply h-full bg-gray-50 text-gray-900 font-body font-medium;
+        @apply h-full font-body font-medium;
     }
     h1 {
         @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
