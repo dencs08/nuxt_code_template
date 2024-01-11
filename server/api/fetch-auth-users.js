@@ -3,8 +3,6 @@ import { serverSupabaseUser } from "#supabase/server";
 
 export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
-    const user = serverSupabaseUser(event);
-
     await checkUserRole(event, client, "admin");
 
     let { data: authData, error: authError } = await client.auth.admin.listUsers();
