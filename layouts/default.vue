@@ -22,7 +22,7 @@ const title = computed(() => t('layouts.default.title', { title: t(route.meta.ti
     </template>
   </Head>
 
-  <Body>
+  <Body class="bg-gray-50 text-gray-900">
     <Navbar />
     <main>
       <slot />
