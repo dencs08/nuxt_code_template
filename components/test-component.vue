@@ -1,5 +1,4 @@
 <script setup>
-import { useUsersStore } from "~/stores/UsersStore";
 const userStore = useUsersStore();
 const { handleSubmit } = useSubmit();
 
@@ -14,8 +13,6 @@ const fetchUserSession = async () => {
 const fetchUsers = async () => {
     await handleSubmit(userStore.fetchUsers, {}, 'Users fetched');
 };
-
-const userSession = computed(() => userStore.getUserSession);
 </script>
 
 <template>
