@@ -12,7 +12,7 @@ export default {
             'p-0 m-0',
 
             // Colors
-            'bg-surface-0 dark:bg-surface-800',
+            'bg-surface-0 dark:bg-surface-900',
             'border-b-2 border-surface-200 dark:border-surface-700',
             'text-surface-900 dark:text-surface-0/80'
         ]
@@ -31,7 +31,7 @@ export default {
             'flex items-center',
 
             // Spacing
-            'p-5',
+            'py-2 px-4',
             '-mb-[2px]',
 
             // Shape
