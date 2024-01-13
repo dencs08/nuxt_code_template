@@ -1,11 +1,11 @@
 <template>
     <div>
         <div>
-            <Button label="Add" icon="pi pi-plus" severity="success" @click="visible = true" />
+            <Button label="Add" icon="pi pi-plus" severity="success" @click="visible = true;" />
         </div>
 
-        <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <Dialog v-model:visible="visible" maximizable header="Header" :style="{ width: '25rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" position="bottomleft">
             <template #header>
                 <div class="inline-flex align-items-center justify-content-center gap-2">
                     <span class="font-bold white-space-nowrap">Create a new user</span>
@@ -43,27 +43,13 @@
 </template>
 
 <script setup>
-import { useUsersStore } from "~/stores/UsersStore";
 const { handleSubmit } = useSubmit();
+const { roles } = useRoles();
 const userStore = useUsersStore();
-
 const visible = ref(false);
-const roles = reactive([
-    {
-        "label": "User",
-        "value": "user"
-    },
-    {
-        "label": "Admin",
-        "value": "admin"
-    }
-]);
 
 const submitForm = async (data) => {
     const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
-    if (!response.errors) {
-        visible.value = false;
-    }
 }
 
 </script>
