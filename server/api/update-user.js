@@ -2,24 +2,29 @@ import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server"
 
 export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
-    // const body = await readBody(event);
-    const userSession = await serverSupabaseUser(event);
+    const body = await readBody(event);
 
-    //Check if requested id is == to a user session.
-    // if (body.id != userSession.id) throw new Error('Error while checking the indentity. ' + body.id + " != " + userSession.id);
+    await checkUserRole(event, client, 'admin');
+
+    if (!body.id) {
+        throw new Error('Missing data for update');
+    }
 
     try {
         const { data, error } = await client
             .from('users')
             .upsert({
-                id: userSession.id,
-                name: userSession.user_metadata.full_name,
-                email: userSession.email,
-                phone: userSession.phone,
-                photo: userSession.user_metadata.avatar_url,
-                last_signin: userSession.last_sign_in_at
+                id: body.id,
+                name: body?.name,
+                email: body?.email,
+                phone: body?.phone,
+                // name: userSession.user_metadata.full_name,
+                // email: userSession.email,
+                // phone: userSession.phone,
+                // photo: userSession.user_metadata.avatar_url,
+                // last_signin: userSession.last_sign_in_at
             })
-            .eq('id', userSession.id) // Make sure to update only the logged-in user's data
+            .eq('id', body.id) // Make sure to update only the passed body.id
             .select();
 
         if (error) {
