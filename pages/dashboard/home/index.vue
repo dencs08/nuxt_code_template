@@ -20,10 +20,14 @@
                     <div class="flex gap-3 md:flex-wrap md:justify-center">
                         <NuxtLink v-for="action in quickActions" :to="action.link"
                             class="flex-none md:flex-grow md:w-1/3 xl:w-1/4">
-                            <Card class="flex flex-col md:flex-row items-center gap-2 text-white transition-colors"
-                                :styling="action.color">
-                                <Icon :name="action.icon" class="h-6 w-auto" />
-                                <p class="text-sm md:text-base">{{ action.title }}</p>
+                            <Card class="no-content border dark:border-surface-700 transition-colors">
+                                <template #title>
+                                    <div class="flex flex-col md:flex-row items-center gap-2">
+                                        <Icon :name="action.icon" class="h-6 w-auto transition-colors"
+                                            :class="action.color" />
+                                        <p class="text-sm md:text-base">{{ action.title }}</p>
+                                    </div>
+                                </template>
                             </Card>
                         </NuxtLink>
                     </div>
@@ -32,9 +36,37 @@
         </div>
 
         <div class="w-full lg:w-1/3">
-            <h2 class="text-db-h2">Actions</h2>
-            <Card class="w-full">
-                <!--                <Feed />-->
+
+            <Card class="w-full border dark:border-surface-700">
+                <template #title>
+                    <h2 class="text-db-h2">Feed</h2>
+                </template>
+                <template #content>
+                    <ScrollPanel style="width: 100%; height: 200px" :pt="{
+                        wrapper: {
+                            style: { 'border-right': 'rgb(var(--primary-400)/10%)' }
+                        },
+                        bary: 'relative z-20 w-[9px] top-0 rounded-full bg-surface-800 hover:bg-primary-500/50 cursor-pointer'
+                    }">
+                        <p>
+                            <!--                <Feed />-->
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis sed labore recusandae
+                            aspernatur, saepe, ab ut dolores nihil esse doloremque animi omnis quos fugiat? Quos quod at
+                            officiis hic accusamus? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eaque sit quis
+                            sed
+                            vero blanditiis beatae! Accusantium officiis laborum omnis molestias itaque, incidunt aperiam,
+                            quibusdam dignissimos voluptate exercitationem voluptatem iste iusto? Lorem ipsum dolor sit amet
+                            consectetur adipisicing elit. Eveniet minima earum tempore magnam, facilis saepe molestias
+                            temporibus cupiditate, eius ratione illo voluptatem amet expedita aut, pariatur dignissimos eos
+                            ex
+                            debitis? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus dicta ad
+                            dolorem
+                            possimus eum. Esse reprehenderit porro doloremque qui consectetur ducimus laboriosam, totam
+                            corporis
+                            odit impedit veritatis quidem, consequuntur ex.
+                        </p>
+                    </ScrollPanel>
+                </template>
             </Card>
         </div>
     </div>
@@ -95,19 +127,25 @@ const quickActions = [
     {
         title: "Add new user",
         icon: "ic:round-person-add",
-        color: "bg-primary-400 hover:bg-primary-500"
+        color: "text-primary-500 hover:text-primary-700"
         // link: "#",
     },
     {
         title: "Send emails",
         icon: "ic:round-mail",
-        color: "bg-secondary-700 hover:bg-secondary-800"
+        color: "text-secondary-500 hover:text-secondary-700"
         // link: "#",
     },
     {
         title: "Generate a report",
         icon: "ic:sharp-data-exploration",
-        color: "bg-primary-400 hover:bg-primary-500"
+        color: "text-primary-500 hover:text-primary-700"
+        // link: "#",
+    },
+    {
+        title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+        icon: "ic:sharp-data-exploration",
+        color: "text-secondary-500 hover:text-secondary-700"
         // link: "#",
     }
 ]
