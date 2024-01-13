@@ -34,13 +34,13 @@ body {
         @apply font-semibold font-heading;
     }
     h4 {
-        @apply text-xl;
+        @apply text-xl font-heading;
     }
     h5 {
-        @apply text-xl;
+        @apply text-xl font-heading;
     }
     h6 {
-        @apply text-xl;
+        @apply text-xl font-heading;
     }
 
     img {
