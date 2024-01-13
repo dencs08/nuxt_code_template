@@ -14,19 +14,27 @@ const props = defineProps({
 
 let resizeHandler
 
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+const isScrollable = computed(() => windowWidth.value <= props.breakpoint)
+
 onMounted(() => {
-  const windowWidth = ref(window.innerWidth)
-  const isScrollable = computed(() => windowWidth.value <= props.breakpoint)
+  if (typeof window !== 'undefined') {
+    resizeHandler = () => {
+      windowWidth.value = window.innerWidth
+    }
 
-  resizeHandler = () => {
-    windowWidth.value = window.innerWidth
+    window.addEventListener('resize', resizeHandler)
   }
-
-  window.addEventListener('resize', resizeHandler)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', resizeHandler)
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', resizeHandler)
+  }
+})
+
+defineExpose({
+  isScrollable
 })
 </script>
 
