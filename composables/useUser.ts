@@ -1,5 +1,6 @@
 export function useUser() {
     const client = useSupabaseClient();
+    const userAuthSession = useSupabaseUser();
 
     const userSession = async () => {
         interface User {
@@ -15,9 +16,8 @@ export function useUser() {
             const { data: user } = (await client
                 .from("users")
                 .select(`*, user_roles!inner(role)`)
-                .single()) as {
-                data: User | null;
-            };
+                .eq("id", userAuthSession.value.id)
+                .single()) as { data: User | null };
 
             if (user) {
                 user.role = user.user_roles.role;
