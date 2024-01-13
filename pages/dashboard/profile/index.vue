@@ -18,14 +18,17 @@
               submit-label="Save">
               <template #default="{ getNode }">
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                  <div class="col-span-2">
-                    <nuxt-img src="https://primefaces.org/cdn/primevue/images/organization/walter.jpg"
-                      class="h-auto w-28 rounded"></nuxt-img>
+                  <div class="col-span-2 flex gap-5 items-center mb-2">
+                    <div
+                      class="border border-surface-300 dark:border-surface-600 rounded h-auto w-28 overflow-hidden object-cover shadow-lg">
+                      <nuxt-img src="https://primefaces.org/cdn/primevue/images/organization/walter.jpg"
+                        class="h-full w-full"></nuxt-img>
+                    </div>
                     <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
                       @upload="onUpload" chooseLabel="Avatar" :pt="{
                         content: { class: 'surface-ground' },
                         button: { class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' },
-                        input: { class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' }
+                        input: { class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' },
                       }" />
                   </div>
                   <FormKit class="w-full" type='primeInputText' name='firstname' validation='required'
