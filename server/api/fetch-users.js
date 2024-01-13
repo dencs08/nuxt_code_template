@@ -4,16 +4,16 @@ export default eventHandler(async (event) => {
     const client = await serverSupabaseClient(event);
     let users = [];
 
-    await checkUserRole(event, client, "admin");
+    await checkUserRole(event, client, "user"); //ensure user has a role of "user" and supabase RLS manages access to the users table
 
     let { data, error } = await client
         .from('users')
         .select(`
-                        *,
-                        user_roles (
-                            role
-                        )
-                    `);
+            *,
+            user_roles (
+                role
+            )
+        `);
 
     users = await data.map(user => {
         const newUser = {

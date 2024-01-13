@@ -7,8 +7,11 @@ export default eventHandler(async (event) => {
 
     await checkUserRole(event, client, 'admin');
 
+    if (!body.role || !body.id) {
+        throw new Error('Missing required data');
+    }
     if (!validRoles.map(role => role.value).includes(body.role)) {
-        throw new Error('Invalid role', role);
+        throw new Error('Invalid or missing data', role);
     }
 
     try {
@@ -26,6 +29,6 @@ export default eventHandler(async (event) => {
         }
         return { response: 'User role updated' };
     } catch (err) {
-        return { error: 'An error occurred during the update process', response: error };
+        throw new Error('An error occurred during the update process');
     }
 });
