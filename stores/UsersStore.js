@@ -8,43 +8,37 @@ export const useUsersStore = defineStore({
     }),
 
     getters: {
-        userEmails(state) {
-            return state.users ? state.users.email : 'No email provided.';
-        },
         totalCount(state) {
             return state.users.length;
         },
         getUserSession: (state) => {
             return state.userSession;
+        },
+        firstName: (state) => {
+            return state.userSession ? state.userSession.name.split(' ')[0] : null;
+        },
+        lastName: (state) => {
+            const nameParts = state.userSession ? state.userSession.name.split(' ') : [];
+            return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
         }
     },
 
     actions: {
         async fetchUsers() {
             this.loading = true;
-            const client = useSupabaseClient();
 
             try {
-                let { data: userData, error: userError } = await client
-                    .from('users')
-                    .select(`
-                        *,
-                        user_roles (
-                            role
-                        )
-                    `);
+                const { data: users, pending, error, refresh } = await useFetch('/api/fetch-users')
 
-                if (userError) {
-                    throw userError;
+                if (error.value) {
+                    console.error(error);
+                    throw new Error('Failed to fetch users');
                 }
 
-                this.users = userData.map(user => ({
-                    ...user,
-                    role: user.user_roles ? user.user_roles.role : 'No role assigned',
-                }));
-
+                this.users = users.value;
             } catch (error) {
                 console.error(error);
+                throw new Error('Failed to fetch users');
             } finally {
                 this.loading = false;
             }
@@ -64,17 +58,17 @@ export const useUsersStore = defineStore({
                 });
 
                 if (userError.value) {
-                    throw userError.value;
+                    throw new Error(`Failed to create a user`);
                 }
 
                 await pending.value;
 
-                console.log(user.value.data);
+                // console.log(user.value.data);
                 this.users.push(user.user);
 
             } catch (error) {
                 console.error(error);
-                throw error;
+                throw new Error(`Failed to create a user`);
             } finally {
                 this.loading = false;
             }
@@ -90,7 +84,7 @@ export const useUsersStore = defineStore({
                 })
 
                 if (error.value) {
-                    console.error(error.value);
+                    // console.error(error);
                     throw new Error('Failed to delete user');
                 }
 
@@ -99,7 +93,7 @@ export const useUsersStore = defineStore({
                 return { status: 'success' };
             } catch (error) {
                 console.error(error);
-                return { status: 'error', error };
+                throw new Error(`Failed to delete user`);
             } finally {
                 this.loading = false;
             }
@@ -116,7 +110,7 @@ export const useUsersStore = defineStore({
                     })
 
                     if (error.value) {
-                        console.error(error.value);
+                        console.error(error);
                         throw new Error(`Failed to delete user with id ${userId}`);
                     }
 
@@ -127,48 +121,72 @@ export const useUsersStore = defineStore({
                 return { status: 'success' };
             } catch (error) {
                 console.error(error);
-                return { status: 'error', error };
+                throw new Error(`Failed to delete user`);
             } finally {
                 this.loading = false;
             }
         },
-        async updateUser(data) {
+        async updateUser(index, data) {
             this.loading = true;
-            const client = useSupabaseClient();
-            const { data: sessionData, error: sessionError } = await client.auth.getSession();
-
-            if (sessionError || !sessionData || !sessionData.session || !sessionData.session.access_token) {
-                throw new Error(sessionError || 'Invalid session data');
-            }
-
-            const { data: updateData, pending, error: updateError, refresh } = useFetch('/api/update-user', {
-                method: 'POST',
-                body: {
-                    "token": sessionData.session.access_token
+            this.updateLocalUsers(index, data);
+            try {
+                const { data: updateData, pending, error: updateError, refresh } = useFetch('/api/update-user', {
+                    method: 'POST',
+                    body: {
+                        id: data.id,
+                        name: data?.name,
+                        email: data?.email,
+                        phone: data?.phone,
+                        photo: data?.photo,
+                    }
+                });
+                if (updateError.value) {
+                    throw new Error('Error updating user');
                 }
-            });
 
-            await pending.value;
-
-            if (updateError.value) {
+            } catch (error) {
                 throw new Error('Error updating user');
+            } finally {
+                this.loading = false;
+                // return updateData.value || 'User updated successfully';
             }
-
-            this.loading = false;
-            // return updateData.value || 'User updated successfully';
+        },
+        async updateRole(index, data) {
+            this.loading = true;
+            this.updateLocalUsers(index, data);
+            try {
+                const { data: updateData, pending, error: updateError, refresh } = useFetch('/api/update-role', {
+                    method: 'POST',
+                    body: {
+                        id: data.id,
+                        role: data.role,
+                    }
+                });
+                if (updateError.value) {
+                    throw new Error('Error updating role');
+                }
+            } catch (error) {
+                throw new Error('Error updating role');
+            } finally {
+                this.loading = false;
+            }
         },
         async fetchUserSession() {
             this.loading = true;
-            const { userSession } = useUser();
             try {
+                const { userSession } = useUser();
                 const user = await userSession();
                 this.userSession = user;
             } catch (error) {
                 console.error('Error in fetchAuthenticatedUser:', error);
                 this.userSession = null;
+                throw new Error('Error fetching the user session');
             } finally {
                 this.loading = false;
             }
+        },
+        async updateLocalUsers(index, data) {
+            this.users[index] = data;
         }
     }
 });
