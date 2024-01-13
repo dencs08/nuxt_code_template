@@ -22,9 +22,23 @@ export function useRoles() {
         selectedRole.value = role;
     };
 
+    const getRoleSeverity = (roleValue: string) => {
+        switch (roleValue) {
+            case "user":
+                return "info";
+            case "admin":
+                return "warning";
+            case "superadmin":
+                return "danger";
+            default:
+                return null;
+        }
+    };
+
     return {
         roles: readonly(roles),
         selectedRole: readonly(selectedRole),
         selectRole,
+        getRoleSeverity,
     };
 }
