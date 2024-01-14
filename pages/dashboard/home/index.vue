@@ -13,7 +13,6 @@
                 </div>
             </div>
 
-            <!--            <TableApplicants :recent="true" />-->
             <div class="space-y-2">
                 <h2 class="text-db-h2">Quick Actions</h2>
                 <HorizontalScroller :breakpoint="768">
@@ -43,10 +42,7 @@
                 </template>
                 <template #content>
                     <ScrollPanel style="width: 100%; height: 200px" :pt="{
-                        wrapper: {
-                            style: { 'border-right': 'rgb(var(--primary-400)/10%)' }
-                        },
-                        bary: 'relative z-20 w-[9px] top-0 rounded-full bg-surface-800 hover:bg-primary-500/50 cursor-pointer'
+                        bary: 'relative z-20 w-[9px] top-0 rounded-full bg-surface-200/40 dark:bg-surface-700 hover:bg-primary-500/25 hover:dark:bg-surface-600 cursor-pointer transition-colors'
                     }">
                         <p>
                             <!--                <Feed />-->
