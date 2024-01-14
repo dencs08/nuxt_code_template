@@ -66,7 +66,7 @@ const { handleSubmit } = useSubmit();
 const { getRoleSeverity } = useRoles();
 const { hasAccess } = useRoleCheck('admin');
 const userStore = useUsersStore();
-await userStore.fetchUsers();
+userStore.fetchUsers();
 
 const editingRows = ref([]);
 const selected = ref();
