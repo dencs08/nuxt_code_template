@@ -14,7 +14,7 @@
           </div>
 
           <div class="col-span-3 md:col-span-2">
-            <FormWrapper :handleSubmit="submitForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+            <FormWrapper :handleSubmit="onProfileChange" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
               submit-label="Save">
               <template #default="{ getNode }">
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -60,7 +60,7 @@
           </div>
 
           <div class="col-span-3 md:col-span-2">
-            <FormWrapper :handleSubmit="submitForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+            <FormWrapper :handleSubmit="onPasswordChange" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
               submit-label="Change password">
               <template #default="{ getNode }">
                 <div class="space-y-3 mb-4">
@@ -86,7 +86,7 @@
           </div>
 
           <div class="col-span-3 md:col-span-2">
-            <FormWrapper :handleSubmit="submitForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+            <FormWrapper :handleSubmit="onLogOut" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
               submit-label="Log out">
               <template #default="{ getNode }">
                 <div class="space-y-3 mb-4">
@@ -144,7 +144,15 @@ const items = ref([
   },
 ]);
 
-const submitForm = async (data: any) => {
+const onLogOut = async (data: any) => {
+  // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+}
+
+const onProfileChange = async (data: any) => {
+  // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+}
+
+const onPasswordChange = async (data: any) => {
   // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
 }
 
