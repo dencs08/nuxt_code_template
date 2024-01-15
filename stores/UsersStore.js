@@ -22,20 +22,14 @@ export const useUsersStore = defineStore({
             return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
         }
     },
-
+    //TODO fix on refresh doesnt fetch the users 
     actions: {
         async fetchUsers() {
             this.loading = true;
 
             try {
-                const { data: users, pending, error, refresh } = await useFetch('/api/fetch-users')
-
-                if (error.value) {
-                    console.error(error);
-                    throw new Error('Failed to fetch users');
-                }
-
-                this.users = users.value;
+                const { data } = await useAsyncData('item', () => $fetch('/api/fetch-users'))
+                this.users = data.value;
             } catch (error) {
                 console.error(error);
                 throw new Error('Failed to fetch users');
@@ -43,29 +37,20 @@ export const useUsersStore = defineStore({
                 this.loading = false;
             }
         },
-        async addUser(data) {
+        async addUser(req) {
             this.loading = true;
             try {
-                const { data: user, error: userError, pending: pending, refresh: refresh } = await useFetch('/api/create-user', {
+                const { data } = await $fetch('/api/create-user', {
                     method: 'POST',
                     body: {
-                        "email": data.email,
-                        "password": data.password,
-                        "role": data.role,
-                        "photo": data.photo,
-                        "name": data.name,
+                        "email": req.email,
+                        "password": req.password,
+                        "role": req.role,
+                        "photo": req.photo,
+                        "name": req.name,
                     }
                 });
-
-                if (userError.value) {
-                    throw new Error(`Failed to create a user`);
-                }
-
-                await pending.value;
-
-                // console.log(user.value.data);
-                this.users.push(user.user);
-
+                this.users.push(data.user);
             } catch (error) {
                 console.error(error);
                 throw new Error(`Failed to create a user`);
@@ -76,20 +61,14 @@ export const useUsersStore = defineStore({
         async deleteUser(userId) {
             this.loading = true;
             try {
-                const { data, pending, error, refresh } = await useFetch('/api/delete-user', {
+                const { data } = await $fetch('/api/delete-user', {
                     method: 'POST',
                     body: {
                         "userId": userId
                     }
                 })
 
-                if (error.value) {
-                    // console.error(error);
-                    throw new Error('Failed to delete user');
-                }
-
                 this.users = this.users.filter(user => user.id !== userId);
-                console.log(data.value);
                 return { status: 'success' };
             } catch (error) {
                 console.error(error);
@@ -102,18 +81,12 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 for (let userId of userIds) {
-                    const { data, pending, error, refresh } = await useFetch('/api/delete-user', {
+                    const { data } = await $fetch('/api/delete-user', {
                         method: 'POST',
                         body: {
                             "userId": userId
                         }
                     })
-
-                    if (error.value) {
-                        console.error(error);
-                        throw new Error(`Failed to delete user with id ${userId}`);
-                    }
-
                     this.users = this.users.filter(user => user.id !== userId);
                 }
 
@@ -126,23 +99,20 @@ export const useUsersStore = defineStore({
                 this.loading = false;
             }
         },
-        async updateUser(index, data) {
+        async updateUser(index, req) {
             this.loading = true;
-            this.updateLocalUsers(index, data);
             try {
-                const { data: updateData, pending, error: updateError, refresh } = useFetch('/api/update-user', {
+                this.updateLocalUsers(index, req);
+                const { data } = $fetch('/api/update-user', {
                     method: 'POST',
                     body: {
-                        id: data.id,
-                        name: data?.name,
-                        email: data?.email,
-                        phone: data?.phone,
-                        photo: data?.photo,
+                        id: req.id,
+                        name: req?.name,
+                        email: req?.email,
+                        phone: req?.phone,
+                        photo: req?.photo,
                     }
                 });
-                if (updateError.value) {
-                    throw new Error('Error updating user');
-                }
 
             } catch (error) {
                 throw new Error('Error updating user');
@@ -151,20 +121,17 @@ export const useUsersStore = defineStore({
                 // return updateData.value || 'User updated successfully';
             }
         },
-        async updateRole(index, data) {
+        async updateRole(index, req) {
             this.loading = true;
-            this.updateLocalUsers(index, data);
             try {
-                const { data: updateData, pending, error: updateError, refresh } = useFetch('/api/update-role', {
+                this.updateLocalUsers(index, req);
+                const { data } = $fetch('/api/update-role', {
                     method: 'POST',
                     body: {
-                        id: data.id,
-                        role: data.role,
+                        id: req.id,
+                        role: req.role,
                     }
                 });
-                if (updateError.value) {
-                    throw new Error('Error updating role');
-                }
             } catch (error) {
                 throw new Error('Error updating role');
             } finally {
