@@ -30,7 +30,7 @@ export default eventHandler(async (event) => {
             throw new Error('Error updating the role: ' + error.message);
         }
 
-        return { response: 'User created', data: data.user.id, body: body.role };
+        return { response: 'User created', data: data };
     } catch (err) {
         return { error: 'An error occurred during the creation process', response: err.message };
     }
