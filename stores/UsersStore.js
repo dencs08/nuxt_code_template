@@ -22,7 +22,8 @@ export const useUsersStore = defineStore({
             return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
         }
     },
-    //TODO fix on refresh doesnt fetch the users 
+    //TODO fix on refresh doesnt fetch the users
+    //TODO check error handling and maybe use useSubmit wrapper around all of the calls to the api
     actions: {
         async fetchUsers() {
             this.loading = true;
