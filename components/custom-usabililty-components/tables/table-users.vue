@@ -28,23 +28,27 @@
         </template>
 
         <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-        <Column field="name" header="Name" :sortable="true" style="width: 15%">
+        <Column field="name" header="Name" :sortable="true" style="width: 17.5%">
             <template #editor="{ data, field }">
                 <InputText size="small" v-model="data[field]" />
             </template>
         </Column>
-        <Column field="email" header="Email" :sortable="true" style="width: 25%">
+        <Column field="email" header="Email" :sortable="true" style="width: 27.5%">
             <template #editor="{ data, field }">
                 <InputText size="small" v-model="data[field]" />
             </template>
         </Column>
-        <Column field="phone" header="Phone" :sortable="true" style="width: 20%">
+        <Column field="phone" header="Phone" :sortable="true" style="width: 15%">
             <template #editor="{ data, field }">
                 <InputText size="small" v-model="data[field]" />
             </template>
         </Column>
-        <Column field="created_at" header="Created at" :sortable="true" style="width: 20%"></Column>
-        <Column field="role" header="Role" :sortable="true" style="width: 20%">
+        <Column field="created_at" header="Created at" :sortable="true" style="width: 25%">
+            <template #body="{ data }">
+                <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ formatDate(data.created_at) }}</span>
+            </template>
+        </Column>
+        <Column field="role" header="Role" :sortable="true" style="width: 15%">
             <template #body="{ data }">
                 <Tag v-if="data?.role" :value="data?.role" :severity="getRoleSeverity(data?.role)" />
             </template>
@@ -66,11 +70,11 @@ const { handleSubmit } = useSubmit();
 const { getRoleSeverity } = useRoles();
 const { hasAccess } = useRoleCheck('admin');
 const userStore = useUsersStore();
-userStore.fetchUsers();
 
 const editingRows = ref([]);
 const selected = ref();
 const changesMade = ref(false);
+let originalUsers = ref([]);
 
 const onRowEditSave = async (event) => {
     let { newData, index } = event;
@@ -80,20 +84,41 @@ const onRowEditSave = async (event) => {
 
 const fetchUsers = async () => {
     await handleSubmit(userStore.fetchUsers, {}, 'Users fetched');
+    originalUsers.value = JSON.parse(JSON.stringify(userStore.users));
     changesMade.value = false;
 };
+fetchUsers();
 
 const updateUsers = async () => {
-    for (let i = 0; i < userStore.users.length; i++) {
-        const user = userStore.users[i];
-        await userStore.updateUser(i, user);
-        await userStore.updateRole(i, user);
+    const changedUsers = changes.value;
+    for (let i = 0; i < changedUsers.length; i++) {
+        const { userName, email, changes: userChanges } = changedUsers[i];
+        const userIndex = userStore.users.findIndex(user => user.name === userName && user.email === email);
+        if (userIndex !== -1) {
+            const user = userStore.users[userIndex];
+            let roleChanged = false;
+            let otherChanged = false;
+            for (let j = 0; j < userChanges.length; j++) {
+                const { key, newValue } = userChanges[j];
+                user[key] = newValue;
+                if (key === 'role') {
+                    roleChanged = true;
+                } else {
+                    otherChanged = true;
+                }
+            }
+            if (otherChanged) {
+                await userStore.updateUser(userIndex, user);
+            }
+            if (roleChanged) {
+                await userStore.updateRole(userIndex, user);
+            }
+        }
     }
     changesMade.value = false;
     originalUsers.value = JSON.parse(JSON.stringify(userStore.users));
 };
 
-const originalUsers = ref(JSON.parse(JSON.stringify(userStore.users)));
 const changes = computed(() => {
     return userStore.users
         .map((user, index) => {
@@ -129,6 +154,18 @@ const confirmSaveChanges = () => {
             showToastOnAccept: true,
             showToastOnReject: false,
         }, "changes");
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
 };
 
 </script>
