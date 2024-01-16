@@ -10,7 +10,7 @@ const title = computed(() => t('layouts.default.title', { title: t(route.meta.ti
 
 const html = ref();
 onMounted(() => {
-  console.log(html.value.$el.ownerDocument.children[0].classList.remove('dark'));
+  html.value.$el.ownerDocument.children[0].classList.remove('dark')
 });
 
 </script>
