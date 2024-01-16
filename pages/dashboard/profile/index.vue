@@ -1,6 +1,5 @@
 <template>
-  <div class="mt-4">
-    <TabMenu :model="items" />
+  <div>
     <div class="mt-5">
       <h2 class="text-db-h2">Your profile</h2>
       <NuxtLink :to="localePath('/dashboard/profile/update-password')" class="link-primary">Password reset</NuxtLink>
@@ -126,23 +125,6 @@ definePageMeta({
 const localePath = useLocalePath()
 const userStore = useUsersStore();
 const userSession = userStore.getUserSession;
-
-const items = ref([
-  {
-    label: 'Account',
-    icon: 'pi pi-user',
-    command: () => {
-      // toast.add({ severity: 'success', summary: 'Selected', detail: 'Dashboard', life: 3000 });
-    }
-  },
-  {
-    label: 'Actions',
-    icon: 'pi pi-chart-line',
-    command: () => {
-      // toast.add({ severity: 'success', summary: 'Selected', detail: 'Transactions', life: 3000 });
-    }
-  },
-]);
 
 const onLogOut = async (data: any) => {
   // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
