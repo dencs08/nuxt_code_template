@@ -1,17 +1,17 @@
 <template>
-    <DataTable :value="userStore?.users" v-model:selection="selected" v-model:editingRows="editingRows"
-        :loading="userStore?.loading" v-model:filters="filters" dataKey="id" tableStyle="min-width: 50rem;" removableSort
-        editMode="row" @row-edit-save="onRowEditSave" paginator :rows="10"
-        :globalFilterFields="['name', 'email', 'phone', 'role']" size="small">
+    <DataTable ref="dt" :value="userStore?.users" v-model:selection="selected" v-model:editingRows="editingRows"
+        :loading="userStore?.loading" v-model:filters="filters" dataKey="id" tableStyle="min-width: 50rem;" editMode="row"
+        @row-edit-save="onRowEditSave" :rows="10" :globalFilterFields="['name', 'email', 'phone', 'role']" size="small"
+        removableSort stripedRows paginator>
 
         <template #header>
             <div class="flex justify-between items-center">
-                <div v-if="hasAccess" class="flex gap-2 w-full items-center">
+                <div v-auto-animate v-if="hasAccess" class="flex gap-2 w-full items-center">
                     <UserCreator />
                     <Button label="Delete" severity="danger" @click="confirmDeleteUsers"
-                        :disabled="!selected || !selected.length" />
+                        :disabled="!selected || !selected.length" v-if="selected" />
                     <Button size="small" v-tooltip.top="'Save changes'" @click="confirmSaveChanges" icon="pi pi-save"
-                        class="!p-2" :disabled="!changesMade" />
+                        class="!p-2" :disabled="!changesMade" v-if="changesMade" />
                 </div>
                 <div class="flex justify-between gap-3" :class="!hasAccess ? 'w-full' : ''">
                     <span class="relative">
@@ -19,6 +19,10 @@
                         <InputText v-model="filters['global'].value" placeholder="Keyword Search"
                             class="pl-10 font-normal" />
                     </span>
+                    <div class="grid place-content-center">
+                        <Button size="small" class="pi pi-external-link text-surface-700 dark:text-surface-100"
+                            v-tooltip.left="'Export table to CSV'" @click="exportCSV($event)" />
+                    </div>
                     <div class="grid place-content-center">
                         <Button size="small" v-tooltip.left="'Refresh users table'" @click="fetchUsers"
                             class="pi pi-refresh text-surface-700 dark:text-surface-100" />
@@ -71,6 +75,7 @@ const { getRoleSeverity } = useRoles();
 const { hasAccess } = useRoleCheck('admin');
 const userStore = useUsersStore();
 
+const dt = ref();
 const editingRows = ref([]);
 const selected = ref();
 const changesMade = ref(false);
@@ -168,6 +173,10 @@ const formatDate = (dateString) => {
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
     return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+};
+
+const exportCSV = () => {
+    dt.value.exportCSV();
 };
 
 </script>
