@@ -25,14 +25,13 @@ export const useUsersStore = defineStore({
         }
     },
 
-    //TODO check error handling and maybe use useSubmit wrapper around all of the calls to the api
     actions: {
         async fetchUsers() {
             this.loading = true;
 
             try {
-                const { data } = await useAsyncData('item', () => $fetch('/api/fetch-users'))
-                this.users = data.value;
+                const data = await $fetch('/api/fetch-users')
+                this.users = data;
             } catch (error) {
                 console.error(error);
                 throw new CustomError('Failed to fetch users', error);
