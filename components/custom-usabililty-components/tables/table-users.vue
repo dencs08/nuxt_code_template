@@ -76,6 +76,10 @@ const selected = ref();
 const changesMade = ref(false);
 let originalUsers = ref([]);
 
+onMounted(() => {
+    fetchUsers();
+})
+
 const onRowEditSave = async (event) => {
     let { newData, index } = event;
     userStore.updateLocalUsers(index, newData);
@@ -87,7 +91,6 @@ const fetchUsers = async () => {
     originalUsers.value = JSON.parse(JSON.stringify(userStore.users));
     changesMade.value = false;
 };
-fetchUsers();
 
 const updateUsers = async () => {
     const changedUsers = changes.value;
@@ -132,7 +135,6 @@ const changes = computed(() => {
         .filter(user => user.changes.length > 0);
 });
 
-//TODO add a confirm dialog composable for easier use + toast after success / error
 const { confirmAction } = useConfirmation();
 const confirmDeleteUsers = (event) => {
     confirmAction(async () => {
@@ -159,7 +161,7 @@ const confirmSaveChanges = () => {
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
