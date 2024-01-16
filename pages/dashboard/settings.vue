@@ -1,7 +1,16 @@
 <template>
     <div class="flex">
-        <Card>
-            <!-- <Switch label="Use dark mode" /> -->
+        <Card class="">
+            <template #header>
+                <div class="pt-5 px-5">
+                    <h4>Dark mode</h4>
+                </div>
+            </template>
+            <template #content>
+                <div class="-pt-5">
+                    <ColorModeSelector />
+                </div>
+            </template>
         </Card>
     </div>
 </template>
@@ -9,8 +18,4 @@
 definePageMeta({
     layout: "dashboard",
 });
-
-// const isDark = useDark();
-// const toggleDark = useToggle(isDark)
-
 </script>
