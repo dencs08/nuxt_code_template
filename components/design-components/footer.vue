@@ -6,7 +6,7 @@
         <div class="h-auto w-24">
           <Logo />
         </div>
-        <LangSwitcher />
+        <I18nDropdown />
       </div>
       <hr class="w-full text-black my-10" />
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
@@ -25,12 +25,17 @@
         </div>
         <div class="mt-10 xl:mt-0">
           <h3 class="text-sm font-semibold leading-6 text-gray-900">Newsteller</h3>
-          <p class="mt-2 text-sm leading-6 text-gray-600">Najnowsze wiadomości, informacje z IT, oferty pracy i
+          <p class="mt-2 text-sm leading-6 text-gray-600 mb-3">Najnowsze wiadomości, informacje z IT, oferty pracy i
             kursy.</p>
-          <form class="mt-6 space-y-2 max-w-md">
-            <InputCustom name="email" label="Email" />
-            <MyButton type="submit" class="xl:w-1/2" size="xs">Zapisz się</MyButton>
-          </form>
+          <FormWrapper :handleSubmit="onSubmit" :submit-attrs="{ inputClass: 'w-full sm:w-auto md:w-1/2 btn-primary' }"
+            submit-label="Sign in">
+            <template #default="{ getNode }">
+              <div class="mb-1.5">
+                <FormKit class="w-full" type='primeInputText' name='email' validation='required' placeholder='Email'
+                  @node="getNode" />
+              </div>
+            </template>
+          </FormWrapper>
         </div>
       </div>
       <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
@@ -79,4 +84,8 @@ const links = ref(
 );
 
 links.value.legal = legal.value;
+
+const onSubmit = async (data) => {
+  // const response = await handleSubmit(authStore.logout, data, 'User successfully logged out');
+}
 </script>
