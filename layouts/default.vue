@@ -7,10 +7,16 @@ const head = useLocaleHead({
   addSeoAttributes: true
 })
 const title = computed(() => t('layouts.default.title', { title: t(route.meta.title ?? 'TBD') }))
+
+const html = ref();
+onMounted(() => {
+  console.log(html.value.$el.ownerDocument.children[0].classList.remove('dark'));
+});
+
 </script>
 
 <template>
-  <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
+  <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" ref="html">
 
   <Head>
     <Title>{{ title }}</Title>
