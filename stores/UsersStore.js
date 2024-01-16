@@ -1,3 +1,5 @@
+const { CustomError } = useCustomError();
+
 export const useUsersStore = defineStore({
     id: 'usersStore',
 
@@ -22,7 +24,7 @@ export const useUsersStore = defineStore({
             return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
         }
     },
-    //TODO fix on refresh doesnt fetch the users
+
     //TODO check error handling and maybe use useSubmit wrapper around all of the calls to the api
     actions: {
         async fetchUsers() {
@@ -33,7 +35,7 @@ export const useUsersStore = defineStore({
                 this.users = data.value;
             } catch (error) {
                 console.error(error);
-                throw new Error('Failed to fetch users');
+                throw new CustomError('Failed to fetch users', error);
             } finally {
                 this.loading = false;
             }
@@ -54,7 +56,7 @@ export const useUsersStore = defineStore({
                 this.users.push(data.user);
             } catch (error) {
                 console.error(error);
-                throw new Error(`Failed to create a user`);
+                throw new CustomError('Failed to create a user', error);
             } finally {
                 this.loading = false;
             }
@@ -73,7 +75,7 @@ export const useUsersStore = defineStore({
                 return { status: 'success' };
             } catch (error) {
                 console.error(error);
-                throw new Error(`Failed to delete user`);
+                throw new CustomError('Failed to delete user', error);
             } finally {
                 this.loading = false;
             }
@@ -95,7 +97,7 @@ export const useUsersStore = defineStore({
                 return { status: 'success' };
             } catch (error) {
                 console.error(error);
-                throw new Error(`Failed to delete user`);
+                throw new CustomError('Failed to delete user', error);
             } finally {
                 this.loading = false;
             }
@@ -104,7 +106,7 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 this.updateLocalUsers(index, req);
-                const { data } = $fetch('/api/update-user', {
+                const { data } = await $fetch('/api/update-user', {
                     method: 'POST',
                     body: {
                         id: req.id,
@@ -116,7 +118,7 @@ export const useUsersStore = defineStore({
                 });
 
             } catch (error) {
-                throw new Error('Error updating user');
+                throw new CustomError('Error updating user', error);
             } finally {
                 this.loading = false;
                 // return updateData.value || 'User updated successfully';
@@ -126,7 +128,7 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 this.updateLocalUsers(index, req);
-                const { data } = $fetch('/api/update-role', {
+                const { data } = await $fetch('/api/update-role', {
                     method: 'POST',
                     body: {
                         id: req.id,
@@ -134,7 +136,8 @@ export const useUsersStore = defineStore({
                     }
                 });
             } catch (error) {
-                throw new Error('Error updating role');
+                throw new CustomError('Error updating role', error);
+
             } finally {
                 this.loading = false;
             }
@@ -148,7 +151,7 @@ export const useUsersStore = defineStore({
             } catch (error) {
                 console.error('Error in fetchAuthenticatedUser:', error);
                 this.userSession = null;
-                throw new Error('Error fetching the user session');
+                throw new CustomError('Error fetching the user session', error);
             } finally {
                 this.loading = false;
             }
