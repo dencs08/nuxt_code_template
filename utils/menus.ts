@@ -1,3 +1,6 @@
+import { profileNavigation } from "./navigations/profileNavigation";
+import { settingsNavigation } from "./navigations/settingsNavigation";
+
 export function useNavigation() {
     const localePath = useLocalePath();
 
@@ -133,11 +136,14 @@ export function useNavigation() {
         },
     ]);
 
+    const dashboardSubNavigation = ref([profileNavigation(), settingsNavigation()]);
+
     return {
         navigation,
         legal,
         social,
         dashboardNavigation,
         dashboardSettings,
+        dashboardSubNavigation,
     };
 }

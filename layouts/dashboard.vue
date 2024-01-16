@@ -18,6 +18,7 @@
                 <main class="pt-20 min-h-screen">
                     <div class="px-4 sm:px-6 lg:px-8 pb-8">
                         <Breadcrumbs class="mb-2" />
+                        <TabMenu v-if="currentSubNavigation" :model="currentSubNavigation.tabMenuItems" class="mb-7" />
                         <slot></slot>
                     </div>
                 </main>
@@ -45,6 +46,11 @@ if (!userStore.userSession) {
 
 const { errorHandler } = useErrorHandler();
 errorHandler();
+
+const { dashboardSubNavigation } = useNavigation();
+const currentSubNavigation = computed(() => {
+    return dashboardSubNavigation.value.find(subNav => route.path.startsWith(`/dashboard${subNav.path}`))
+})
 </script>
 
 <style lang="scss" scoped></style>
