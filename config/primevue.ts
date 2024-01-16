@@ -1,5 +1,4 @@
 // config/primevue.ts
-import path from "path";
 export default {
     options: {
         ripple: true,
