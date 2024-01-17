@@ -19,8 +19,8 @@
                     <div class="flex gap-3 md:flex-wrap md:justify-center">
                         <NuxtLink v-for="action in quickActions" :to="action.link"
                             class="flex-none md:flex-grow md:w-1/3 xl:w-1/4">
-                            <Card class="no-content border dark:border-surface-700 transition-colors">
-                                <template #title>
+                            <Card class="no-content border dark:border-surface-700 transition-colors p-5">
+                                <template #header>
                                     <div class="flex flex-col md:flex-row items-center gap-2">
                                         <Icon :name="action.icon" class="h-6 w-auto transition-colors"
                                             :class="action.color" />

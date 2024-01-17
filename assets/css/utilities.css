@@ -17,3 +17,7 @@
 .no-content [data-pc-section="content"] {
     display: none;
 }
+
+.no-content [data-pc-section="body"] {
+    display: none;
+}
