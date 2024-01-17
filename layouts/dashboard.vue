@@ -48,9 +48,17 @@ const { errorHandler } = useErrorHandler();
 errorHandler();
 
 const { dashboardSubNavigation } = useNavigation();
+const { locale } = useI18n();
+
+const removeLocalePrefix = (path, currentLocale) => {
+    const localePrefixPattern = new RegExp(`^/${currentLocale}`);
+    return path.replace(localePrefixPattern, '');
+};
+
 const currentSubNavigation = computed(() => {
-    return dashboardSubNavigation.value.find(subNav => route.path.startsWith(`/dashboard${subNav.path}`))
-})
+    const pathWithoutLocale = removeLocalePrefix(route.path, locale.value);
+    return dashboardSubNavigation.value.find(subNav => pathWithoutLocale.startsWith(`/dashboard${subNav.path}`))
+});
 </script>
 
 <style lang="scss" scoped></style>
