@@ -6,19 +6,33 @@ export function settingsNavigation() {
         path: "/settings",
         tabMenuItems: [
             {
-                label: "Account",
+                label: "General",
                 icon: "pi pi-user",
                 command: () => {
                     navigateTo(localePath("/dashboard/settings"));
                 },
             },
             {
-                label: "Other settings",
+                label: "Notifications",
                 icon: "pi pi-chart-line",
                 command: () => {
-                    navigateTo(localePath("/dashboard/settings/other"));
+                    navigateTo(localePath("/dashboard/settings/notifications"));
                 },
             },
+            // {
+            //     label: "Plan",
+            //     icon: "pi pi-chart-line",
+            //     command: () => {
+            //         navigateTo(localePath("/dashboard/settings/other"));
+            //     },
+            // },
+            // {
+            //     label: "Billing",
+            //     icon: "pi pi-chart-line",
+            //     command: () => {
+            //         navigateTo(localePath("/dashboard/settings/other"));
+            //     },
+            // },
         ],
     };
 }

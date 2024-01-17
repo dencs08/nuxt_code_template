@@ -124,15 +124,18 @@ export function useNavigation() {
         {
             label: "Settings",
             icon: "pi pi-cog",
-            items: [
-                {
-                    label: "Some setting..",
-                    icon: "pi pi-cog",
-                    command: () => {
-                        navigateTo(localePath("/dashboard/settings"));
-                    },
-                },
-            ],
+            command: () => {
+                navigateTo(localePath("/dashboard/settings"));
+            },
+            // items: [
+            //     {
+            //         label: "Some setting..",
+            //         icon: "pi pi-cog",
+            //         command: () => {
+            //             navigateTo(localePath("/dashboard/settings"));
+            //         },
+            //     },
+            // ],
         },
     ]);
 
