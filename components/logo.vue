@@ -24,7 +24,7 @@ watchEffect(() => {
   const color = allowedColors.includes(props.color) ? props.color : 'color';
   const type = allowedTypes.includes(props.type) ? props.type : 'logo';
 
-  logoPath.value = `/img/logos/${type}_${color}.jpg`;
+  logoPath.value = `/img/logos/${type}_${color}.svg`;
 });
 
 // If the image fails to load, change the source to a placeholder
