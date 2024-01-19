@@ -22,6 +22,8 @@
                     class="pi pi-angle-right text-primary-500 dark:text-primary-400 ml-auto transform transition-transform group-hover:rotate-90"
                     :class="{ 'rotate-90': dropdowns[item.label] }" />
             </a>
+            <Divider
+                :pt="{ root: { class: 'flex relative my-1.5 mx-0 py-0 px-5 w-full before:block before:absolute before:left-0 before:top-1/2 before:w-full before:border-solid before:border-t before:border-surface-200/40 before:dark:border-surface-700/75' } }" />
         </template>
     </PanelMenu>
 </template>
