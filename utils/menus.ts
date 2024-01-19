@@ -4,7 +4,14 @@ import { settingsNavigation } from "./navigations/settingsNavigation";
 export function useNavigation() {
     const localePath = useLocalePath();
 
-    const navigation = computed(() => [{ name: "Kontakt", to: localePath("/contact") }]);
+    const navigation = computed(() => [
+        {
+            label: "Kontakt",
+            command: () => {
+                navigateTo(localePath("/contact"));
+            },
+        },
+    ]);
 
     const legal = computed(() => [
         { name: "Polityka prywatności", href: localePath("/privacy-policy") },
