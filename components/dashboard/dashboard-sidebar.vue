@@ -13,7 +13,8 @@
 
       <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 items-center">
         <nuxt-link :to="localePath('/')">
-          <Logo type="logotype" color="black" class="h-4 w-auto hidden lg:block" />
+          <!-- <Logo type="logotype" color="black" class="h-4 w-auto hidden lg:block" /> -->
+          <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px" />
         </nuxt-link>
 
         <form class="relative flex flex-1 lg:pl-28 lg:ml-10 w-full items-center">
@@ -44,7 +45,7 @@
           <div class="flex items-center justify-between px-4 pt-4 shrink-0">
             <span class="inline-flex items-center gap-2">
               <nuxt-link :to="localePath('/')">
-                <Logo type="logotype" color="black" class="h-4 w-auto" />
+                <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px" />
               </nuxt-link>
             </span>
             <span>
@@ -94,6 +95,7 @@ const { signOut } = useAuthentication();
 const localePath = useLocalePath()
 const userStore = useUsersStore();
 const firstName = userStore.firstName;
+const isDark = useDark();
 
 const sidebarOpen = ref(false);
 const searchValue = ref('');
