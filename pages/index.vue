@@ -13,7 +13,7 @@
     </section>
 
     <section class="container mx-auto">
-      <DesignTableDisplay />
+      <!-- <DesignTableDisplay /> -->
     </section>
 
     <section>
