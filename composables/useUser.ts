@@ -12,6 +12,10 @@ export function useUser() {
             user_roles?: { role: string };
         }
 
+        if (!userAuthSession.value) {
+            return null;
+        }
+
         try {
             const { data: user } = (await client
                 .from("users")
