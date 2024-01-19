@@ -3,21 +3,21 @@
         :class="{ '-translate-y-full': !showHeader }">
         <nav class="container mx-auto flex items-center justify-between py-5" aria-label="Global">
             <NuxtLink :to="localePath('index')">
-                <Logo type="logotype" color="black" class="h-5 w-auto" />
+                <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px"
+                    @click="sidebarOpen = false" />
             </NuxtLink>
             <div class="flex lg:hidden">
                 <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                    @click="mobileMenuOpen = true">
+                    @click="sidebarOpen = true">
                     <span class="sr-only">Open main menu</span>
-                    <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+                    <Icon name="ic:outline-menu" class="h-6 w-6" />
                 </button>
             </div>
             <div class="hidden lg:flex items-center lg:gap-x-12">
-                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
-                    class="text-sm font-semibold leading-6 text-gray-900">
-                    {{ item.name }}
+                <NuxtLink v-for="item in navigation" :key="item.label" @click="item.command"
+                    class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer">
+                    {{ item.label }}
                 </NuxtLink>
-
                 <NuxtLink :to="localePath('/login')">
                     <MyButton size="xs">
                         Login
@@ -25,47 +25,46 @@
                 </NuxtLink>
             </div>
         </nav>
-        <Transition name="slide">
-            <div class="lg:hidden" v-if="mobileMenuOpen">
-                <div class="fixed inset-0 z-10" />
-                <div
-                    class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-                    <div class="flex items-center justify-between">
-                        <Logo type="logotype" color="black" class="h-5 w-auto" />
-                        <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = false">
-                            <span class="sr-only">Close menu</span>
-                            <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
+
+        <Sidebar v-model:visible="sidebarOpen" @hide="animateOut">
+            <template #container="{ closeCallback }">
+                <div class="flex flex-col h-full">
+                    <div class="flex items-center justify-between px-4 pt-4 shrink-0">
+                        <span class="inline-flex items-center gap-2">
+                            <nuxt-link :to="localePath('/')">
+                                <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px"
+                                    @click="sidebarOpen = false" />
+                            </nuxt-link>
+                        </span>
+                        <span>
+                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded text></Button>
+                        </span>
                     </div>
-                    <div class="mt-6 flow-root">
-                        <div class="-my-6 divide-y divide-gray-500/10">
-                            <div class="space-y-2 py-6">
-                                <NuxtLink v-for="item in navigation" :key="item.name" :to="item.to"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 cursor-pointer">
-                                    {{ item.name }}
-                                </NuxtLink>
-                            </div>
-                            <div class="py-6">
-                                <LangSwitcher />
-                            </div>
-                        </div>
+                    <Divider />
+                    <div class="overflow-y-auto mt-4 pl-2 pr-5">
+                        <PanelMenuDropdown :dashboardNavigation="navigation" :toggleDropdown="toggleDropdown"
+                            :dropdowns="dropdowns" @click="sidebarOpen = false" />
                     </div>
                 </div>
-            </div>
-        </Transition>
+            </template>
+        </Sidebar>
     </header>
 </template>
 
 <script setup>
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-
+const isDark = useDark();
 const localePath = useLocalePath()
 const { navigation } = useNavigation();
 const { scrollToElement } = useSmoothScroll();
 
-const mobileMenuOpen = ref(false)
+const sidebarOpen = ref(false);
 const lastScrollPosition = ref(0)
 const showHeader = ref(true)
+
+const dropdowns = reactive({});
+const toggleDropdown = (item) => {
+    dropdowns[item.label] = !dropdowns[item.label];
+};
 
 const { y } = useWindowScroll()
 watch(y, (newScrollPosition) => {
@@ -74,16 +73,60 @@ watch(y, (newScrollPosition) => {
         lastScrollPosition.value = newScrollPosition
     }
 })
+
+function animateOut() {
+    document.querySelectorAll('.sidebar-enter')[0].classList.add('sidebar-leave')
+}
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
-    transition: all 0.3s ease;
+.dashboard-custom-panel :deep(div[data-pc-section="headercontent"]),
+.dashboard-custom-panel :deep(div[data-pc-section="menucontent"]),
+.dashboard-custom-panel :deep(div[data-pc-section="header"]),
+.dashboard-custom-panel :deep(div[data-pc-section="menu"]) {
+    border: none !important;
+    outline: none !important;
+    background-color: #00000000 !important;
 }
 
-.slide-enter-from,
-.slide-leave-to {
-    opacity: 0;
+.dashboard-custom-panel :deep(div[data-pc-section="menu"]),
+.dashboard-custom-panel :deep(div[data-pc-section="menucontent"]) {
+    margin-left: 10px !important;
+    margin-top: -8px !important;
+}
+</style>
+
+<style>
+/* TODO fix mask animation for all primevue components or maybe just wait for a fix from primevue */
+.sidebar-enter {
+    animation: sidebar-enter-animation 300ms forwards;
+}
+
+.sidebar-leave {
+    animation: sidebar-leave-animation 300ms forwards;
+}
+
+@keyframes sidebar-enter-animation {
+    from {
+        background-color: transparent;
+        backdrop-filter: blur(0px);
+    }
+
+    to {
+        @apply bg-surface-950/20;
+        backdrop-filter: blur(6px);
+    }
+}
+
+@keyframes sidebar-leave-animation {
+    from {
+        @apply bg-surface-950/20;
+        backdrop-filter: blur(6px);
+    }
+
+    to {
+        background-color: transparent;
+        backdrop-filter: blur(0px);
+    }
 }
 </style>
