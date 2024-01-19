@@ -2,8 +2,8 @@
     <div>
         <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div>
-                <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-                <p class="mt-1 text-sm leading-6 text-gray-500">This information displayed on your profile</p>
+                <h2 class="text-base font-semibold leading-7 text-surface-700 dark:text-surface-100">Profile</h2>
+                <p class="mt-1 text-sm leading-6 text-surface-500 dark:text-surface-200">Lorem ipsum</p>
 
                 <dl class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
                     <div v-for="(value, key) in user" :key="key" class="pt-6 sm:flex">
@@ -20,6 +20,7 @@
     </div>
 </template>
 <script setup>
+//TODO fix [id] in path when path doesnt exist, also propably create different naming convention for public profile pages
 definePageMeta({
     layout: "dashboard",
 });
