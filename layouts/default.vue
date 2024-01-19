@@ -7,10 +7,11 @@ const head = useLocaleHead({
   addSeoAttributes: true
 })
 const title = computed(() => t('layouts.default.title', { title: t(route.meta.title ?? 'TBD') }))
-
+const isDark = useDark()
 const html = ref();
+
 onMounted(() => {
-  html.value.$el.ownerDocument.children[0].classList.remove('dark')
+  isDark.value = false;
 });
 
 </script>
