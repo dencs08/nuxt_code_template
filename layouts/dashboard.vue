@@ -39,10 +39,10 @@ const head = useLocaleHead({
 })
 const title = computed(() => t('layouts.default.title', { title: t(route.meta.title ?? 'TBD') }))
 
-const userStore = useUsersStore();
-if (!userStore.userSession) {
-    await userStore.fetchUserSession();
-}
+// const userStore = useUsersStore();
+// if (!userStore.userSession) {
+//     await userStore.fetchUserSession();
+// }
 
 const { errorHandler } = useErrorHandler();
 errorHandler();
