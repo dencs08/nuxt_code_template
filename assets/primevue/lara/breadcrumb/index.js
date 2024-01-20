@@ -5,11 +5,11 @@ export default {
             'rounded-md',
 
             // Spacing
-            'p-4',
+            'py-2 pr-4 pl-1',
 
             // Color
-            'bg-surface-0 dark:bg-surface-700',
-            'border border-surface-200 dark:border-surface-700',
+            // 'bg-surface-0 dark:bg-surface-900',
+            // 'border border-surface-200 dark:border-surface-700',
 
             // Misc
             'overflow-x-auto'
@@ -55,10 +55,10 @@ export default {
             'flex items-center',
 
             // Spacing
-            ' mx-2',
+            'mx-1 scale-75',
 
             // Color
-            'text-surface-600 dark:text-white/70'
+            'text-surface-500 dark:text-surface-200/50'
         ]
     }
 };
