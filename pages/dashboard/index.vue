@@ -6,7 +6,7 @@ definePageMeta({
 
 const localePath = useLocalePath();
 onMounted(() => {
-    navigateTo(localePath("/dashboard/home'"));
+    navigateTo(localePath("/dashboard/home"));
 });
 </script>
 <style lang="">
