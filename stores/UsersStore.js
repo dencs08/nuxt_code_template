@@ -16,6 +16,9 @@ export const useUsersStore = defineStore({
         getUserSession: (state) => {
             return state.userSession;
         },
+        userRole: (state) => {
+            return state.userSession ? state.userSession.role : null;
+        },
         firstName: (state) => {
             return state.userSession ? state.userSession.name.split(' ')[0] : null;
         },
