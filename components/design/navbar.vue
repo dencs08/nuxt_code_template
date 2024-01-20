@@ -42,8 +42,14 @@
                     </div>
                     <Divider />
                     <div class="overflow-y-auto mt-4 pl-2 pr-5">
-                        <PanelMenuDropdown :dashboardNavigation="navigation" :toggleDropdown="toggleDropdown"
-                            :dropdowns="dropdowns" @click="sidebarOpen = false" />
+                        <PanelMenuDropdown :navigation="navigation" @click="sidebarOpen = false" />
+                        <div class="mt-6">
+                            <NuxtLink :to="localePath('/login')">
+                                <MyButton class="w-full" size="xs">
+                                    Login
+                                </MyButton>
+                            </NuxtLink>
+                        </div>
                     </div>
                 </div>
             </template>
@@ -61,10 +67,7 @@ const sidebarOpen = ref(false);
 const lastScrollPosition = ref(0)
 const showHeader = ref(true)
 
-const dropdowns = reactive({});
-const toggleDropdown = (item) => {
-    dropdowns[item.label] = !dropdowns[item.label];
-};
+
 
 const { y } = useWindowScroll()
 watch(y, (newScrollPosition) => {
