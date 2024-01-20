@@ -53,13 +53,11 @@
             </span>
           </div>
           <div class="overflow-y-auto mt-4 pl-2 pr-5">
-            <PanelMenuDropdown :dashboardNavigation="dashboardNavigation" :toggleDropdown="toggleDropdown"
-              :dropdowns="dropdowns" />
+            <PanelMenuDropdown :navigation="dashboardNavigation" />
           </div>
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-t-1 border-surface-200 dark:border-surface-700/35" />
-            <PanelMenuDropdown :dashboardNavigation="dashboardSettings" :toggleDropdown="toggleDropdown"
-              :dropdowns="dropdowns" />
+            <PanelMenuDropdown :navigation="dashboardSettings" />
           </div>
         </div>
       </template>
@@ -69,14 +67,12 @@
     <div class="hidden fixed top-20 lg:z-50 lg:flex lg:w-56 lg:flex-col h-full">
       <div class="flex grow flex-col gap-y-5 overflow-y-auto pl-3 pr-2 pb-4">
         <nav class="flex flex-1 flex-col">
-          <PanelMenuDropdown :dashboardNavigation="dashboardNavigation" :toggleDropdown="toggleDropdown"
-            :dropdowns="dropdowns" />
+          <PanelMenuDropdown :navigation="dashboardNavigation" />
 
           <!--Settings-->
           <div class="mt-auto mb-20">
             <Divider class="" />
-            <PanelMenuDropdown :dashboardNavigation="dashboardSettings" :toggleDropdown="toggleDropdown"
-              :dropdowns="dropdowns" />
+            <PanelMenuDropdown :navigation="dashboardSettings" />
           </div>
         </nav>
       </div>
@@ -99,12 +95,7 @@ const isDark = useDark();
 
 const sidebarOpen = ref(false);
 const searchValue = ref('');
-const dropdowns = reactive({});
 const userMenu = ref();
-
-const toggleDropdown = (item) => {
-  dropdowns[item.label] = !dropdowns[item.label];
-};
 
 const toggleUserMenu = (event) => {
   userMenu.value.toggle(event);
