@@ -19,9 +19,12 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                   <div class="col-span-2 flex gap-5 items-center mb-2">
                     <div
-                      class="border border-surface-300 dark:border-surface-600 rounded h-auto w-28 overflow-hidden object-cover shadow-lg">
-                      <nuxt-img src="https://primefaces.org/cdn/primevue/images/organization/walter.jpg"
-                        class="h-full w-full"></nuxt-img>
+                      class="border border-surface-300 dark:border-surface-600 rounded h-28 w-28 overflow-hidden shadow-lg">
+                      <Skeleton v-if="!userSession && !userSession?.photo" height="100%" width="100%"
+                        class="object-cover"></Skeleton>
+                      <nuxt-img v-else-if="!userSession?.photo" :src="'img/avatar.svg'"
+                        class="h-full w-full object-cover"></nuxt-img>
+                      <nuxt-img v-else :src="userSession.photo" class="h-full w-full object-cover"></nuxt-img>
                     </div>
                     <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
                       @upload="onUpload" chooseLabel="Avatar" :pt="{
@@ -122,9 +125,9 @@ definePageMeta({
   layout: "dashboard",
 });
 
-const localePath = useLocalePath()
 const userStore = useUsersStore();
-const userSession = userStore.getUserSession;
+const userSession = await userStore.getUserSession;
+const localePath = useLocalePath()
 
 const onLogOut = async (data: any) => {
   // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
