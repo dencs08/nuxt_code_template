@@ -8,6 +8,7 @@ export function useUser() {
             name: string;
             email: string;
             phone: string;
+            photo: string;
             role?: string;
             user_roles?: { role: string };
         }
