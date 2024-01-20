@@ -8,16 +8,12 @@ export function profileNavigation() {
             {
                 label: "Account",
                 icon: "pi pi-user",
-                command: () => {
-                    navigateTo(localePath("/dashboard/profile"));
-                },
+                route: localePath("/dashboard/profile"),
             },
             {
                 label: "Actions",
                 icon: "pi pi-chart-line",
-                command: () => {
-                    navigateTo(localePath("/dashboard/profile/actions"));
-                },
+                route: localePath("/dashboard/profile/actions"),
             },
         ],
     };

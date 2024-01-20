@@ -6,10 +6,12 @@ export function useNavigation() {
 
     const navigation = computed(() => [
         {
+            label: "Start",
+            route: localePath("index"),
+        },
+        {
             label: "Kontakt",
-            command: () => {
-                navigateTo(localePath("/contact"));
-            },
+            route: localePath("/contact"),
         },
     ]);
 
@@ -43,9 +45,7 @@ export function useNavigation() {
         {
             label: "Main",
             icon: "pi pi-home",
-            command: () => {
-                navigateTo(localePath("/dashboard/home"));
-            },
+            route: localePath("/dashboard/home"),
             // items: [
             //     {
             //         label: "Dashboard",
@@ -73,9 +73,7 @@ export function useNavigation() {
                         {
                             label: "Inbox",
                             icon: "pi pi-inbox",
-                            command: () => {
-                                navigateTo(localePath("/dashboard/marketing"));
-                            },
+                            route: localePath("/dashboard/marketing"),
                             badge: 5,
                         },
                         {
@@ -97,16 +95,12 @@ export function useNavigation() {
                         {
                             label: "test",
                             icon: "pi pi-briefcase",
-                            command: () => {
-                                navigateTo(localePath("/dashboard/reports/test"));
-                            },
+                            route: localePath("/dashboard/reports/test"),
                         },
                         {
                             label: "test2",
                             icon: "pi pi-briefcase",
-                            command: () => {
-                                navigateTo(localePath("/dashboard/reports/test2"));
-                            },
+                            route: localePath("/dashboard/reports/test2"),
                         },
                     ],
                 },
@@ -119,9 +113,7 @@ export function useNavigation() {
                 {
                     label: "Users",
                     icon: "pi pi-users",
-                    command: () => {
-                        navigateTo(localePath("/dashboard/users"));
-                    },
+                    route: localePath("/dashboard/users"),
                 },
             ],
         },
@@ -131,9 +123,7 @@ export function useNavigation() {
         {
             label: "Settings",
             icon: "pi pi-cog",
-            command: () => {
-                navigateTo(localePath("/dashboard/settings"));
-            },
+            route: localePath("/dashboard/settings"),
             // items: [
             //     {
             //         label: "Some setting..",

@@ -8,16 +8,12 @@ export function settingsNavigation() {
             {
                 label: "General",
                 icon: "pi pi-user",
-                command: () => {
-                    navigateTo(localePath("/dashboard/settings"));
-                },
+                route: localePath("/dashboard/settings"),
             },
             {
                 label: "Notifications",
                 icon: "pi pi-chart-line",
-                command: () => {
-                    navigateTo(localePath("/dashboard/settings/notifications"));
-                },
+                route: localePath("/dashboard/settings/notifications"),
             },
             // {
             //     label: "Plan",
