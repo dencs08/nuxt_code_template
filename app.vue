@@ -13,7 +13,7 @@
 <style>
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.25s;
+  transition: all 0.125s;
 }
 
 .page-enter-from,
