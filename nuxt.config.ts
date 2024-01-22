@@ -7,6 +7,8 @@ import modules from "./config/modules";
 import components from "./config/components";
 import hooks from "./config/hooks";
 import primevue from "./config/primevue";
+import content from "./config/content";
+import googleFonts from "./config/googleFonts";
 import pwa from "./config/pwa";
 import auth from "./config/auth"; //this is sidebase auth
 
@@ -18,6 +20,8 @@ export default defineNuxtConfig({
     i18n,
     hooks,
     primevue,
+    content,
+    googleFonts,
     // pwa, //when using nuxt pwa module
     // auth, //when using nuxt auth module
 
