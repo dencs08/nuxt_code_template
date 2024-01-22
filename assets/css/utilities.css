@@ -15,9 +15,9 @@
 }
 
 .no-content [data-pc-section="content"] {
-    display: none;
+    @apply hidden;
 }
 
 .no-content [data-pc-section="body"] {
-    display: none;
+    @apply hidden;
 }
