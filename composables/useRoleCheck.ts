@@ -1,12 +1,12 @@
-export function useRoleCheck(requiredRoleName) {
+export function useRoleCheck(requiredRoleName: string) {
     const { roles } = useRoles();
     const userStore = useUsersStore();
-    const user = userStore.getUserSession;
+    const user = userStore.userRole;
 
-    const requiredRole = roles.value.find(role => role.value === requiredRoleName);
+    const requiredRole = roles.value.find((role) => role.value === requiredRoleName);
 
     const userRole = computed(() => {
-        return roles.value.find(role => role.value === user.role);
+        return roles.value.find((role) => role.value === user);
     });
 
     const hasAccess = computed(() => {
