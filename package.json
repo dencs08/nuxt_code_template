@@ -46,6 +46,7 @@
     "@sfxcode/formkit-primevue": "^1.6.2",
     "@vueuse/core": "^10.2.1",
     "@vueuse/motion": "^2.0.0",
+    "chart.js": "^4.4.1",
     "gsap": "^3.12.2",
     "pinia": "^2.1.6",
     "primevue": "^3.46.0",
