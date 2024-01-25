@@ -17,8 +17,10 @@
             <div class="lg:pl-56">
                 <main class="pt-20 min-h-screen">
                     <div class="px-4 sm:px-6 lg:px-8 pb-8">
-                        <Breadcrumbs class="mb-2" />
-                        <TabMenu v-if="currentSubNavigation" :model="currentSubNavigation.tabMenuItems" class="mb-7" />
+                        <Breadcrumbs class="mb-3" />
+                        <div v-auto-animate>
+                            <Menubar v-if="showMenubar" :model="currentSubNavigation" />
+                        </div>
                         <slot></slot>
                     </div>
                 </main>
@@ -30,35 +32,43 @@
 </template>
 
 <script setup>
-const route = useRoute()
-const { t } = useI18n()
 const head = useLocaleHead({
     addDirAttribute: true,
     identifierAttribute: 'id',
     addSeoAttributes: true
 })
+
+const { locale, t } = useI18n();
+const route = useRoute()
 const title = computed(() => t('layouts.default.title', { title: t(route.meta.title ?? 'TBD') }))
-
-// const userStore = useUsersStore();
-// if (!userStore.userSession) {
-//     await userStore.fetchUserSession();
-// }
-
+const { dashboardSubNavigation, dashboardNavigation } = useNavigation();
 const { errorHandler } = useErrorHandler();
 errorHandler();
 
-const { dashboardSubNavigation } = useNavigation();
-const { locale } = useI18n();
-
-const removeLocalePrefix = (path, currentLocale) => {
-    const localePrefixPattern = new RegExp(`^/${currentLocale}`);
-    return path.replace(localePrefixPattern, '');
-};
-
 const currentSubNavigation = computed(() => {
-    const pathWithoutLocale = removeLocalePrefix(route.path, locale.value);
-    return dashboardSubNavigation.value.find(subNav => pathWithoutLocale.startsWith(`/dashboard${subNav.path}`))
+    // Recursive function to search in navigation items
+    const searchNavItems = (items, path) => {
+        for (const item of items) {
+            // Check for direct match or sub-route match
+            if (item.route === path || path.startsWith(item.route + '/')) {
+                return item.items ?? [];
+            }
+            // Recursively check in nested items
+            if (item.items) {
+                const subItems = searchNavItems(item.items, path);
+                if (subItems) return subItems;
+            }
+        }
+        return null;
+    };
+
+    // Search in dashboardNavigation and dashboardSubNavigation
+    let items = searchNavItems([...dashboardNavigation.value, ...dashboardSubNavigation.value], route.path);
+    return items ?? [];
 });
+
+// Control visibility of Menubar
+const showMenubar = computed(() => currentSubNavigation.value && currentSubNavigation.value.length > 0);
 </script>
 
 <style lang="scss" scoped></style>
