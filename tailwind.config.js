@@ -15,7 +15,7 @@ const colorDefinitions = [
 const fontFamilyVariants = {
   'heading': ['Poppins', 'Poppins', 'sans-serif'],
   'body': ['Inter', 'Inter', 'sans-serif'],
-  'accent': ['Oswald', 'Oswald', 'sans-serif'],
+  'accent': ['Bebas Neue', 'Bebas Neue', 'sans-serif'],
 }
 const screenSizes = {
   xs: '350px',
