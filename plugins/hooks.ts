@@ -1,5 +1,5 @@
-import type { Pinia } from "pinia";
-import { useUsersStore } from "~/stores/UsersStore";
+// import type { Pinia } from "pinia";
+// import { useUsersStore } from "~/stores/UsersStore";
 
 //TODO get the all of the users settings + darkmode
 
@@ -9,7 +9,7 @@ import { useUsersStore } from "~/stores/UsersStore";
  */
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.hook("app:beforeMount", async () => {
-        const usersStore = useUsersStore(nuxtApp.$pinia as Pinia);
-        await usersStore.fetchUserSession();
+        // const usersStore = useUsersStore(nuxtApp.$pinia as Pinia);
+        // await usersStore.fetchUserSession();
     });
 });
