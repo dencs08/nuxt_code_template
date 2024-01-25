@@ -1,62 +1,71 @@
+import { fetchPublicUserSession } from "../services/userSession";
+import { type User } from "../utils/types";
+
+//TODO check if useAuthentication functions are wrapped here or not - and used in app from here or the useAuthentication
 export function useUser() {
     const client = useSupabaseClient();
     const userAuthSession = useSupabaseUser();
-
+    const { CustomError } = useCustomError();
+    const { updateEmail } = useAuthentication();
+    const { addToast } = useToastService();
+    const { checkProvider } = useProvider();
     const userSession = async () => {
-        interface User {
-            id: string;
-            name: string;
-            email: string;
-            phone: string;
-            photo: string;
-            role?: string;
-            user_roles?: { role: string };
-        }
+        fetchPublicUserSession();
+    };
 
-        if (!userAuthSession.value) {
-            return null;
-        }
-
+    const updateProfile = async (profileData: Partial<User>) => {
         try {
-            const { data: user } = (await client
+            const { error } = await client
                 .from("users")
-                .select(`*, user_roles!inner(role)`)
+                //@ts-ignore
+                .update({
+                    name: profileData.name,
+                    phone: profileData.phone,
+                })
                 .eq("id", userAuthSession.value.id)
-                .single()) as { data: User | null };
+                .select();
 
-            if (user) {
-                user.role = user.user_roles.role;
-                delete user.user_roles;
+            if (error) {
+                throw new CustomError("Error updating user data", error);
             }
 
-            return user;
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
-            } else {
-                throw error;
-            }
+            return { response: "Profile updated" };
+        } catch (e) {
+            throw new CustomError("An error occurred during the update process", e);
         }
     };
 
-    const fetchUser = async () => {
-        interface User {
-            role?: string; // add more fields based on your user structure
-        }
-
+    const updateUserEmail = async (email: string, emailRedirectTo?: string) => {
         try {
-            const { data: user } = (await client.from("users").select("*").single()) as {
-                data: User | null;
-            };
-            return user;
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
-            } else {
-                throw error;
+            if (email && email !== userAuthSession.value.email) {
+                if (!checkProvider("email")) return;
+                await updateEmail(email, emailRedirectTo);
+                addToast(
+                    "warn",
+                    "Verify email change",
+                    `To change the email, click on the verification link sent to ${email}`,
+                    60000
+                );
+
+                //update email_change and token in public.users
+                const { error } = await client
+                    .from("users")
+                    //@ts-ignore
+                    .update({
+                        new_email: email,
+                    })
+                    .eq("id", userAuthSession.value.id)
+                    .select();
+
+                if (error) {
+                    throw new CustomError("Error updating user data", error);
+                }
             }
+            return { response: "Verification link sent" };
+        } catch (e) {
+            throw new CustomError("An error occurred during the update process", e);
         }
     };
 
-    return { fetchUser, userSession };
+    return { userSession, updateProfile, updateUserEmail };
 }
