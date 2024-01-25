@@ -1,5 +1,5 @@
 const { CustomError } = useCustomError();
-
+import { fetchPublicUserSession } from '../services/userSession';
 export const useUsersStore = defineStore({
     id: 'usersStore',
 
@@ -16,15 +16,18 @@ export const useUsersStore = defineStore({
         getUserSession: (state) => {
             return state.userSession;
         },
-        userRole: (state) => {
-            return state.userSession ? state.userSession.role : null;
-        },
         firstName: (state) => {
             return state.userSession ? state.userSession.name.split(' ')[0] : null;
         },
         lastName: (state) => {
             const nameParts = state.userSession ? state.userSession.name.split(' ') : [];
             return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
+        },
+        userRole: (state) => {
+            return state.userSession ? state.userSession.role : null;
+        },
+        photo: (state) => {
+            return state.userSession ? state.userSession.photo : null;
         }
     },
 
@@ -147,8 +150,7 @@ export const useUsersStore = defineStore({
         async fetchUserSession() {
             this.loading = true;
             try {
-                const { userSession } = useUser();
-                const user = await userSession();
+                const user = await fetchPublicUserSession();
                 this.userSession = user;
             } catch (error) {
                 console.error('Error in fetchAuthenticatedUser:', error);
