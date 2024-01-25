@@ -29,24 +29,36 @@
                 <div class="text-sm">
                     {{ message.message }}
                 </div>
-                <div class="w-full mt-2">
+                <div class="w-full mt-4">
                     <p class="text-xs mb-1">Type your password to confirm the action:</p>
-                    <Password v-model="password" toggleMask :feedback="false" placeholder="Password" :pt="{
-                        input: { class: 'w-full' },
-                    }" />
+                    <Password v-model="password" toggleMask :feedback="false" placeholder="Password" />
+                </div>
+            </template>
+
+            <template #footer="{ message, acceptCallback, rejectCallback }">
+                <div
+                    class="flex items-center justify-end gap-2 p-4 border-t bg-surface-50/40 dark:bg-surface-900/35 border-surface-100 dark:border-surface-600">
+                    <Button label="Confirm" @click="checkPassword(acceptCallback, rejectCallback)"
+                        :class="message.acceptClass"></Button>
+                    <Button label="Cancel" outlined severity="secondary" @click="rejectCallback"></Button>
                 </div>
             </template>
         </ExtendedConfirmDialog>
     </div>
 </template>
 <script setup>
-const password = ref('');
-const checkPassword = (acceptCallback, rejectCallback) => {
-    const correctPassword = 'correctPassword'; // Replace with the correct password
-    if (password.value === correctPassword) {
+const { verifyPassword } = useAuthentication();
+const { addToast } = useToastService();
+
+const password = ref();
+const checkPassword = async (acceptCallback, rejectCallback) => {
+    try {
+        if (!password.value) throw new Error('Password is required');
+        await verifyPassword(password.value);
+        addToast('success', 'Account deletion confirmed', 'Your account will now be permanentaly deleted, you will be logged out automatically.', 30000)
         acceptCallback();
-    } else {
-        rejectCallback();
+    } catch (error) {
+        addToast('error', 'Account deletion failed', error.message)
     }
 };
 </script>
