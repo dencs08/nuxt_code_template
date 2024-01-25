@@ -4,7 +4,7 @@ const { updatePassword } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
 async function handleForm(data) {
-  await handleSubmit(updatePassword, { password: data.password }, 'Password updated');
+  await handleSubmit(updatePassword, data.password, 'Password updated');
 }
 </script>
 
