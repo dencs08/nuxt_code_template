@@ -13,40 +13,32 @@
           </div>
 
           <div class="col-span-3 md:col-span-2">
-            <FormWrapper :handleSubmit="onProfileChange" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+            <div class="flex items-center gap-6 mb-4">
+              <ProfileAvatar class="w-28 h-28" :photo="userStore.userSession.photo" />
+              <div class="space-y-3">
+                <AvatarUpload />
+                <p class="text-surface-700/70 dark:text-surface-100/70 text-sm font-medium">JPG, JPEG, or PNG. 1MB
+                  max.</p>
+              </div>
+            </div>
+            <FormWrapper :handleSubmit="onProfileSave" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
               submit-label="Save">
               <template #default="{ getNode }">
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                  <div class="col-span-2 flex gap-5 items-center mb-2">
-                    <div
-                      class="border border-surface-300 dark:border-surface-600 rounded h-28 w-28 overflow-hidden shadow-lg">
-                      <Skeleton v-if="!userSession && !userSession?.photo" height="100%" width="100%"
-                        class="object-cover"></Skeleton>
-                      <nuxt-img v-else-if="!userSession?.photo" :src="'img/avatar.svg'"
-                        class="h-full w-full object-cover"></nuxt-img>
-                      <nuxt-img v-else :src="userSession.photo" class="h-full w-full object-cover"></nuxt-img>
-                    </div>
-                    <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
-                      @upload="onUpload" chooseLabel="Avatar" :pt="{
-                        content: { class: 'surface-ground' },
-                        button: { class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' },
-                        input: { class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' },
-                      }" />
-                  </div>
                   <FormKit class="w-full" type='primeInputText' name='firstname' validation='required'
-                    placeholder='First name' @node="getNode">
+                    placeholder='First name' v-model="userDetails.firstname">
                   </FormKit>
                   <FormKit class="w-full" type='primeInputText' name='lastname' validation='required'
-                    placeholder='Last name' @node="getNode">
+                    placeholder='Last name' v-model="userDetails.lastname">
                   </FormKit>
                   <div class="col-span-2">
                     <FormKit class="w-full" type='primeInputText' name='email' validation='required|email'
-                      placeholder='Email' @node="getNode">
+                      placeholder='Email' v-model="userDetails.email" :disabled="userSession.provider !== 'email'">
                     </FormKit>
                   </div>
                   <div class="col-span-2">
-                    <FormKit class="w-full" type='primeInputNumber' name='phone' validation='required' placeholder='Phone'
-                      @node="getNode">
+                    <FormKit class="w-full" type='primeInputNumber' name='phone' validation='required|number'
+                      placeholder='Phone' v-model="userDetails.phone">
                     </FormKit>
                   </div>
                 </div>
@@ -63,7 +55,7 @@
 
           <div class="col-span-3 md:col-span-2">
             <FormWrapper :handleSubmit="onPasswordChange" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
-              submit-label="Change password">
+              submit-label="Change password" :disabled="userSession.provider !== 'email'">
               <template #default="{ getNode }">
                 <div class="space-y-3 mb-4">
                   <FormKit class="w-full" type='primePassword' name='currentpassword' validation='required' toggleMask
@@ -88,7 +80,7 @@
           </div>
 
           <div class="col-span-3 md:col-span-2">
-            <FormWrapper :handleSubmit="onLogOut" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+            <FormWrapper :handleSubmit="onTerminateSession" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
               submit-label="Log out">
               <template #default="{ getNode }">
                 <div class="space-y-3 mb-4">
@@ -120,40 +112,73 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 definePageMeta({
   layout: "dashboard",
 });
 
+const { changeUserPassword, verifyPassword, terminateSession } = useAuthentication();
+const { updateProfile, updateUserEmail } = useUser();
+const { handleSubmit } = useSubmit();
+const { addToast } = useToastService();
+const { confirmAction } = useConfirmation();
+const { deleteAccount } = useAccount();
 const userStore = useUsersStore();
+userStore.fetchUserSession();
 const userSession = await userStore.getUserSession;
 const localePath = useLocalePath()
+const userDetails = ref({
+  firstname: userStore.firstName,
+  lastname: userStore.lastName,
+  email: userSession?.email,
+  phone: userSession?.phone,
+})
+let initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 
-const onLogOut = async (data: any) => {
-  // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+const onProfileSave = async (data) => {
+  const name = `${data.firstname} ${data.lastname}`;
+  const { email, phone } = data;
+
+  if (initialUserDetails.firstname !== data.firstname || initialUserDetails.lastname !== data.lastname || initialUserDetails.phone !== data.phone) {
+    await handleSubmit(updateProfile, { name, phone }, 'User profile successfully updated');
+  }
+
+  if (initialUserDetails.email !== data.email) {
+    await updateUserEmail(email, `${window.location.origin}/dashboard/profile/confirm-email-change/`);
+  }
+  initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 }
 
-const onProfileChange = async (data: any) => {
-  // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+const onPasswordChange = async (data) => {
+  const { currentpassword, password_confirm } = data;
+  try {
+    await changeUserPassword(currentpassword, password_confirm);
+    addToast('success', 'Password updated', 'Your password has been updated successfully')
+  } catch (error) {
+    addToast('error', 'Password update failed', error.message)
+  }
 }
 
-const onPasswordChange = async (data: any) => {
-  // const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
+const onTerminateSession = async (data) => {
+  const { currentpassword } = data;
+  try {
+    await verifyPassword(currentpassword);
+    await terminateSession('others');
+    addToast('success', 'Other sessions terminated', 'Your sessions have been terminated successfully', 30000)
+  } catch (error) {
+    addToast('error', 'Session termination failed', error.message)
+  }
 }
 
-const onUpload = (event: any) => {
-  // toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-}
-
-const { confirmAction } = useConfirmation();
 const confirmDeleteAccount = () => {
   confirmAction(async () => {
-    console.log('tst');
+    await deleteAccount();
   },
     {
       header: 'Do you want to delete your account?',
       message: 'No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently. ',
-      severity: ConfirmationSeverity.Danger,
+      severity: 'error',
+      showToastOnAccept: false,
     }, ConfirmationGroup.PasswordConfirm);
 };
 </script>
