@@ -14,8 +14,8 @@
 </template>
 
 <script setup>
-import ColorModeSelector from '@/components/custom-usabililty-components/color-mode-selector.vue';
-import LanguageSelector from '@/components/custom-usabililty-components/dropdowns/i18n-dropdown.vue';
+import ColorModeSelector from '@/components/utils/color-mode-selector.vue';
+import LanguageSelector from '@/components/utils/dropdowns/i18n-dropdown.vue';
 
 definePageMeta({
     layout: "dashboard",
