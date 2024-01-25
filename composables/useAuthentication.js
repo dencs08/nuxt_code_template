@@ -1,5 +1,4 @@
 import { authenticationService } from '@/services/authentication';
-import {userService} from '@/services/insertUserMeta'
 export function useAuthentication() {
     const authService = authenticationService('supabase');
     const { handleRequestError } = useRequests();
@@ -30,20 +29,33 @@ export function useAuthentication() {
         handleRequestError(response);
     }
 
-    async function lostPassword({email}) {
+    async function lostPassword({ email }) {
         const response = await authService.resetPassword(email);
         handleRequestError(response);
     }
 
-    async function updateProfile(payload) {
-        const response = await authService.updateUser(payload);
-        handleRequestError(response);
-        if (payload.password) return "Password has been updated.";
-        if (payload.email) return "Email has been updated.";
+    async function updateAuthProfile(attributes, options) {
+        const response = await authService.updateUser(attributes, options);
+        // handleRequestError(response);
     }
 
-    const updatePassword = password => updateProfile(password);
-    const updateEmail = email => updateProfile(email);
+    const updatePassword = password => updateAuthProfile({ password: password });
+    const updateEmail = (email, emailRedirectTo) => updateAuthProfile({ email: email }, { emailRedirectTo: emailRedirectTo });
+
+    //used when want to change the password with the current password verification
+    const changeUserPassword = async (currentPassword, newPassword) => {
+        return authService.changePassword(currentPassword, newPassword);
+    }
+
+    const terminateSession = async (scope) => {
+        const response = await authService.terminateSession(scope);
+        handleRequestError(response);
+    }
+
+    const verifyPassword = async (password) => {
+        const response = await authService.verifyPassword(password);
+        handleRequestError(response);
+    }
 
     return {
         signIn,
@@ -53,7 +65,11 @@ export function useAuthentication() {
         signOut,
         lostPassword,
         updatePassword,
-        updateEmail
+        updateEmail,
+        updateAuthProfile,
+        changeUserPassword,
+        terminateSession,
+        verifyPassword
     };
 }
 
@@ -69,6 +85,6 @@ function redirectInPopup(url) {
     const customFunction = (event, session) => {
         popup.close()
     };
-    const {handleAuthStateChange} = useAuthListeners();
+    const { handleAuthStateChange } = useAuthListeners();
     handleAuthStateChange('SIGNED_IN', customFunction)
 }
