@@ -60,6 +60,7 @@ import { type FileUploadUploaderEvent } from 'primevue/fileupload';
 const emit = defineEmits(['success', 'error', 'file-selected']);
 const client = useSupabaseClient();
 
+//TODO files which could be compressed should be compressed before upload 
 const internalUploadHandler = async (event: FileUploadUploaderEvent) => {
     console.log('uploading internally');
 
