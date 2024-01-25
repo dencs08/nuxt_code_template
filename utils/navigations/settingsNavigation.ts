@@ -3,17 +3,21 @@ export function settingsNavigation() {
     const localePath = useLocalePath();
 
     return {
-        path: "/settings",
-        tabMenuItems: [
+        route: localePath("/dashboard/settings"),
+        items: [
             {
                 label: "General",
                 icon: "pi pi-user",
-                route: localePath("/dashboard/settings"),
+                command: () => {
+                    navigateTo(localePath("/dashboard/settings"));
+                },
             },
             {
                 label: "Notifications",
                 icon: "pi pi-chart-line",
-                route: localePath("/dashboard/settings/notifications"),
+                command: () => {
+                    navigateTo(localePath("/dashboard/settings/notifications"));
+                },
             },
             // {
             //     label: "Plan",

@@ -88,21 +88,49 @@ export function useNavigation() {
                         },
                     ],
                 },
+            ],
+        },
+        {
+            label: "Analytics",
+            icon: "pi pi-chart-bar",
+            route: localePath("/dashboard/admin/analytics"),
+            items: [
                 {
-                    label: "Reports",
-                    icon: "pi pi-chart-bar",
+                    label: "Users",
+                    icon: "pi pi-users",
+                    command: () => {
+                        navigateTo(localePath("/dashboard/admin/analytics/users"));
+                    },
                     items: [
                         {
                             label: "test",
-                            icon: "pi pi-briefcase",
-                            route: localePath("/dashboard/reports/test"),
-                        },
-                        {
-                            label: "test2",
-                            icon: "pi pi-briefcase",
-                            route: localePath("/dashboard/reports/test2"),
+                            icon: "pi pi-users",
+                            command: () => {
+                                navigateTo(localePath("/dashboard/admin/analytics/users/test"));
+                            },
+                            items: [
+                                {
+                                    label: "test2",
+                                    icon: "pi pi-users",
+                                    command: () => {
+                                        navigateTo(
+                                            localePath(
+                                                "/dashboard/admin/analytics/users/test/test2"
+                                            )
+                                        );
+                                    },
+                                },
+                            ],
                         },
                     ],
+                },
+                {
+                    label: "Test",
+                    icon: "pi pi-users",
+                    // route: localePath("/dashboard/admin/analytics/test"),
+                    command: () => {
+                        navigateTo(localePath("/dashboard/admin/analytics/test"));
+                    },
                 },
             ],
         },
@@ -136,7 +164,7 @@ export function useNavigation() {
         },
     ]);
 
-    const dashboardSubNavigation = ref([profileNavigation(), settingsNavigation()]);
+    const dashboardSubNavigation = computed(() => [profileNavigation(), settingsNavigation()]);
 
     return {
         navigation,

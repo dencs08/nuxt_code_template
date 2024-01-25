@@ -3,17 +3,21 @@ export function profileNavigation() {
     const localePath = useLocalePath();
 
     return {
-        path: "/profile",
-        tabMenuItems: [
+        route: localePath("/dashboard/profile"),
+        items: [
             {
                 label: "Account",
                 icon: "pi pi-user",
-                route: localePath("/dashboard/profile"),
+                command: () => {
+                    navigateTo(localePath("/dashboard/profile"));
+                },
             },
             {
                 label: "Actions",
                 icon: "pi pi-chart-line",
-                route: localePath("/dashboard/profile/actions"),
+                command: () => {
+                    navigateTo(localePath("/dashboard/profile/actions"));
+                },
             },
         ],
     };
