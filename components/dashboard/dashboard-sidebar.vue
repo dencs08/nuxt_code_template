@@ -2,7 +2,7 @@
   <div>
     <!-- Navbar -->
     <div
-      class="fixed w-screen top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/50 backdrop-blur px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+      class="fixed w-screen top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-surface-100 dark:border-surface-800 bg-white dark:bg-surface-950/50 backdrop-blur px-4 shadow sm:gap-x-6 sm:px-6 lg:px-8">
       <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
         <span class="sr-only">Open sidebar</span>
         <Icon name="ic:round-menu" class="h-6 w-auto" />
@@ -13,7 +13,6 @@
 
       <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 items-center">
         <nuxt-link :to="localePath('/')">
-          <!-- <Logo type="logotype" color="black" class="h-4 w-auto hidden lg:block" /> -->
           <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px" />
         </nuxt-link>
 
@@ -64,14 +63,15 @@
     </Sidebar>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden fixed top-20 lg:z-50 lg:flex lg:w-56 lg:flex-col h-full">
-      <div class="flex grow flex-col gap-y-5 overflow-y-auto pl-3 pr-2 pb-4">
+    <div
+      class="hidden fixed top-16 lg:z-50 lg:flex lg:w-56 lg:flex-col h-full bg-white shadow-[4px_0_5px_-5px_rgba(0,0,0,0.3)] dark:bg-surface-950/50 border-r border-surface-100 dark:border-surface-800">
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto px-3 pb-4 pt-4">
         <nav class="flex flex-1 flex-col">
           <PanelMenuDropdown :navigation="dashboardNavigation" />
 
           <!--Settings-->
-          <div class="mt-auto mb-20">
-            <Divider class="" />
+          <div class="mt-auto mb-14">
+            <!-- <Divider class="" /> -->
             <PanelMenuDropdown :navigation="dashboardSettings" />
           </div>
         </nav>
@@ -118,7 +118,6 @@ const userNavigation = computed(() => [
         command: async () => {
           try {
             const response = await signOut();
-            console.log(response);
             navigateTo(localePath('/login'));
           } catch (error) {
             console.error(error);
