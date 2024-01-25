@@ -22,5 +22,7 @@ useHead({
 </script>
 
 <template>
-  <h1>Contact</h1>
+  <div class="grid place-content-center h-screen">
+    <h1>Contact</h1>
+  </div>
 </template>
