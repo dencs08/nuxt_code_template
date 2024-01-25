@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="hidden lg:flex items-center lg:gap-x-12">
-                <NuxtLink v-for="item in navigation" :key="item.label" @click="item.command"
+                <NuxtLink v-for="item in navigation" :key="item.label" :to="item.route"
                     class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer">
                     {{ item.label }}
                 </NuxtLink>
