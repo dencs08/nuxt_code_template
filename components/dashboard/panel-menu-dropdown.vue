@@ -2,7 +2,7 @@
     <PanelMenu :model="navigation" class="dashboard-custom-panel" multiple>
         <template #item="{ item }">
             <nuxt-link v-if="item.route" :to="item.route" v-ripple
-                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-2 rounded"
+                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-1.5 my-1 rounded"
                 @click="toggleDropdown(item)">
                 <span :class="item.icon" />
                 <span class="ml-2 text-sm">{{ item.label }}</span>
@@ -27,8 +27,8 @@
                     class="pi pi-angle-right text-primary-500 dark:text-primary-400 ml-auto transform transition-transform group-hover:rotate-90"
                     :class="{ 'rotate-90': dropdowns[item.label] }" />
             </a>
-            <Divider v-if="item !== navigation[navigation.length - 1]"
-                :pt="{ root: { class: 'flex relative my-1.5 mx-0 py-0 px-5 w-full before:block before:absolute before:left-0 before:top-1/2 before:w-full before:border-solid before:border-t before:border-surface-200/40 before:dark:border-surface-700/75' } }" />
+            <!-- <Divider v-if="item !== navigation[navigation.length - 1]"
+                :pt="{ root: { class: 'flex relative my-1.5 mx-0 py-0 px-5 w-full before:block before:absolute before:left-0 before:top-1/2 before:w-full before:border-solid before:border-t before:border-surface-200/40 before:dark:border-surface-700/75' } }" /> -->
         </template>
     </PanelMenu>
 </template>
