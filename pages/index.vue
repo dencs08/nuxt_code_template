@@ -7,18 +7,13 @@
       <p class="font-body text-3xl font-bold" v-motion="fade({ delay: 425 })">
         {{ t('pages.index.description') }}
       </p>
-      <p class="font-accent text-2xl font-black" v-motion="slideBottom({ delay: 450 })">
+      <p class="font-accent text-2xl" v-motion="slideBottom({ delay: 450 })">
         {{ $t('welcome') }}
       </p>
     </section>
 
     <section class="container mx-auto">
-      <!-- <DesignTableDisplay /> -->
-    </section>
-
-    <section>
-      Need to have for class registration of tailwind
-      <p class="hover:shadow-sm hover:bg-blue-700">a</p>
+      <DesignTableDisplay />
     </section>
   </div>
 </template>
