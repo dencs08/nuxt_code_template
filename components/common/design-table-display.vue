@@ -1,8 +1,18 @@
 <template>
     <div>
+        <div v-for="font in fonts" :key="font" class="mb-10">
+            <div v-for="(size, index) in sizes" :key="size">
+                <p :class="getFontClass(font, weights[index], size)">
+                    The quick brown fox jumps over the lazy dog
+                </p>
+                <p class="text-xs text-dark-900 mb-4">
+                    {{ `${font}-${weights[index]}-${size}` }}
+                </p>
+            </div>
+        </div>
         <div class="flex gap-2">
             <div v-for="variant in variants" :key="variant" class="flex-1">
-                <div v-for="color in colors" :key="color" :class="getClass(color, variant)"
+                <div v-for="color in colors" :key="color" :class="getColorClass(color, variant)"
                     class="h-24 w-full mb-8 relative rounded-md border border-gray-400/25">
                     <div class="text-xs text-dark-900 absolute -bottom-5">
                         {{ `${color}-${variant}` }}
@@ -16,8 +26,12 @@
 <script setup>
 const colors = ['primary', 'secondary', 'accent', 'surface', 'light', 'dark'];
 const variants = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const getColorClass = (color, variant) => `bg-${color}-${variant}`;
 
-const getClass = (color, variant) => `bg-${color}-${variant}`;
+const fonts = ['heading', 'body', 'accent'];
+const weights = ['thin', 'extralight', 'light', 'normal', 'medium', 'semibold', 'bold', 'extrabold', 'black'];
+const sizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'];
+const getFontClass = (font, weight, size) => `font-${font} font-${weight} text-${size}`;
 </script>
 
 <!-- remember to comment this before deploying if not all of those styles even if unused will get bundled into the css -->
