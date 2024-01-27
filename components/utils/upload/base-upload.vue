@@ -1,5 +1,5 @@
 <template>
-    <FileUpload :mode="mode" :name="name" customUpload @uploader="internalUploadHandler" :accept="accept"
+    <FileUpload :mode="mode" :name="name" customUpload @uploader="handleUploadPlaceholder" :accept="accept"
         :maxFileSize="maxFileSize" :auto="auto" :chooseLabel="chooseLabel" :pt="pt" />
 </template>
 
@@ -53,51 +53,62 @@ const props = defineProps({
     addTimestamp: {
         type: Boolean,
         default: true
+    },
+    fileForUpload: {
+        type: Object as () => File | null,
+        default: null
     }
 });
 
 import { type FileUploadUploaderEvent } from 'primevue/fileupload';
-const emit = defineEmits(['success', 'error', 'file-selected']);
+const emit = defineEmits(['success', 'error', 'file-selected', 'file-ready-for-upload']);
 const client = useSupabaseClient();
 
-//TODO files which could be compressed should be compressed before upload 
-const internalUploadHandler = async (event: FileUploadUploaderEvent) => {
-    console.log('uploading internally');
-
-    const files = Array.isArray(event.files) ? event.files : [event.files];
-    emit('file-selected', files);
-
-    if (files.length === 0) {
-        emit('error', 'No file selected');
-        return;
+watch(() => props.fileForUpload, (newFile) => {
+    if (newFile) {
+        internalUploadHandler(newFile as File);
     }
+}, { immediate: false });
 
+const internalUploadHandler = async (fileOrEvent: File | FileUploadUploaderEvent) => {
+    // console.log('3.5 internalUploadHandler', fileOrEvent);
+
+    if (fileOrEvent) {
+        performUpload(fileOrEvent as File);
+    } else {
+        emit('error', 'No file available for upload');
+    }
+};
+
+const performUpload = async (file: File) => {
     try {
-        const file = files[0];
-
+        let extension = file.type.split('/').pop();
         let filePath = `${props.path}`;
+
         if (props.addTimestamp) {
             const timestamp = Date.now();
-            const pathParts = filePath.split('.');
-            const extension = pathParts.pop();
-            filePath = `${pathParts.join('.')}_${timestamp}.${extension}`;
+            filePath = `${filePath}_${timestamp}.${extension}`; // Add timestamp and new extension
+        } else {
+            filePath = `${filePath}.${extension}`; // Add the extension for cases without timestamp
         }
 
-        const { data, error: uploadError } = await client.
-            storage.
-            from(props.bucketName).
-            upload(filePath, file, { upsert: props.upsert });
+        const { data, error: uploadError } = await client.storage.from(props.bucketName).upload(filePath, file, { upsert: props.upsert });
 
         if (uploadError) throw uploadError;
 
-        const fileUrl = client
-            .storage
-            .from(props.bucketName)
-            .getPublicUrl(filePath);
+        const fileUrl = client.storage.from(props.bucketName).getPublicUrl(filePath);
+        // console.log('4. baseupload performUpload done, now emitting success');
 
         emit('success', fileUrl.data.publicUrl);
     } catch (error) {
         emit('error', (error as Error).message);
     }
+};
+
+//used to prevent PrimeVue from uploading the file itself
+const handleUploadPlaceholder = (event: FileUploadUploaderEvent) => {
+    const files = Array.isArray(event.files) ? event.files : [event.files];
+    // console.log('1. baseupload handleUploadPlaceholder now emitting file-selected');
+    emit('file-selected', files);
 };
 </script>
