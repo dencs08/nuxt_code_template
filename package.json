@@ -43,7 +43,7 @@
     "@nuxt/image": "^1.0.0-rc.1",
     "@nuxtjs/robots": "^3.0.0",
     "@pinia/nuxt": "^0.5.1",
-    "@sfxcode/formkit-primevue": "^1.6.2",
+    "@sfxcode/formkit-primevue": "^1.6.4",
     "@vueuse/core": "^10.2.1",
     "@vueuse/motion": "^2.0.0",
     "browser-image-compression": "^2.0.2",
