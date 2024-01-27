@@ -19,7 +19,7 @@
                     <div class="px-4 sm:px-6 lg:px-8 pb-8">
                         <Breadcrumbs class="mb-3" />
                         <div v-auto-animate>
-                            <Menubar v-if="showMenubar" :model="currentSubNavigation" />
+                            <Menubar v-if="showMenubar" :model="currentSubNavigation" class="mb-6" />
                         </div>
                         <slot></slot>
                     </div>

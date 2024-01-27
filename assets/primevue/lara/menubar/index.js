@@ -8,14 +8,14 @@ export default {
             'items-center',
 
             // Spacing
-            'p-2',
+            'p-0',
 
             // Shape
             'rounded-md',
 
             // Color
-            'bg-surface-50 dark:bg-surface-700',
-            'border border-surface-200 dark:border-surface-700'
+            'bg-gray-50 dark:bg-surface-900',
+            'border-0 border-surface-200 dark:border-surface-700'
         ]
     },
     menu: ({ props }) => ({
@@ -25,10 +25,10 @@ export default {
             'items-center',
             'flex-wrap',
             'flex-col sm:flex-row',
-            { hidden: !props?.mobileActive, flex: props?.mobileActive },
+            // { hidden: !props?.mobileActive, flex: props?.mobileActive },
 
             // Position
-            'absolute sm:relative',
+            'sm:relative',
             'top-full left-0',
             'sm:top-auto sm:left-auto',
 
@@ -36,23 +36,23 @@ export default {
             'w-full sm:w-auto',
 
             // Spacing
-            'm-0',
+            'mr-0',
             'py-1 sm:py-0 sm:p-0',
             'list-none',
 
             // Shape
-            'shadow-md sm:shadow-none',
+            'shadow-none',
             'border-0',
 
             // Color
-            'bg-surface-0 dark:bg-surface-700 sm:bg-transparent',
+            'bg-surface-0 dark:bg-surface-900 sm:bg-transparent',
 
             // Misc
             'outline-none'
         ]
     }),
     menuitem: {
-        class: 'sm:relative sm:w-auto w-full static'
+        class: 'sm:relative sm:w-auto w-full static mr-0'
     },
     content: ({ props, context }) => ({
         class: [
@@ -61,21 +61,20 @@ export default {
 
             //  Colors
             {
-                'text-surface-500 dark:text-white/70': !context.focused && !context.active,
-                'text-surface-500 dark:text-white/70 bg-surface-200 dark:bg-surface-600/90': context.focused && !context.active,
-                'text-primary-700 dark:text-surface-0/80 bg-primary-50 dark:bg-primary-400/30': context.focused && context.active,
-                'text-primary-700 dark:text-surface-0/80 bg-primary-50 dark:bg-primary-400/30': !context.focused && context.active
+                'text-primary-500 dark:text-primary/70': !context.focused && !context.active,
+                'text-primary-500 dark:text-primary/70': context.focused && !context.active,
+                'text-primary-700 dark:text-primary-300': context.focused && context.active,
+                'text-primary-700 dark:text-primary-300': !context.focused && context.active
             },
 
             // Hover States
             {
-                'hover:bg-surface-100 dark:hover:bg-surface-600/80': !context.active,
-                'hover:bg-primary-500/50 dark:hover:bg-primary-300/30 text-primary-700 dark:text-surface-0/80': context.active
+                // 'hover:bg-surface-100/80 dark:hover:bg-surface-700/80': !context.active,
+                // 'hover:bg-surface-100/80 dark:hover:bg-surface-700/80 text-primary-700 dark:text-surface-0/80': context.active
             },
 
             // Transitions
-            'transition-all',
-            'duration-200'
+            'transition',
         ]
     }),
     action: ({ context }) => ({
@@ -118,16 +117,17 @@ export default {
     submenu: ({ props }) => ({
         class: [
             // Size
-            'w-full sm:w-48',
+            'w-full sm:w-48 transition',
 
             // Spacing
-            'py-1',
+            'py-0',
             'm-0',
             'list-none',
 
             // Shape
             'shadow-none sm:shadow-md',
             'border-0',
+            'rounded-md',
 
             // Position
             'static sm:absolute',
@@ -144,7 +144,7 @@ export default {
     button: {
         class: [
             // Flexbox
-            'flex sm:hidden',
+            'hidden',
             'items-center justify-center',
 
             // Size
@@ -163,7 +163,7 @@ export default {
             'focus:ring focus:ring-primary-400/50 dark:focus:ring-primary-300/50',
 
             // Transitions
-            'transition duration-200 ease-in-out',
+            'transition ease-in-out',
 
             // Misc
             'cursor-pointer',
