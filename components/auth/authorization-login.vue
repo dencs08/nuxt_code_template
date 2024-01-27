@@ -10,23 +10,12 @@
         <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Login">
           <template #default="{ getNode }">
             <div class="space-y-2 mb-5">
-              <FormKit
-                  class="w-full"
-                  type='primeInputText'
-                  name= 'email'
-                  validation= 'required|email'
-                  placeholder= 'Email'
-                  @node="getNode">
+              <FormKit class="w-full" type='primeInputText' name='email' validation='required|email' placeholder='Email'
+                @node="getNode">
               </FormKit>
 
-              <FormKit
-                  class="w-full"
-                  type='primePassword'
-                  name= 'password'
-                  validation= 'required'
-                  toggleMask
-                  placeholder= 'Password'
-                  @node="getNode">
+              <FormKit class="w-full" type='primePassword' name='password' validation='required' toggleMask
+                placeholder='Password' @node="getNode">
               </FormKit>
             </div>
 
@@ -55,7 +44,7 @@
             </div>
           </div>
 
-          <OAuth/>
+          <OAuth />
         </div>
 
         <div class="mt-3 text-center">
@@ -70,10 +59,10 @@
 
 <script setup>
 const localePath = useLocalePath()
-const {signIn} = useAuthentication();
-const {handleSubmit} = useSubmit();
+const { signIn } = useAuthentication();
+const { handleSubmit } = useSubmit();
 
 async function handleForm(data) {
-    await handleSubmit(signIn, { email: data.email, password: data.password }, 'Redirecting to your dashboard panel','/dashboard',true);
+  await handleSubmit(signIn, { email: data.email, password: data.password }, 'Redirecting to your dashboard panel', '/dashboard', true);
 }
 </script>
