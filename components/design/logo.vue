@@ -1,5 +1,6 @@
 <template>
-  <nuxt-img :src="logoPath" @error="handleImageError" alt="Logo" quality="10" />
+  <nuxt-img :src="logoPath" @error="handleImageError" :ismap="false" decoding="auto" loading="lazy" width="100%"
+    height="100%" alt="Logo" quality="10" />
 </template>
 
 <script setup lang="ts">
