@@ -29,8 +29,9 @@
                             <FormKit class="w-full" type='primePassword' name='password_confirm'
                                 validation='required|confirm' toggleMask placeholder='Repeat password' @node="getNode">
                             </FormKit>
-                            <FormKit class="w-full" type='primeDropdown' :options="roles" name="role"
-                                placeholder="Select user role" validation='required' @node="getNode"></FormKit>
+                            <FormKit class="w-full" type='primeDropdown' :options="rolesOptions" optionValue="value"
+                                optionLabel="label" name="role" placeholder="Select user role" validation='required'
+                                @node="getNode"></FormKit>
                             <!-- <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
                                 @upload="onUpload" chooseLabel="Avatar" /> -->
                         </div>
@@ -47,6 +48,8 @@ const { handleSubmit } = useSubmit();
 const { roles } = useRoles();
 const userStore = useUsersStore();
 const visible = ref(false);
+
+const rolesOptions = computed(() => roles.value.map(role => ({ label: role.label, value: role.value })));
 
 const submitForm = async (data) => {
     const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
