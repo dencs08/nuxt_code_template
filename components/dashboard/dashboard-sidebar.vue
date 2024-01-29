@@ -109,7 +109,7 @@ const userNavigation = computed(() => [
         label: 'Your profile',
         icon: 'pi pi-user',
         command: () => {
-          navigateTo(localePath('/dashboard/profile'));
+          navigateTo(localePath('/dashboard/user/profile'));
         }
       },
       {
@@ -118,7 +118,7 @@ const userNavigation = computed(() => [
         command: async () => {
           try {
             const response = await signOut();
-            navigateTo(localePath('/login'));
+            navigateTo(localePath('/login')); //TODO change to the environment variable
           } catch (error) {
             console.error(error);
           }
