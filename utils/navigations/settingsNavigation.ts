@@ -4,6 +4,7 @@ export function settingsNavigation() {
 
     return {
         route: localePath("/dashboard/settings"),
+        checkRoute: localePath("/dashboard/settings"),
         items: [
             {
                 label: "General",

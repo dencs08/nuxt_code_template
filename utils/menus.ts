@@ -1,9 +1,22 @@
 import { profileNavigation } from "./navigations/profileNavigation";
 import { settingsNavigation } from "./navigations/settingsNavigation";
 
-export function useNavigation() {
-    const localePath = useLocalePath();
+const localePath = useLocalePath();
 
+const dashboardRoutes = {
+    home: localePath("/dashboard/home"),
+    mail: localePath("/dashboard/mail"),
+
+    admin: {
+        users: localePath("/dashboard/admin/users"),
+        marketing: localePath("/dashboard/admin/marketing"),
+        analytics: localePath("/dashboard/admin/analytics"),
+    },
+
+    user: {},
+};
+
+export function useNavigation() {
     const navigation = computed(() => [
         {
             label: "Start",
@@ -45,7 +58,8 @@ export function useNavigation() {
         {
             label: "Main",
             icon: "pi pi-home",
-            route: localePath("/dashboard/home"),
+            route: dashboardRoutes.home,
+            checkRoute: dashboardRoutes.home,
             // items: [
             //     {
             //         label: "Dashboard",
@@ -59,47 +73,50 @@ export function useNavigation() {
         {
             label: "Marketing",
             icon: "pi pi-percentage",
-            badge: 5,
+            route: localePath("/dashboard/admin/marketing"),
+            // badge: 5,
+            // items: [
+
+            // ],
+        },
+        {
+            label: "Mail",
+            icon: "pi pi-envelope",
             items: [
                 {
-                    label: "Mail",
-                    icon: "pi pi-envelope",
-                    items: [
-                        {
-                            label: "Compose",
-                            icon: "pi pi-file-edit",
-                            shortcut: "⌘+N",
-                        },
-                        {
-                            label: "Inbox",
-                            icon: "pi pi-inbox",
-                            route: localePath("/dashboard/marketing"),
-                            badge: 5,
-                        },
-                        {
-                            label: "Sent",
-                            icon: "pi pi-send",
-                            // shortcut: "⌘+S",
-                        },
-                        {
-                            label: "Trash",
-                            icon: "pi pi-trash",
-                            // shortcut: "⌘+T",
-                        },
-                    ],
+                    label: "Compose",
+                    icon: "pi pi-file-edit",
+                    shortcut: "⌘+N",
+                },
+                {
+                    label: "Inbox",
+                    icon: "pi pi-inbox",
+                    route: localePath("/dashboard/mail/inbox"),
+                    badge: 5,
+                },
+                {
+                    label: "Sent",
+                    icon: "pi pi-send",
+                    // shortcut: "⌘+S",
+                },
+                {
+                    label: "Trash",
+                    icon: "pi pi-trash",
+                    // shortcut: "⌘+T",
                 },
             ],
         },
         {
             label: "Analytics",
             icon: "pi pi-chart-bar",
-            route: localePath("/dashboard/admin/analytics"),
+            // route: dashboardRoutes.admin.analytics, //for routing used in the primevue components
+            checkRoute: dashboardRoutes.admin.analytics, //for checking if the current route is active
             items: [
                 {
                     label: "Users",
                     icon: "pi pi-users",
                     command: () => {
-                        navigateTo(localePath("/dashboard/admin/analytics/users"));
+                        // navigateTo(localePath("/dashboard/admin/analytics/users"));
                     },
                     items: [
                         {
@@ -108,19 +125,6 @@ export function useNavigation() {
                             command: () => {
                                 navigateTo(localePath("/dashboard/admin/analytics/users/test"));
                             },
-                            items: [
-                                {
-                                    label: "test2",
-                                    icon: "pi pi-users",
-                                    command: () => {
-                                        navigateTo(
-                                            localePath(
-                                                "/dashboard/admin/analytics/users/test/test2"
-                                            )
-                                        );
-                                    },
-                                },
-                            ],
                         },
                     ],
                 },
@@ -141,7 +145,7 @@ export function useNavigation() {
                 {
                     label: "Users",
                     icon: "pi pi-users",
-                    route: localePath("/dashboard/users"),
+                    route: localePath("/dashboard/admin/users"),
                 },
             ],
         },
