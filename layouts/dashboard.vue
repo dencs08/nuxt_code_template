@@ -17,7 +17,7 @@
             <div class="lg:pl-56">
                 <main class="pt-20 min-h-screen">
                     <div class="px-4 sm:px-6 lg:px-8 pb-8">
-                        <Breadcrumbs class="mb-3" />
+                        <Breadcrumbs class="hidden sm:block mb-3" />
                         <div v-auto-animate>
                             <Menubar v-if="showMenubar" :model="currentSubNavigation" class="mb-6" />
                         </div>
@@ -46,14 +46,11 @@ const { errorHandler } = useErrorHandler();
 errorHandler();
 
 const currentSubNavigation = computed(() => {
-    // Recursive function to search in navigation items
     const searchNavItems = (items, path) => {
         for (const item of items) {
-            // Check for direct match or sub-route match
-            if (item.checkRoute === path || path.startsWith(item.checkRoute + '/')) {
+            if (item.checkRoute === path || path.startsWith(item.checkRoute + '/') || item.route === path || path.startsWith(item.route + '/')) {
                 return item.items ?? [];
             }
-            // Recursively check in nested items
             if (item.items) {
                 const subItems = searchNavItems(item.items, path);
                 if (subItems) return subItems;
@@ -62,12 +59,10 @@ const currentSubNavigation = computed(() => {
         return null;
     };
 
-    // Search in dashboardNavigation and dashboardSubNavigation
     let items = searchNavItems([...dashboardNavigation.value, ...dashboardSubNavigation.value], route.path);
     return items ?? [];
 });
 
-// Control visibility of Menubar
 const showMenubar = computed(() => currentSubNavigation.value && currentSubNavigation.value.length > 0);
 </script>
 
