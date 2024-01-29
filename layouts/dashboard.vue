@@ -50,7 +50,7 @@ const currentSubNavigation = computed(() => {
     const searchNavItems = (items, path) => {
         for (const item of items) {
             // Check for direct match or sub-route match
-            if (item.route === path || path.startsWith(item.route + '/')) {
+            if (item.checkRoute === path || path.startsWith(item.checkRoute + '/')) {
                 return item.items ?? [];
             }
             // Recursively check in nested items
