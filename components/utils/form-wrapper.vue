@@ -34,6 +34,7 @@ const formSubmitted = (data) => {
         resolve();
       }, delay);
     }).catch((error) => {
+      reset();
       reject(error);
     });
   });
