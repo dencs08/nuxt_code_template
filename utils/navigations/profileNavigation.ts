@@ -4,7 +4,6 @@ export function profileNavigation() {
 
     return {
         route: localePath("/dashboard/user/profile"),
-        checkRoute: localePath("/dashboard/user/profile"),
         items: [
             {
                 label: "Account",
@@ -18,13 +17,6 @@ export function profileNavigation() {
                 icon: "pi pi-chart-line",
                 command: () => {
                     navigateTo(localePath("/dashboard/user/profile/actions"));
-                },
-            },
-            {
-                label: "Actions",
-                icon: "pi pi-chart-line",
-                command: () => {
-                    navigateTo(localePath({ name: "contactiro" }));
                 },
             },
         ],

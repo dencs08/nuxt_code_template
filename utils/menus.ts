@@ -59,7 +59,6 @@ export function useNavigation() {
             label: "Main",
             icon: "pi pi-home",
             route: dashboardRoutes.home,
-            checkRoute: dashboardRoutes.home,
             // items: [
             //     {
             //         label: "Dashboard",
@@ -109,7 +108,6 @@ export function useNavigation() {
         {
             label: "Analytics",
             icon: "pi pi-chart-bar",
-            // route: dashboardRoutes.admin.analytics, //for routing used in the primevue components
             checkRoute: dashboardRoutes.admin.analytics, //for checking if the current route is active
             items: [
                 {
