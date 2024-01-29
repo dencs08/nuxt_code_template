@@ -2,7 +2,7 @@
     <PanelMenu :model="navigation" class="dashboard-custom-panel" multiple>
         <template #item="{ item }">
             <nuxt-link v-if="item.route" :to="item.route" v-ripple
-                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-1.5 my-1 rounded"
+                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-2 my-1 rounded"
                 @click="toggleDropdown(item)">
                 <span :class="item.icon" />
                 <span class="ml-2 text-sm">{{ item.label }}</span>
@@ -15,7 +15,7 @@
                     :class="{ 'rotate-90': dropdowns[item.label] }" />
             </nuxt-link>
             <a v-else v-ripple
-                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-2.5 rounded"
+                class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-2 rounded"
                 :href="item.url" :target="item.target" @click="toggleDropdown(item)">
                 <span :class="item.icon" />
                 <span class="ml-2 text-sm">{{ item.label }}</span>
@@ -32,12 +32,13 @@
         </template>
     </PanelMenu>
 </template>
-  
+
 <script setup>
 const props = defineProps(['navigation']);
 
 const dropdowns = reactive({});
 const toggleDropdown = (item) => {
+    if (!item.items || item.items.length === 0) return; // Ignore items without sub-items
     dropdowns[item.label] = !dropdowns[item.label];
 };
 </script>
