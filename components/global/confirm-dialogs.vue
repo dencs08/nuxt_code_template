@@ -49,11 +49,12 @@
 <script setup>
 const { verifyPassword } = useAuthentication();
 const { addToast } = useToastService();
+const { CustomError } = useCustomError();
 
 const password = ref();
 const checkPassword = async (acceptCallback, rejectCallback) => {
     try {
-        if (!password.value) throw new Error('Password is required');
+        if (!password.value) throw new CustomError('Password is required', 'PASSWORD_REQUIRED');
         await verifyPassword(password.value);
         addToast('success', 'Account deletion confirmed', 'Your account will now be permanentaly deleted, you will be logged out automatically.', 30000)
         acceptCallback();
