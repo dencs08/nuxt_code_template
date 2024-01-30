@@ -1,5 +1,6 @@
 // services/userService.ts
 import { type User } from "../utils/types";
+const { CustomError } = useCustomError();
 
 export const fetchPublicUserSession = async () => {
     const client = useSupabaseClient();
@@ -21,7 +22,7 @@ export const fetchPublicUserSession = async () => {
         return user;
     } catch (error) {
         if (error instanceof Error) {
-            throw new Error(error.message);
+            throw new CustomError(error.message, error);
         } else {
             throw error;
         }
