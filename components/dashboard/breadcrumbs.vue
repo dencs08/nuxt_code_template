@@ -24,7 +24,7 @@ const { locale, getBrowserLocale } = useI18n()
 
 const home = ref({
   icon: 'pi pi-home',
-  route: localePath('/dashboard/home')
+  route: localePath({ name: 'dash-home' })
 });
 
 const items = computed(() => {

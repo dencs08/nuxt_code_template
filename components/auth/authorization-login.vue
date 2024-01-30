@@ -26,7 +26,8 @@
               </div>
 
               <div class="text-sm leading-6">
-                <NuxtLink :to="localePath('/lost-password')" class="font-medium text-primary-500 hover:text-primary-600">
+                <NuxtLink :to="localePath({ name: 'lost-password' })"
+                  class="font-medium text-primary-500 hover:text-primary-600">
                   Forgot password?
                 </NuxtLink>
               </div>
@@ -48,7 +49,7 @@
         </div>
 
         <div class="mt-3 text-center">
-          <NuxtLink :to="localePath('/register')" class="text-sm font-medium text-gray-600">
+          <NuxtLink :to="localePath({ name: 'register' })" class="text-sm font-medium text-gray-600">
             Don't have an account yet? <span class="text-primary-500">Create one!</span>
           </NuxtLink>
         </div>

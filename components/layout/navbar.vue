@@ -2,7 +2,7 @@
     <header class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white/60 backdrop-blur-md shadow"
         :class="{ '-translate-y-full': !showHeader }">
         <nav class="container mx-auto flex items-center justify-between py-5" aria-label="Global">
-            <NuxtLink :to="localePath('index')">
+            <NuxtLink :to="localePath({ name: 'index' })">
                 <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px"
                     @click="sidebarOpen = false" />
             </NuxtLink>
@@ -18,7 +18,7 @@
                     class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer">
                     {{ item.label }}
                 </NuxtLink>
-                <NuxtLink :to="localePath('/login')">
+                <NuxtLink :to="localePath({ name: 'login' })">
                     <MyButton size="xs">
                         Login
                     </MyButton>
@@ -31,7 +31,7 @@
                 <div class="flex flex-col h-full">
                     <div class="flex items-center justify-between px-4 pt-4 shrink-0">
                         <span class="inline-flex items-center gap-2">
-                            <nuxt-link :to="localePath('/')">
+                            <nuxt-link :to="localePath({ name: 'index' })">
                                 <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px"
                                     @click="sidebarOpen = false" />
                             </nuxt-link>
@@ -44,7 +44,7 @@
                     <div class="overflow-y-auto mt-4 pl-2 pr-5">
                         <PanelMenuDropdown :navigation="navigation" @click="sidebarOpen = false" />
                         <div class="mt-6">
-                            <NuxtLink :to="localePath('/login')">
+                            <NuxtLink :to="localePath({ name: 'login' })">
                                 <MyButton class="w-full" size="xs">
                                     Login
                                 </MyButton>
@@ -100,7 +100,6 @@ function animateOut() {
 </style>
 
 <style>
-/* TODO fix mask animation for all primevue components or maybe just wait for a fix from primevue */
 .sidebar-enter {
     animation: sidebar-enter-animation 300ms forwards;
 }

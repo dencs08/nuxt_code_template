@@ -1,7 +1,7 @@
 <script setup>
 const localePath = useLocalePath()
-const {lostPassword} = useAuthentication();
-const {handleSubmit} = useSubmit();
+const { lostPassword } = useAuthentication();
+const { handleSubmit } = useSubmit();
 
 async function handleForm(data) {
   await handleSubmit(lostPassword, { email: data.email }, 'Reset link sent');
@@ -19,21 +19,17 @@ async function handleForm(data) {
       <FormWrapper :handleSubmit="handleForm">
         <template #default="{ getNode }">
           <div class="mb-2">
-            <FormKit
-                class="w-full"
-                type='primeInputText'
-                name= 'email'
-                validation= 'required|email'
-                validationVisibility= 'submit'
-                placeholder= 'Email'
-                @node="getNode">
+            <FormKit class="w-full" type='primeInputText' name='email' validation='required|email'
+              validationVisibility='submit' placeholder='Email' @node="getNode">
             </FormKit>
           </div>
         </template>
       </FormWrapper>
 
-      <NuxtLink :to="localePath('/login')" class="flex items-center justify-center gap-1 text-gray-600 text-sm group">
-        <Icon name="ic:round-arrow-back" class="h-auto w-5 group-hover:-translate-x-1 transition-transform duration-150"/>
+      <NuxtLink :to="localePath({ name: 'login' })"
+        class="flex items-center justify-center gap-1 text-gray-600 text-sm group">
+        <Icon name="ic:round-arrow-back"
+          class="h-auto w-5 group-hover:-translate-x-1 transition-transform duration-150" />
         <span>Back to log in</span>
       </NuxtLink>
     </div>

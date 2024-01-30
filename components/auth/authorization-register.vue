@@ -39,7 +39,7 @@
         </div>
 
         <div class="mt-5 text-center">
-          <NuxtLink :to="localePath('/login')" class="text-sm font-medium text-gray-600">
+          <NuxtLink :to="localePath({ name: 'login' })" class="text-sm font-medium text-gray-600">
             Already have an account? <span class="text-primary-500">Sign in!</span>
           </NuxtLink>
         </div>

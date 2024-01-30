@@ -12,7 +12,7 @@
       <div class="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
 
       <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 items-center">
-        <nuxt-link :to="localePath('/')">
+        <nuxt-link :to="localePath({ name: 'index' })">
           <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px" />
         </nuxt-link>
 
@@ -43,7 +43,7 @@
         <div class="flex flex-col h-full">
           <div class="flex items-center justify-between px-4 pt-4 shrink-0">
             <span class="inline-flex items-center gap-2">
-              <nuxt-link :to="localePath('/')">
+              <nuxt-link :to="localePath({ name: 'index' })">
                 <Logo type="symbol" :color="isDark ? 'white' : 'black'" height="25px" width="25px" />
               </nuxt-link>
             </span>
@@ -109,7 +109,7 @@ const userNavigation = computed(() => [
         label: 'Your profile',
         icon: 'pi pi-user',
         command: () => {
-          navigateTo(localePath('/dashboard/user/profile'));
+          navigateTo(localePath({ name: "dash-user-profile" }));
         }
       },
       {
@@ -118,7 +118,7 @@ const userNavigation = computed(() => [
         command: async () => {
           try {
             const response = await signOut();
-            navigateTo(localePath('/login')); //TODO change to the environment variable
+            navigateTo(localePath({ name: 'login' }));
           } catch (error) {
             console.error(error);
           }
