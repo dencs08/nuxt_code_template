@@ -1,7 +1,6 @@
 import { authenticationService } from '@/services/authentication';
 export function useAuthentication() {
     const authService = authenticationService('supabase');
-    const { handleRequestError } = useRequests();
 
     async function signIn({ email, password }) {
         const response = await authService.signIn(email, password);
@@ -72,6 +71,11 @@ export function useAuthentication() {
         verifyPassword
     };
 }
+
+const { CustomError } = useCustomError();
+const handleRequestError = (response) => {
+    if (response.error) throw new CustomError(response.error.message, response);
+};
 
 function redirectInPopup(url) {
     // Define dimensions and positioning for the popup
