@@ -1,8 +1,6 @@
 // This Nuxt middleware function checks the user's authentication state and performs redirects based on route metadata.
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const nuxt = useNuxtApp()
-    const LOGIN_PATH = '/login'; //TODO - make this a env variable
-
     const user = useSupabaseUser();
     const auth = to.meta.auth;
 
@@ -14,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (auth && auth.unauthenticatedOnly) {
             // If the user is authenticated, redirect them to a different route.
             if (user.value !== null) {
-                return navigateTo(nuxt.$localePath(auth.navigateAuthenticatedTo));
+                return navigateTo(nuxt.$localePath({ name: auth.navigateAuthenticatedTo || 'index' }));
             }
             // If the user is not authenticated, allow them to access the route.
             else {
@@ -26,8 +24,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (auth === undefined && user.value !== null) return;
 
         // If the user is not authenticated and the route requires authentication, redirect to the login page.
-        if (user.value === null && auth !== false && to.path !== nuxt.$localePath(LOGIN_PATH)) {
-            return navigateTo(nuxt.$localePath(LOGIN_PATH));
+        if (user.value === null && auth !== false && to.path !== nuxt.$localePath({ name: "login" })) {
+            return navigateTo(nuxt.$localePath({ name: "login" }));
         }
     } catch (error) {
         // Log the error and consider redirecting the user to an error page.
