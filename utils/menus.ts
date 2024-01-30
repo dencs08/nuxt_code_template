@@ -1,38 +1,40 @@
 import { profileNavigation } from "./navigations/profileNavigation";
 import { settingsNavigation } from "./navigations/settingsNavigation";
 
-const localePath = useLocalePath();
+const localesPath = useLocalePath();
 
 const dashboardRoutes = {
-    home: localePath("/dashboard/home"),
-    mail: localePath("/dashboard/mail"),
+    home: localesPath({ name: "dash-home" }),
+    mail: localesPath("/dashboard/mail"),
 
     admin: {
-        users: localePath("/dashboard/admin/users"),
-        marketing: localePath("/dashboard/admin/marketing"),
-        analytics: localePath("/dashboard/admin/analytics"),
+        users: localesPath("/dashboard/admin/users"),
+        marketing: localesPath("/dashboard/admin/marketing"),
+        analytics: localesPath("/dashboard/admin/analytics"),
     },
 
     user: {},
 };
 
 export function useNavigation() {
+    const localePath = useLocalePath(); //if outside of useNavigation causes error 500 - not sure why...
+
     const navigation = computed(() => [
         {
             label: "Start",
-            route: localePath("index"),
+            route: localePath({ name: "index" }),
         },
         {
             label: "Kontakt",
-            route: localePath("/contact"),
+            route: localePath({ name: "contact" }),
         },
     ]);
 
     const legal = computed(() => [
-        { name: "Polityka prywatności", href: localePath("/privacy-policy") },
-        { name: "Warunki korzystania", href: localePath("/terms-and-conditions") },
-        { name: "Polityka ciasteczek", href: localePath("/cookies-policy") },
-        { name: "Ustawienia ciasteczek", href: localePath("/contact") },
+        { name: "Polityka prywatności", href: localePath({ name: "privacy" }) },
+        { name: "Warunki korzystania", href: localePath({ name: "terms" }) },
+        { name: "Polityka ciasteczek", href: localePath({ name: "cookies" }) },
+        { name: "Ustawienia ciasteczek", href: localePath({ name: "cookies" }) },
     ]);
 
     const social = computed(() => [
@@ -64,7 +66,7 @@ export function useNavigation() {
             //         label: "Dashboard",
             //         icon: "pi pi-eraser",
             //         command: () => {
-            //             navigateTo(localePath("/dashboard/home"));
+            //             navigateTo(localePath({ name: "dash-home" }));
             //         },
             //     },
             // ],
