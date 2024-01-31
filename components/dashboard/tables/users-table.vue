@@ -8,7 +8,7 @@
             <div class="flex justify-between items-center">
                 <div v-auto-animate v-if="hasAccess" class="flex gap-2 w-full items-center">
                     <UserCreator />
-                    <Button label="Delete" severity="danger" @click="confirmDeleteUsers"
+                    <Button size="small" label="Delete" severity="danger" @click="confirmDeleteUsers"
                         :disabled="!selected || !selected.length" v-if="selected" />
                     <Button size="small" v-tooltip.top="'Save changes'" @click="confirmSaveChanges" icon="pi pi-save"
                         class="!p-2" :disabled="!changesMade" v-if="changesMade" />
