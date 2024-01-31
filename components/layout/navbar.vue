@@ -67,8 +67,6 @@ const sidebarOpen = ref(false);
 const lastScrollPosition = ref(0)
 const showHeader = ref(true)
 
-
-
 const { y } = useWindowScroll()
 watch(y, (newScrollPosition) => {
     if (window.matchMedia("(min-width: 1025px)").matches) {
@@ -76,10 +74,6 @@ watch(y, (newScrollPosition) => {
         lastScrollPosition.value = newScrollPosition
     }
 })
-
-function animateOut() {
-    document.querySelectorAll('.sidebar-enter')[0].classList.add('sidebar-leave')
-}
 </script>
 
 <style scoped>
@@ -99,36 +93,4 @@ function animateOut() {
 }
 </style>
 
-<style>
-.sidebar-enter {
-    animation: sidebar-enter-animation 300ms forwards;
-}
-
-.sidebar-leave {
-    animation: sidebar-leave-animation 300ms forwards;
-}
-
-@keyframes sidebar-enter-animation {
-    from {
-        background-color: transparent;
-        backdrop-filter: blur(0px);
-    }
-
-    to {
-        @apply bg-surface-950/20;
-        backdrop-filter: blur(6px);
-    }
-}
-
-@keyframes sidebar-leave-animation {
-    from {
-        @apply bg-surface-950/20;
-        backdrop-filter: blur(6px);
-    }
-
-    to {
-        background-color: transparent;
-        backdrop-filter: blur(0px);
-    }
-}
-</style>
+<style></style>
