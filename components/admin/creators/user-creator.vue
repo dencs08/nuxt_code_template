@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <Button label="Add" icon="pi pi-plus" severity="success" @click="visible = true;" />
+            <Button size="small" label="Add" icon="pi pi-plus" severity="success" @click="visible = true;" />
         </div>
 
         <Dialog v-model:visible="visible" maximizable header="Header" :style="{ width: '25rem' }"
