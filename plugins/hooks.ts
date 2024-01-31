@@ -1,8 +1,6 @@
 // import type { Pinia } from "pinia";
 // import { useUsersStore } from "~/stores/UsersStore";
 
-//TODO get the all of the users settings + darkmode
-
 /**
  * Nuxt plugin which gets all the necessary data before the application is created.
  * @param {object} nuxtApp - The Nuxt application instance.
