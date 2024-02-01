@@ -36,3 +36,21 @@ export async function checkUserRole(event, client, role) {
         throw new Error(`Unauthorized: User is not a ${role} or higher`);
     }
 }
+
+// Usage
+// await getUserRole(event, client);
+export async function getUserRole(event, client) {
+    const user = await getUserSession(event);
+
+    const { data, error } = await client
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+    if (error) {
+        throw new Error(`Error retrieving user roles: ${error.message}`);
+    }
+
+    return data.role;
+}
