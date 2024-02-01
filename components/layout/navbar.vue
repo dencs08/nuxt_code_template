@@ -26,7 +26,7 @@
             </div>
         </nav>
 
-        <Sidebar v-model:visible="sidebarOpen" @hide="animateOut">
+        <Sidebar v-model:visible="sidebarOpen">
             <template #container="{ closeCallback }">
                 <div class="flex flex-col h-full">
                     <div class="flex items-center justify-between px-4 pt-4 shrink-0">
