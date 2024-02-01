@@ -61,6 +61,7 @@ export function useNavigation() {
             label: "Main",
             icon: "pi pi-home",
             route: dashboardRoutes.home,
+            access: "user",
             // items: [
             //     {
             //         label: "Dashboard",
@@ -75,6 +76,7 @@ export function useNavigation() {
             label: "Marketing",
             icon: "pi pi-percentage",
             route: localePath("/dashboard/admin/marketing"),
+            access: "admin",
             // badge: 5,
             // items: [
 
@@ -83,6 +85,7 @@ export function useNavigation() {
         {
             label: "Mail",
             icon: "pi pi-envelope",
+            access: "user",
             items: [
                 {
                     label: "Compose",
@@ -111,6 +114,7 @@ export function useNavigation() {
             label: "Analytics",
             icon: "pi pi-chart-bar",
             checkRoute: dashboardRoutes.admin.analytics, //for checking if the current route is active
+            access: "admin",
             items: [
                 {
                     label: "Users",
@@ -141,6 +145,7 @@ export function useNavigation() {
         {
             label: "Administrative",
             icon: "pi pi-home",
+            access: "admin",
             items: [
                 {
                     label: "Users",
@@ -168,13 +173,27 @@ export function useNavigation() {
         },
     ]);
 
+    const { hasAccess } = useRoleCheck();
+    const filterNavigationItems = (items: any[]) => {
+        return items.filter((item) => {
+            if (item.items) {
+                item.items = filterNavigationItems(item.items);
+            }
+            return !item.access || hasAccess(item.access);
+        });
+    };
+
+    const filteredDashboardNavigation = computed(() => {
+        return filterNavigationItems(dashboardNavigation.value);
+    });
+
     const dashboardSubNavigation = computed(() => [profileNavigation(), settingsNavigation()]);
 
     return {
         navigation,
         legal,
         social,
-        dashboardNavigation,
+        dashboardNavigation: filteredDashboardNavigation,
         dashboardSettings,
         dashboardSubNavigation,
     };
