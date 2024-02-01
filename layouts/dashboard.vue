@@ -34,7 +34,7 @@
                                     'relative',
                                     'flex',
                                     'items-center',
-                                    'p-2',
+                                    'p-1',
                                     'rounded-md',
                                     'bg-surface-0/80 dark:bg-surface-800/30',
                                     'border border-surface-100/50 dark:border-surface-700/50'
