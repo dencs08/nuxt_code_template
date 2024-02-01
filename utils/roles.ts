@@ -7,6 +7,7 @@ export type Role = {
 };
 
 export const validRoles: Role[] = [
+    { label: "Subscriber", value: "subscriber", level: 0 },
     { label: "User", value: "user", level: 1 },
     { label: "Admin", value: "admin", level: 2 },
     { label: "SuperAdmin", value: "superadmin", level: 3 },
