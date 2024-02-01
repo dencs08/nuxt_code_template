@@ -4,6 +4,7 @@ import { validRoles } from '@/utils/roles';
 export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
     const body = await readBody(event);
+    const userRole = await getUserRole(event, client);
 
     await checkUserRole(event, client, 'admin');
 
@@ -12,6 +13,23 @@ export default eventHandler(async (event) => {
     }
     if (!validRoles.map(role => role.value).includes(body.role)) {
         throw new Error('Invalid or missing data', role);
+    }
+
+    const { data: currentUserData, error: currentUserError } = await client
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', body.id)
+        .single();
+    if (currentUserError) {
+        throw new Error('Error retrieving current user role');
+    }
+
+    if (userRole === 'admin' && (currentUserData.role === 'admin' || currentUserData.role === 'superadmin')) {
+        throw new Error('Admins cannot change the role of other admins or superadmins');
+    }
+
+    if (userRole !== 'superadmin' && body.role === 'superadmin') {
+        throw new Error('Only superadmins can assign the superadmin role');
     }
 
     try {
