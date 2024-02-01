@@ -6,14 +6,14 @@
 
         <template #header>
             <div class="flex justify-between items-center">
-                <div v-auto-animate v-if="hasAccess" class="flex gap-2 w-full items-center">
+                <div v-auto-animate v-if="isAdmin" class="flex gap-2 w-full items-center">
                     <UserCreator />
                     <Button size="small" label="Delete" severity="danger" @click="confirmDeleteUsers"
                         :disabled="!selected || !selected.length" v-if="selected" />
                     <Button size="small" v-tooltip.top="'Save changes'" @click="confirmSaveChanges" icon="pi pi-save"
                         class="!p-2" :disabled="!changesMade" v-if="changesMade" />
                 </div>
-                <div class="flex justify-between gap-3" :class="!hasAccess ? 'w-full' : ''">
+                <div class="flex justify-between gap-3" :class="!isAdmin ? 'w-full' : ''">
                     <span class="relative">
                         <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
                         <InputText v-model="filters['global'].value" placeholder="Keyword Search"
@@ -72,7 +72,9 @@ const filters = ref({
 
 const { handleSubmit } = useSubmit();
 const { getRoleSeverity } = useRoles();
-const { hasAccess } = useRoleCheck('admin');
+const { hasAccess } = useRoleCheck();
+
+const isAdmin = hasAccess('admin');
 const userStore = useUsersStore();
 
 const dt = ref();
