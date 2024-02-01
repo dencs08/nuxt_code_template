@@ -4,7 +4,7 @@ export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
     const body = await readBody(event);
 
-    await checkUserRole(event, client, 'admin');
+    await checkUserRole(event, client, 'superadmin');
 
     try {
         const { data, error } = await client.auth.admin.deleteUser(body.userId);
