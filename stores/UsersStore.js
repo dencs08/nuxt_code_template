@@ -39,8 +39,7 @@ export const useUsersStore = defineStore({
                 const data = await $fetch('/api/fetch-users')
                 this.users = data;
             } catch (error) {
-                console.error(error);
-                throw new CustomError('Failed to fetch users', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
@@ -60,8 +59,7 @@ export const useUsersStore = defineStore({
                 });
                 this.users.push(data.user);
             } catch (error) {
-                console.error(error);
-                throw new CustomError('Failed to create a user', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
@@ -79,8 +77,7 @@ export const useUsersStore = defineStore({
                 this.users = this.users.filter(user => user.id !== userId);
                 return { status: 'success' };
             } catch (error) {
-                console.error(error);
-                throw new CustomError('Failed to delete user', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
@@ -101,8 +98,7 @@ export const useUsersStore = defineStore({
                 console.log('Delete operation completed');
                 return { status: 'success' };
             } catch (error) {
-                console.error(error);
-                throw new CustomError('Failed to delete user', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
@@ -123,7 +119,7 @@ export const useUsersStore = defineStore({
                 });
 
             } catch (error) {
-                throw new CustomError('Error updating user', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
                 // return updateData.value || 'User updated successfully';
@@ -141,8 +137,7 @@ export const useUsersStore = defineStore({
                     }
                 });
             } catch (error) {
-                throw new CustomError('Error updating role', error);
-
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
@@ -155,7 +150,7 @@ export const useUsersStore = defineStore({
             } catch (error) {
                 console.error('Error in fetchAuthenticatedUser:', error);
                 this.userSession = null;
-                throw new CustomError('Error fetching the user session', error);
+                throw new CustomError(error.data.message, error);
             } finally {
                 this.loading = false;
             }
