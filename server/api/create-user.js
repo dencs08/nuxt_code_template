@@ -2,8 +2,7 @@ import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server"
 
 export default eventHandler(async (event) => {
     const client = serverSupabaseServiceRole(event);
-    const body = await readBody(event);
-
+    let body = await readBody(event);
     await checkUserRole(event, client, 'admin');
 
     try {
@@ -21,17 +20,19 @@ export default eventHandler(async (event) => {
             throw new Error('Error creating user: ' + error.message);
         }
 
-        const { error: roleError } = await client
-            .from('user_roles')
-            .update({ role: body.role })
-            .eq('user_id', data.user.id)
-
-        if (roleError) {
-            throw new Error('Error updating the role: ' + error.message);
+        body = { ...body, id: data.user.id };
+        try {
+            await assignRole(event, body);
+        } catch (err) {
+            const { error: removeError } = await client.auth.admin.deleteUser(data.user.id);
+            const { data: deletedUser, error: deleteError } = await client
+                .from('users')
+                .delete()
+                .eq('id', data.user.id);
         }
 
         return { response: 'User created', data: data };
     } catch (err) {
-        return { error: 'An error occurred during the creation process', response: err.message };
+        throw new Error('An error occurred during the creation process ' + err.message);
     }
 });
