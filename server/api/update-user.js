@@ -32,6 +32,6 @@ export default eventHandler(async (event) => {
         }
         return { response: 'User updated' };
     } catch (err) {
-        return { error: 'An error occurred during the update process' };
+        throw new Error('An error occurred during the update process');
     }
 });

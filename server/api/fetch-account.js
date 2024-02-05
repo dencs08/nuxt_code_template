@@ -10,6 +10,6 @@ export default eventHandler(async (event) => {
 
         return { response: 'Account fetched', account: userSession };
     } catch (err) {
-        return { error: 'An error occurred during the fetching process', response: err.message };
+        throw new Error('An error occurred during the fetching process ' + err.message);
     }
 });

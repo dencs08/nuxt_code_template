@@ -22,6 +22,6 @@ export default eventHandler(async (event) => {
 
         return { response: 'User deleted', data: deletedUser };
     } catch (err) {
-        return { error: 'An error occurred during the deletion process', response: err.message };
+        throw new Error('An error occurred during the deletion process ' + err.message);
     }
 });
