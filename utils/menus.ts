@@ -1,20 +1,6 @@
 import { profileNavigation } from "./navigations/profileNavigation";
 import { settingsNavigation } from "./navigations/settingsNavigation";
-
-const localesPath = useLocalePath();
-
-const dashboardRoutes = {
-    home: localesPath({ name: "dash-home" }),
-    mail: localesPath("/dashboard/mail"),
-
-    admin: {
-        users: localesPath("/dashboard/admin/users"),
-        marketing: localesPath("/dashboard/admin/marketing"),
-        analytics: localesPath("/dashboard/admin/analytics"),
-    },
-
-    user: {},
-};
+import { mainDashboardNavigation } from "./navigations/main-dashboard";
 
 export function useNavigation() {
     const localePath = useLocalePath(); //if outside of useNavigation causes error 500 - not sure why...
@@ -27,6 +13,10 @@ export function useNavigation() {
         {
             label: "Kontakt",
             route: localePath({ name: "contact" }),
+        },
+        {
+            label: "FAQ",
+            route: localePath({ name: "faq" }),
         },
     ]);
 
@@ -56,144 +46,23 @@ export function useNavigation() {
         },
     ]);
 
-    const dashboardNavigation = computed(() => [
-        {
-            label: "Main",
-            icon: "pi pi-home",
-            route: dashboardRoutes.home,
-            access: "user",
-            // items: [
-            //     {
-            //         label: "Dashboard",
-            //         icon: "pi pi-eraser",
-            //         command: () => {
-            //             navigateTo(localePath({ name: "dash-home" }));
-            //         },
-            //     },
-            // ],
-        },
-        {
-            label: "Marketing",
-            icon: "pi pi-percentage",
-            route: localePath("/dashboard/admin/marketing"),
-            access: "admin",
-            // badge: 5,
-            // items: [
-
-            // ],
-        },
-        {
-            label: "Mail",
-            icon: "pi pi-envelope",
-            access: "user",
-            items: [
-                {
-                    label: "Compose",
-                    icon: "pi pi-file-edit",
-                    shortcut: "⌘+N",
-                },
-                {
-                    label: "Inbox",
-                    icon: "pi pi-inbox",
-                    route: localePath("/dashboard/mail/inbox"),
-                    badge: 5,
-                },
-                {
-                    label: "Sent",
-                    icon: "pi pi-send",
-                    // shortcut: "⌘+S",
-                },
-                {
-                    label: "Trash",
-                    icon: "pi pi-trash",
-                    // shortcut: "⌘+T",
-                },
-            ],
-        },
-        {
-            label: "Analytics",
-            icon: "pi pi-chart-bar",
-            checkRoute: dashboardRoutes.admin.analytics, //for checking if the current route is active
-            access: "admin",
-            items: [
-                {
-                    label: "Users",
-                    icon: "pi pi-users",
-                    command: () => {
-                        // navigateTo(localePath("/dashboard/admin/analytics/users"));
-                    },
-                    items: [
-                        {
-                            label: "test",
-                            icon: "pi pi-users",
-                            command: () => {
-                                navigateTo(localePath("/dashboard/admin/analytics/users/test"));
-                            },
-                        },
-                    ],
-                },
-                {
-                    label: "Test",
-                    icon: "pi pi-users",
-                    // route: localePath("/dashboard/admin/analytics/test"),
-                    command: () => {
-                        navigateTo(localePath("/dashboard/admin/analytics/test"));
-                    },
-                },
-            ],
-        },
-        {
-            label: "Administrative",
-            icon: "pi pi-home",
-            access: "admin",
-            items: [
-                {
-                    label: "Users",
-                    icon: "pi pi-users",
-                    route: localePath("/dashboard/admin/users"),
-                },
-            ],
-        },
-    ]);
-
     const dashboardSettings = computed(() => [
         {
             label: "Settings",
             icon: "pi pi-cog",
             route: localePath("/dashboard/settings"),
-            // items: [
-            //     {
-            //         label: "Some setting..",
-            //         icon: "pi pi-cog",
-            //         command: () => {
-            //             navigateTo(localePath("/dashboard/settings"));
-            //         },
-            //     },
-            // ],
         },
     ]);
 
-    const { hasAccess } = useRoleCheck();
-    const filterNavigationItems = (items: any[]) => {
-        return items.filter((item) => {
-            if (item.items) {
-                item.items = filterNavigationItems(item.items);
-            }
-            return !item.access || hasAccess(item.access);
-        });
-    };
-
-    const filteredDashboardNavigation = computed(() => {
-        return filterNavigationItems(dashboardNavigation.value);
-    });
-
     const dashboardSubNavigation = computed(() => [profileNavigation(), settingsNavigation()]);
+
+    const dashboardNavigation = mainDashboardNavigation();
 
     return {
         navigation,
         legal,
         social,
-        dashboardNavigation: filteredDashboardNavigation,
+        dashboardNavigation,
         dashboardSettings,
         dashboardSubNavigation,
     };
