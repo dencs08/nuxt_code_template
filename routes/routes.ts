@@ -71,6 +71,40 @@ export const routes = [
         file: "@/pages/dashboard/home/index.vue",
     },
     {
+        name: "dashboard-mail-inbox",
+        newName: "dash-mail-inbox",
+        path: "/dashboard/mail/inbox",
+        file: "@/pages/dashboard/mail/inbox.vue",
+    },
+
+    //dashboard admin pages
+    {
+        name: "dashboard-admin-users",
+        newName: "dash-admin-users",
+        path: "/dashboard/admin/users",
+        file: "@/pages/dashboard/admin/users/index.vue",
+    },
+    {
+        name: "dashboard-admin-marketing",
+        newName: "dash-admin-marketing",
+        path: "/dashboard/admin/marketing",
+        file: "@/pages/dashboard/admin/marketing/index.vue",
+    },
+    {
+        name: "dashboard-admin-analytics",
+        newName: "dash-admin-analytics",
+        path: "/dashboard/admin/analytics",
+        file: "@/pages/dashboard/admin/analytics/index.vue",
+    },
+    {
+        name: "dashboard-admin-analytics-users",
+        newName: "dash-admin-analytics-users",
+        path: "/dashboard/admin/analytics/users",
+        file: "@/pages/dashboard/admin/analytics/users/index.vue",
+    },
+
+    //dashboard user pages
+    {
         name: "dashboard-user-profile",
         newName: "dash-user-profile",
         path: "/dashboard/user/profile",
