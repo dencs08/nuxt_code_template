@@ -7,12 +7,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (auth === false) {
         return; // Allow all users regardless of authentication state.
     } else {
+        const usersStore = useUsersStore();
         if (access === undefined) {
             return; // Allow all users regardless of role.
         }
-
-        const userSession = await fetchPublicUserSession();
-        const userRole = userSession?.role;
+        const userSession = await usersStore.fetchUserSession();
+        const userRole = usersStore.userRole;
 
         // Find the user's role and the minimum access role in the validRoles array
         const userRoleObj = validRoles.find(role => role.value === userRole);
