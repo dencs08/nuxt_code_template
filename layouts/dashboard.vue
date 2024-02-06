@@ -95,11 +95,19 @@ const head = useLocaleHead({
 })
 
 const { locale, t } = useI18n();
+const localePath = useLocalePath();
 const route = useRoute()
 const title = computed(() => t('layouts.default.title', { title: t(route.meta.title ?? 'TBD') }))
 const { dashboardSubNavigation, dashboardNavigation } = useNavigation();
 const { errorHandler } = useErrorHandler();
 errorHandler();
+
+const userStore = useUsersStore();
+userStore.fetchUserSession();
+const userSession = userStore.userSession;
+if (!userSession) {
+    navigateTo(localePath({ name: "login" }));
+}
 
 const currentSubNavigation = computed(() => {
     const searchNavItems = (items, path) => {
