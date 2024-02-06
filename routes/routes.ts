@@ -105,6 +105,12 @@ export const routes = [
 
     //dashboard user pages
     {
+        name: "dashboard-user-account",
+        newName: "dash-user-account",
+        path: "/dashboard/user/account",
+        file: "@/pages/dashboard/user/account/index.vue",
+    },
+    {
         name: "dashboard-user-profile",
         newName: "dash-user-profile",
         path: "/dashboard/user/profile",
