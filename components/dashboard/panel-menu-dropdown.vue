@@ -1,5 +1,5 @@
 <template>
-    <PanelMenu :model="navigation" class="dashboard-custom-panel" multiple>
+    <PanelMenu :model="filteredNavigation" class="dashboard-custom-panel" multiple>
         <template #item="{ item }">
             <nuxt-link v-if="item.route" :to="item.route" v-ripple
                 class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0/80 hover:bg-surface-400/15 px-3 py-2 my-1 rounded"
@@ -41,6 +41,10 @@ const toggleDropdown = (item) => {
     if (!item.items || item.items.length === 0) return; // Ignore items without sub-items
     dropdowns[item.label] = !dropdowns[item.label];
 };
+
+const filteredNavigation = computed(() => {
+    return props.navigation.filter(item => (item.route) || (item.items && item.items.length > 0));
+});
 </script>
 
 <style scoped>
