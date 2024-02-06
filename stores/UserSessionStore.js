@@ -1,5 +1,5 @@
-export const useUsersStore = defineStore({
-    id: 'usersStore',
+export const userSessionStore = defineStore({
+    id: 'userSessionStore',
 
     state: () => ({
         user: [],
@@ -19,17 +19,13 @@ export const useUsersStore = defineStore({
             const client = useSupabaseClient();
             const { data, error } = await client.from("users").select("*")
 
-            const {addToast} = useToastService();
+            const { addToast } = useToastService();
             if (error) {
                 addToast('error', 'error', error.message)
             }
 
             this.user = data
             this.loading = false
-        },
-        addUser() {
-        },
-        deleteUser() {
         },
     }
 });
