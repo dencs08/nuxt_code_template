@@ -1,8 +1,4 @@
 <script setup lang="ts">
-definePageMeta({
-    auth: false,
-})
-
 const { t, locale } = useI18n()
 const title = computed(() => t('pages.index.title'))
 const description = computed(() => t('pages.index.description'))

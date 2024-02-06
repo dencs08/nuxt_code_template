@@ -23,10 +23,6 @@ const { t, locale } = useI18n()
 const title = computed(() => t('pages.index.title'))
 const description = computed(() => t('pages.index.description'))
 
-definePageMeta({
-  auth: false,
-})
-
 useHead({
   title: title,
   meta: [

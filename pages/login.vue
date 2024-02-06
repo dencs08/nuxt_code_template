@@ -1,10 +1,4 @@
 <script setup>
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: 'dash-home'
-  }
-})
 </script>
 
 <template>
