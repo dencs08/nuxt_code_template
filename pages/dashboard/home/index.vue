@@ -19,7 +19,11 @@
                     <div class="flex gap-3 md:flex-wrap md:justify-center">
                         <NuxtLink v-for="action in quickActions" :to="action.link"
                             class="flex-none md:flex-grow md:w-1/3 xl:w-1/4">
-                            <Card class="no-content border dark:border-surface-700 transition-colors p-5">
+                            <Card class="no-content border dark:border-surface-700 transition-colors p-5" :pt="{
+                                root: [
+                                    'rounded-md shadow-md bg-white dark:bg-surface-800 text-surface-700 dark:text-surface-0',
+                                ]
+                            }">
                                 <template #header>
                                     <div class="flex flex-col md:flex-row items-center gap-2">
                                         <Icon :name="action.icon" class="h-6 w-auto transition-colors"
@@ -36,7 +40,11 @@
 
         <div class="w-full lg:w-1/3">
 
-            <Card class="w-full border dark:border-surface-700">
+            <Card class="w-full border dark:border-surface-700" :pt="{
+                root: [
+                    'rounded-md shadow-md bg-white dark:bg-surface-800 text-surface-700 dark:text-surface-0',
+                ]
+            }">
                 <template #title>
                     <h2 class="text-db-h2">Feed</h2>
                 </template>
@@ -72,7 +80,8 @@ definePageMeta({
     layout: "dashboard",
 });
 
-const user = useSupabaseUser();
+const userStore = useUsersStore();
+const user = userStore.userSession;
 
 const information = ref([
     {
