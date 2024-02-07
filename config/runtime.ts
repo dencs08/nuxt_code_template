@@ -2,9 +2,8 @@
 
 export default {
     public: {
+        global_route_access: process.env.GLOBAL_ROUTE_ACCESS,
+
         apiBase: process.env.BASE_API_URL,
-        email: process.env.APP_EMAIL,
-        phone: process.env.APP_PHONE,
-        address: process.env.APP_ADDRESS,
     },
 };
