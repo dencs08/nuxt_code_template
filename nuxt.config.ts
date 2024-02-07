@@ -2,7 +2,7 @@
 
 import supabase from "./config/supabase";
 import i18n from "./config/i18n";
-import runtime from "./config/runtime";
+import runtimeConfig from "./config/runtime";
 import modules from "./config/modules";
 import components from "./config/components";
 import hooks from "./config/hooks";
@@ -12,7 +12,7 @@ import googleFonts from "./config/googleFonts";
 import pwa from "./config/pwa";
 
 export default defineNuxtConfig({
-    runtime,
+    runtimeConfig,
     supabase,
     modules,
     components,
