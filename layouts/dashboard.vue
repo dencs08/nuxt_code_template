@@ -103,7 +103,7 @@ const { errorHandler } = useErrorHandler();
 errorHandler();
 
 const userStore = useUsersStore();
-userStore.fetchUserSession();
+await userStore.fetchUserSession();
 const userSession = userStore.userSession;
 if (!userSession) {
     navigateTo(localePath({ name: "login" }));
