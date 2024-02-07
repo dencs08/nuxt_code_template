@@ -1,17 +1,18 @@
 import { type Role, validRoles } from "@/utils/roles";
-export function useRoleCheck(defaultRoleCheck = "user" as string) {
+
+export function useRoleCheck(defaultRoleCheck = "guest") {
     const { roles } = useRoles();
     const userStore = useUsersStore();
-    const user = userStore.userRole;
-    const userRole = computed(() => roles.value.find((role) => role.value === user));
+    const role = userStore.userRole || defaultRoleCheck;
+    const userRole = computed(() => roles.value.find((r) => r.value === role));
 
     const checkAccess = (requiredRoleValue: Role["value"]): boolean => {
-        const userRoleLevel = userRole.value.level;
-        const requiredRole = validRoles.find((role) => role.value === requiredRoleValue);
+        const userRoleLevel = validRoles.find((r) => r.value === role)?.level;
+        const requiredRole = validRoles.find((r) => r.value === requiredRoleValue);
         return requiredRole && userRoleLevel >= requiredRole.level;
     };
 
-    const hasAccess = (roleValue: Role["value"] = "user"): boolean => {
+    const hasAccess = (roleValue: Role["value"] = defaultRoleCheck): boolean => {
         return checkAccess(roleValue);
     };
 
@@ -20,8 +21,10 @@ export function useRoleCheck(defaultRoleCheck = "user" as string) {
     ): Record<Role["value"], boolean> => {
         const accessMap: Record<Role["value"], boolean> = {} as Record<Role["value"], boolean>;
         validRoles.forEach((role) => {
-            accessMap[role.value] =
-                role.level >= validRoles.find((r) => r.value === minimalAccessRoleValue).level;
+            const minimalAccessRoleLevel = validRoles.find(
+                (r) => r.value === minimalAccessRoleValue
+            )?.level;
+            accessMap[role.value] = role.level >= minimalAccessRoleLevel;
         });
         return accessMap;
     };
