@@ -103,9 +103,7 @@ export function mainDashboardNavigation() {
     };
 
     const hasAccess = (accessLevel: string) => {
-        if (!accessLevel) {
-            return true; //if no access level is set, allow access
-        }
+        if (!accessLevel) return true; //if no access level is set, allow access
         return originalHasAccess(accessLevel);
     };
 
