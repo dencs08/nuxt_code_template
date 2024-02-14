@@ -86,6 +86,8 @@ const props = defineProps({
   userNavigation: Array,
 });
 
+// const { useAccessChecks } = useRoleCheck();
+// console.log(useAccessChecks.value);
 const { dashboardNavigation, dashboardSettings } = useNavigation();
 const { signOut } = useAuthentication();
 const localePath = useLocalePath()
@@ -109,7 +111,7 @@ const userNavigation = computed(() => [
         label: 'Your profile',
         icon: 'pi pi-user',
         command: () => {
-          navigateTo(localePath({ name: "dash-user-profile" }));
+          navigateTo(localePath({ name: "dash-user-account" }));
         }
       },
       {
