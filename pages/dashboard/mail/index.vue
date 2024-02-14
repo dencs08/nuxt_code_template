@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        Mail index
     </div>
 </template>
 <script setup>
