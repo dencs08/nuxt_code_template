@@ -26,8 +26,12 @@ export function useRoles() {
 
     const getRoleSeverity = (roleValue: string) => {
         switch (roleValue) {
-            case "user":
+            case "guest":
+                return "secondary";
+            case "subscriber":
                 return "info";
+            case "user":
+                return "success";
             case "admin":
                 return "warning";
             case "superadmin":
