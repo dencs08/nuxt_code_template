@@ -12,6 +12,10 @@
       </p>
     </section>
 
+    <section class="container mx-auto my-24">
+      <CarouselBase header="Base carousel" :elements="carouselElements" />
+    </section>
+
     <section class="container mx-auto">
       <DesignTableDisplay />
     </section>
@@ -37,4 +41,22 @@ useHead({
 })
 
 const { slideTop, slideLeft, slideRight, fade, slideBottom } = useAnimations();
+
+const carouselElements = ref([
+  {
+    img: `/img/placeholder.jpg`
+  },
+  {
+    img: `/img/placeholder.jpg`
+  },
+  {
+    img: `/img/placeholder.jpg`
+  },
+  {
+    img: `/img/placeholder.jpg`
+  },
+  // {
+  //     img: `/img/placeholder.jpg`
+  // }
+])
 </script>
