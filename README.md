@@ -61,3 +61,11 @@ yarn preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Macbook
+
+## Sets the brew path on the local environemnt for the npm and node access via brew.
+
+##TODO make the brew path accessible globally
+
+# export PATH="/opt/homebrew/bin:$PATH"
