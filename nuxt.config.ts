@@ -10,6 +10,7 @@ import primevue from "./config/primevue";
 import content from "./config/content";
 import googleFonts from "./config/googleFonts";
 import pwa from "./config/pwa";
+import webVitals from "./config/webVitals";
 
 export default defineNuxtConfig({
     runtimeConfig,
@@ -21,6 +22,7 @@ export default defineNuxtConfig({
     primevue,
     content,
     googleFonts,
+    webVitals,
     // pwa, //when using nuxt pwa module
 
     css: ["@/assets/css/main.css"],
