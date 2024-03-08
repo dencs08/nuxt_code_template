@@ -8,9 +8,13 @@ import components from "./config/components";
 import hooks from "./config/hooks";
 import primevue from "./config/primevue";
 import content from "./config/content";
+import image from "./config/image";
 import googleFonts from "./config/googleFonts";
-import pwa from "./config/pwa";
 import webVitals from "./config/webVitals";
+import site from "./config/site";
+import robots from "./config/robots";
+import routeRules from "./config/routeRules";
+import pwa from "./config/pwa";
 
 export default defineNuxtConfig({
     runtimeConfig,
@@ -21,16 +25,13 @@ export default defineNuxtConfig({
     hooks,
     primevue,
     content,
+    image,
     googleFonts,
     webVitals,
+    site,
+    robots,
+    routeRules,
     // pwa, //when using nuxt pwa module
-
-    css: ["@/assets/css/main.css"],
-
-    //for sitemap generation
-    site: {
-        url: import.meta.env.APP_URL,
-    },
 
     devtools: {
         enabled: true,
@@ -38,30 +39,7 @@ export default defineNuxtConfig({
 
     app: {
         pageTransition: { name: "page", mode: "out-in" },
-    },
-
-    // ssr: false, //for static site generation
-
-    // nitro: {
-    //   prerender: {
-    //     routes: ["/"],
-    //   },
-    // },
-
-    routeRules: {
-        // Homepage pre-rendered at build time
-        "/": { prerender: true }, //propably need to make SSR instead of prerender
-        "/contact": { prerender: true },
-        // Product page generated on-demand, revalidates in background
-        // '/products/**': { swr: 3600 },
-        // // Blog post generated on-demand once until next deploy
-        // '/blog/**': { isr: true },
-        // // Admin dashboard renders only on client-side
-        // '/dashboard/**': { ssr: false },
-        // // Add cors headers on API routes
-        // '/api/**': { cors: true },
-        // // Redirects legacy urls
-        // '/old-page': { redirect: '/new-page' }
+        // layoutTransition: { name: 'layout', mode: 'out-in' }
     },
 
     pinia: {
@@ -71,4 +49,12 @@ export default defineNuxtConfig({
     imports: {
         dirs: ["pinia"],
     },
+
+    // ssr: false, //for static site generation
+
+    // nitro: {
+    //   prerender: {
+    //     routes: ["/"],
+    //   },
+    // },
 });
