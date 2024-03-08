@@ -7,7 +7,7 @@ export function useNavigation() {
 
     const navigation = computed(() => [
         {
-            label: "Start",
+            label: "Home",
             route: localePath({ name: "index" }),
         },
         {
