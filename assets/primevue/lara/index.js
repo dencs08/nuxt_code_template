@@ -1,149 +1,205 @@
-import global from './global.js';
+import accordion from './accordion';
 import autocomplete from './autocomplete';
+import avatar from './avatar';
+import avatargroup from './avatargroup';
+import badge from './badge';
+import badgedirective from './badgedirective';
+import blockui from './blockui';
+import breadcrumb from './breadcrumb';
+import button from './button';
 import calendar from './calendar';
+import card from './card';
+import carousel from './carousel';
 import cascadeselect from './cascadeselect';
 import checkbox from './checkbox';
+import chip from './chip';
 import chips from './chips';
 import colorpicker from './colorpicker';
+import confirmpopup from './confirmpopup';
+import contextmenu from './contextmenu';
+import datatable from './datatable';
+import dataview from './dataview';
+import dataviewlayoutoptions from './dataviewlayoutoptions';
+import dialog from './dialog';
+import divider from './divider';
+import dock from './dock';
 import dropdown from './dropdown';
+import fieldset from './fieldset';
+import fileupload from './fileupload';
+import floatlabel from './floatlabel';
+import galleria from './galleria';
+import global from './global';
+import iconfield from './iconfield';
+import image from './image';
+import inlinemessage from './inlinemessage';
+import inplace from './inplace';
 import inputgroup from './inputgroup';
 import inputgroupaddon from './inputgroupaddon';
 import inputmask from './inputmask';
 import inputnumber from './inputnumber';
+import inputotp from './inputotp';
 import inputswitch from './inputswitch';
 import inputtext from './inputtext';
 import knob from './knob';
 import listbox from './listbox';
-import multiselect from './multiselect';
-import password from './password';
-import radiobutton from './radiobutton';
-import rating from './rating';
-import selectbutton from './selectbutton';
-import slider from './slider';
-import textarea from './textarea';
-import togglebutton from './togglebutton';
-import treeselect from './treeselect';
-import tristatecheckbox from './tristatecheckbox';
-import button from './button';
-import splitbutton from './splitbutton';
-import datatable from './datatable';
-import dataview from './dataview';
-import orderlist from './orderlist';
-import organizationchart from './organizationchart';
-import paginator from './paginator';
-import picklist from './picklist';
-import tree from './tree';
-import treetable from './treetable';
-import accordion from './accordion';
-import card from './card';
-import divider from './divider';
-import fieldset from './fieldset';
-import panel from './panel';
-import scrollpanel from './scrollpanel';
-import tabview from './tabview';
-import toolbar from './toolbar';
-import confirmpopup from './confirmpopup';
-import dialog from './dialog';
-import overlaypanel from './overlaypanel';
-import sidebar from './sidebar';
-import tooltip from './tooltip';
-import breadcrumb from './breadcrumb';
-import contextmenu from './contextmenu';
-import dock from './dock';
+import megamenu from './megamenu';
 import menu from './menu';
 import menubar from './menubar';
-import megamenu from './megamenu';
+import message from './message';
+import metergroup from './metergroup';
+import multiselect from './multiselect';
+import orderlist from './orderlist';
+import organizationchart from './organizationchart';
+import overlaypanel from './overlaypanel';
+import paginator from './paginator';
+import panel from './panel';
 import panelmenu from './panelmenu';
+import password from './password';
+import picklist from './picklist';
+import progressbar from './progressbar';
+import progressspinner from './progressspinner';
+import radiobutton from './radiobutton';
+import rating from './rating';
+import ripple from './ripple';
+import scrollpanel from './scrollpanel';
+import scrolltop from './scrolltop';
+import selectbutton from './selectbutton';
+import sidebar from './sidebar';
+import skeleton from './skeleton';
+import slider from './slider';
+import speeddial from './speeddial';
+import splitbutton from './splitbutton';
+import splitter from './splitter';
+import splitterpanel from './splitterpanel';
+import stepper from './stepper';
 import steps from './steps';
 import tabmenu from './tabmenu';
-import tieredmenu from './tieredmenu';
-import message from './message';
-import inlinemessage from './inlinemessage';
-import toast from './toast';
-import avatar from './avatar';
-import badge from './badge';
-import badgedirective from './badgedirective';
-import chip from './chip';
-import scrolltop from './scrolltop';
-import skeleton from './skeleton';
-import progressbar from './progressbar';
-import ripple from './ripple';
+import tabview from './tabview';
 import tag from './tag';
 import terminal from './terminal';
+import textarea from './textarea';
+import tieredmenu from './tieredmenu';
+import timeline from './timeline';
+import toast from './toast';
+import togglebutton from './togglebutton';
+import toolbar from './toolbar';
+import tooltip from './tooltip';
+import tree from './tree';
+import treeselect from './treeselect';
+import treetable from './treetable';
+import tristatecheckbox from './tristatecheckbox';
 
 export default {
     global,
     directives: {
-        tooltip,
-        badgedirective,
-        ripple
+        badge: badgedirective,
+        ripple,
+        tooltip
     },
+
+    //forms
     autocomplete,
-    calendar,
-    cascadeselect,
-    checkbox,
-    chips,
-    colorpicker,
     dropdown,
+    inputnumber,
+    inputtext,
+    calendar,
+    checkbox,
+    radiobutton,
+    inputswitch,
+    selectbutton,
+    slider,
+    chips,
+    rating,
+    multiselect,
+    togglebutton,
+    cascadeselect,
+    listbox,
+    colorpicker,
     inputgroup,
     inputgroupaddon,
     inputmask,
-    inputnumber,
-    inputswitch,
-    inputtext,
     knob,
-    listbox,
-    multiselect,
-    password,
-    radiobutton,
-    rating,
-    selectbutton,
-    slider,
-    textarea,
-    togglebutton,
     treeselect,
     tristatecheckbox,
+    textarea,
+    password,
+    iconfield,
+    floatlabel,
+    inputotp,
+
+    //buttons
     button,
     splitbutton,
-    datatable,
-    dataview,
-    orderlist,
-    organizationchart,
+    speeddial,
+
+    //data
     paginator,
-    picklist,
+    datatable,
     tree,
+    dataview,
+    dataviewlayoutoptions,
+    organizationchart,
+    orderlist,
+    picklist,
     treetable,
+    timeline,
+
+    //panels
     accordion,
-    card,
-    divider,
-    fieldset,
     panel,
-    scrollpanel,
+    fieldset,
+    card,
     tabview,
+    divider,
     toolbar,
-    confirmpopup,
+    scrollpanel,
+    splitter,
+    splitterpanel,
+    stepper,
+
+    //file
+    fileupload,
+
+    //menu
+    contextmenu,
+    menu,
+    menubar,
+    steps,
+    tieredmenu,
+    breadcrumb,
+    panelmenu,
+    megamenu,
+    dock,
+    tabmenu,
+
+    //overlays
     dialog,
     overlaypanel,
     sidebar,
-    breadcrumb,
-    contextmenu,
-    dock,
-    menu,
-    menubar,
-    megamenu,
-    panelmenu,
-    steps,
-    tabmenu,
-    tieredmenu,
+    confirmpopup,
+
+    //messages
     message,
     inlinemessage,
     toast,
-    avatar,
+
+    //media
+    carousel,
+    galleria,
+    image,
+
+    //misc
     badge,
-    chip,
-    scrolltop,
-    skeleton,
-    progressbar,
+    avatar,
+    avatargroup,
     tag,
-    terminal
-}
+    chip,
+    progressbar,
+    skeleton,
+    scrolltop,
+    terminal,
+    blockui,
+    metergroup,
+    inplace,
+    progressspinner
+};
