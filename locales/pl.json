@@ -1,19 +1,64 @@
 {
-    "welcome": "PL",
-    "TBD": "To be determined",
+    "TBD": "Nieustalony w pl.json",
+    "html": {
+        "lang": "pl"
+    },
     "layouts": {
         "default": {
-            "title": "Polish default layout title"
+            "title": "Domyślny tytuł układu w języku polskim"
         }
+    },
+    "fallback": {
+        "title": "Domyślny tytuł w języku polskim",
+        "description": "Domyślny opis w języku polskim"
     },
     "pages": {
         "index": {
-            "title": "Polish page title",
-            "description": "Polish page description"
+            "meta": {
+                "title": "Tytuł strony głównej w języku polskim",
+                "description": "Opis strony głównej w języku polskim"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Nagłówek strony głównej w języku polskim",
+                    "h2": "Podnagłówek strony głównej w języku polskim"
+                }
+            }
         },
         "contact": {
-            "title": "Polish contact title",
-            "description": "Polish page description"
+            "meta": {
+                "title": "Tytuł strony kontaktowej w języku polskim",
+                "description": "Opis strony kontaktowej w języku polskim"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Nagłówek strony kontaktowej w języku polskim"
+                }
+            }
+        }
+    },
+    "components": {
+        "navbar": {
+            "links": []
+        },
+        "footer": {}
+    },
+    "forms": {
+        "contact": {
+            "placeholders": {
+                "firstname": "Imię",
+                "lastname": "Nazwisko",
+                "email": "Adres e-mail",
+                "message": "Wiadomość",
+                "submit": "Wyślij"
+            },
+            "errors": {
+                "required": "Pole wymagane",
+                "firstname": "Niepoprawne imię",
+                "lastname": "Niepoprawne nazwisko",
+                "message": "Niepoprawna wiadomość",
+                "email": "Niepoprawny adres e-mail"
+            }
         }
     }
 }

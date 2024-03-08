@@ -1,19 +1,64 @@
 {
-    "welcome": "EN",
     "TBD": "To be determined",
+    "html": {
+        "lang": "en"
+    },
     "layouts": {
         "default": {
-            "title": "English default layout title"
+            "title": "Default layout title in English"
         }
+    },
+    "fallback": {
+        "title": "Default title in English",
+        "description": "Default description in English"
     },
     "pages": {
         "index": {
-            "title": "English page title",
-            "description": "English page description"
+            "meta": {
+                "title": "Home page title in English",
+                "description": "Home page description in English"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Home page header in English",
+                    "h2": "Home page subheader in English"
+                }
+            }
         },
         "contact": {
-            "title": "English contact title",
-            "description": "English page description"
+            "meta": {
+                "title": "Contact page title in English",
+                "description": "Contact page description in English"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Contact page header in English"
+                }
+            }
+        }
+    },
+    "components": {
+        "navbar": {
+            "links": []
+        },
+        "footer": {}
+    },
+    "forms": {
+        "contact": {
+            "placeholders": {
+                "firstname": "First name",
+                "lastname": "Last name",
+                "email": "Email address",
+                "message": "Message",
+                "submit": "Submit"
+            },
+            "errors": {
+                "required": "Field required",
+                "firstname": "Invalid first name",
+                "lastname": "Invalid last name",
+                "message": "Invalid message",
+                "email": "Invalid email address"
+            }
         }
     }
 }

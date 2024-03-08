@@ -1,15 +1,64 @@
 {
-    "welcome": "DE",
-    "TBD": "To be determined",
+    "TBD": "Noch zu bestimmen",
+    "html": {
+        "lang": "de"
+    },
     "layouts": {
         "default": {
-            "title": "This is the title: {title}"
+            "title": "Standardlayouttitel auf Deutsch"
         }
+    },
+    "fallback": {
+        "title": "Standardtitel auf Deutsch",
+        "description": "Standardbeschreibung auf Deutsch"
     },
     "pages": {
         "index": {
-            "title": "German page title",
-            "description": "German page description"
+            "meta": {
+                "title": "Startseitentitel auf Deutsch",
+                "description": "Startseitenbeschreibung auf Deutsch"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Startseitenüberschrift auf Deutsch",
+                    "h2": "Startseitenunterüberschrift auf Deutsch"
+                }
+            }
+        },
+        "contact": {
+            "meta": {
+                "title": "Kontaktseitentitel auf Deutsch",
+                "description": "Kontaktseitenbeschreibung auf Deutsch"
+            },
+            "content": {
+                "hero": {
+                    "h1": "Kontaktseitenüberschrift auf Deutsch"
+                }
+            }
+        }
+    },
+    "components": {
+        "navbar": {
+            "links": []
+        },
+        "footer": {}
+    },
+    "forms": {
+        "contact": {
+            "placeholders": {
+                "firstname": "Vorname",
+                "lastname": "Nachname",
+                "email": "E-Mail-Adresse",
+                "message": "Nachricht",
+                "submit": "Absenden"
+            },
+            "errors": {
+                "required": "Feld erforderlich",
+                "firstname": "Ungültiger Vorname",
+                "lastname": "Ungültiger Nachname",
+                "message": "Ungültige Nachricht",
+                "email": "Ungültige E-Mail-Adresse"
+            }
         }
     }
 }
