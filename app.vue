@@ -22,6 +22,8 @@
 // useAuthEvent('USER_UPDATED', onUserUpdated);
 </script>
 <style>
+@import "@/assets/css/main.css";
+
 .page-enter-active,
 .page-leave-active {
   transition: all 0.125s;
@@ -32,4 +34,14 @@
   opacity: 0;
   filter: blur(.2rem);
 }
+
+/* .layout-enter-active,
+.layout-leave-active {
+  transition: all 0.2s;
+}
+
+.layout-enter-from,
+.layout-leave-to {
+  filter: grayscale(1);
+} */
 </style>
