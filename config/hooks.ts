@@ -34,6 +34,18 @@ export default {
             }
         });
     },
+    //remove main css file to reduce the size of the main css file
+    'build:manifest': (manifest: any) => {
+        // find the app entry, css list
+        const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+        if (css) {
+          // start from the end of the array and go to the beginning
+          for (let i = css.length - 1; i >= 0; i--) {
+            // if it starts with 'entry', remove it from the list
+            if (css[i].startsWith('entry')) css.splice(i, 1)
+          }
+        }
+      },
 };
 
 function determineAccessLevelFromPath(path: string): string | undefined {
