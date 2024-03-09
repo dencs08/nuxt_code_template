@@ -23,10 +23,11 @@ export default {
         {
             code: "de",
             file: "de.json",
-            iso: "de-GER",
+            iso: "de-DE",
         },
     ],
     lazy: true,
     defaultLocale: "en",
     langDir: "locales",
+    baseUrl: process.env.BASE_URL || 'url not set in the i18n module or env file',
 };
