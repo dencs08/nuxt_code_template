@@ -7,7 +7,7 @@ export default [
     //seo
     '@nuxtjs/web-vitals',
     "@nuxtjs/robots",
-    "nuxt-simple-sitemap",
+    "@nuxtjs/sitemap",
     
     //core
     "@nuxtjs/supabase",
