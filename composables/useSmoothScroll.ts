@@ -1,5 +1,5 @@
 export function useSmoothScroll() {
-    const scrollToElement = (elementId, behavior = 'smooth') => {
+    const scrollToElement = (elementId: string, behavior: ScrollBehavior = 'smooth') => {
         const element = document.getElementById(elementId);
 
         if (element) {

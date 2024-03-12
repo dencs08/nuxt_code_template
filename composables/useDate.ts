@@ -1,5 +1,5 @@
 export function useDate() {
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: string) => {
         let date = new Date(dateString);
 
         let day = String(date.getDate()).padStart(2, '0');
