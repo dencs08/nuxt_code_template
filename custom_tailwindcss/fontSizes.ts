@@ -1,7 +1,10 @@
 // fontSizes.js
+
+type ScaleKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl';
+
 function generateFontSizeVariants(baseFontSize = 1, dividerNumber = 1.618) {
-    const variants = {};
-    const scales = {
+    const variants: Record<string, string> = {};
+    const scales: Record<ScaleKey, { factor: number, vwFactor: number }> = {
         'xs': { factor: 0.75, vwFactor: 0.5 },
         'sm': { factor: 0.875, vwFactor: 0.75 },
         'md': { factor: baseFontSize, vwFactor: 0.85 },
@@ -17,9 +20,10 @@ function generateFontSizeVariants(baseFontSize = 1, dividerNumber = 1.618) {
     };
 
     for (let key in scales) {
-        const minValue = `${scales[key].factor / dividerNumber}rem`;
-        const preferredSize = `calc(0.85rem + ${scales[key].vwFactor}vw)`;
-        const maxValue = `${scales[key].factor * dividerNumber}rem`;
+        const scaleKey = key as ScaleKey;
+        const minValue = `${scales[scaleKey].factor / dividerNumber}rem`;
+        const preferredSize = `calc(0.85rem + ${scales[scaleKey].vwFactor}vw)`;
+        const maxValue = `${scales[scaleKey].factor * dividerNumber}rem`;
 
         variants[`clamp-${key}`] = `clamp(${minValue}, ${preferredSize}, ${maxValue})`;
     }

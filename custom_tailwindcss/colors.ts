@@ -1,4 +1,10 @@
-function hexToRgb(hex) {
+interface ColorDefinition {
+    colorName: string;
+    mainHex: string;
+}
+
+
+function hexToRgb(hex: string) {
     const bigint = parseInt(hex.slice(1), 16);
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
@@ -7,12 +13,12 @@ function hexToRgb(hex) {
     return [r, g, b];
 }
 
-function rgbToHex(r, g, b) {
+function rgbToHex(r: number, g: number, b: number) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
-export function generateColorVariants(colorDefinitions) {
-    const variants = {};
+export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
+    const variants: Record<string, string> = {};
 
     let initialBlackFactor = 0.1;
     let slowDownFactor = 0.9; //smaller the slowDownFactor, the slower the growth of blackFactor.
@@ -21,7 +27,7 @@ export function generateColorVariants(colorDefinitions) {
 
     let blackFactorStep = (1 - initialBlackFactor) / ((950 - 500) / 50 - 1);
 
-    colorDefinitions.forEach(({ colorName, mainHex }) => {
+    colorDefinitions.forEach(({ colorName, mainHex }: {colorName:string, mainHex:string}) => {
         const baseRgb = hexToRgb(mainHex);
 
         for (let i = 0; i <= 950; i += 50) {
