@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
-import { generateColorVariants } from './custom_tailwindcss/colors.js';
-import generateFontSizeVariants from './custom_tailwindcss/fontSizes.js';
+import { generateColorVariants } from './custom_tailwindcss/colors.ts';
+import generateFontSizeVariants from './custom_tailwindcss/fontSizes.ts';
 
 //!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
 const colorDefinitions = [
