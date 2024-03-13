@@ -8,11 +8,19 @@ const i18nHead = useLocaleHead({
     canonicalQueries: ['']
   },
 })
+
+const title = computed(() => {
+  const titleKey = typeof route.meta.title === 'string' || typeof route.meta.title === 'number'
+    ? route.meta.title
+    : 'TBD';
+  return t('layouts.default.title', { title: t(titleKey) })
+})
+
 useHead({
   htmlAttrs: {
     lang: i18nHead.value.htmlAttrs?.lang,
   },
-  title: t('layouts.default.title', { title: t(route.meta.title || 'TBD') }),
+  title: title,
   link: [...(i18nHead.value.link || [])],
   meta: [...(i18nHead.value.meta || [])]
 })
