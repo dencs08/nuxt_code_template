@@ -39,4 +39,14 @@ export const routeSettings = {
         auth: false,
         access: "",
     },
+
+    //dashboard pages
+    
+    //profile
+    "dash-user-account":{
+        access:"guest"
+    },
+    "dash-user-profile":{
+        access:"guest"
+    }
 };
