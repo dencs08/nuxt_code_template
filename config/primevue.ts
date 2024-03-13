@@ -9,14 +9,14 @@ export default {
     },
     components: {
         // prefix: "prime", //breaks sfxformkit componenets...
-        include: "*",
-        // exclude: ['Galleria', 'Carousel'],
+        // include: "*",
+        exclude: ['AutoComplete', 'CascadeSelect', 'ColorPicker', 'Knob', 'Galleria', 'TreeTable', 'PickList','DataView', 'OrderList', 'OrganizationChart'],
     },
     composables: {
-        include: "*",
+        // include: "*",
     },
     directives: {
-        include: "*",
-        // exclude: ['Ripple']
+        // include: "*",
+        exclude: ['Ripple']
     },
 };
