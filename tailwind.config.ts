@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+
 const defaultTheme = require('tailwindcss/defaultTheme');
-import { generateColorVariants } from './custom_tailwindcss/colors.ts';
-import generateFontSizeVariants from './custom_tailwindcss/fontSizes.ts';
+import { generateColorVariants } from './custom_tailwindcss/colors';
+import generateFontSizeVariants from './custom_tailwindcss/fontSizes';
 
 //!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
 const colorDefinitions = [
@@ -49,8 +50,7 @@ module.exports = {
     },
   },
   plugins: [
-    // require('@tailwindcss/forms'),
-    function ({ addComponents }) {
+    function ({ addComponents }: {addComponents: Function}) {
       addComponents({
         '.container': {
           maxWidth: '100%',
