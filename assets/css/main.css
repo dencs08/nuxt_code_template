@@ -17,7 +17,7 @@ body {
         @apply h-full font-body font-normal;
     }
     h1 {
-        @apply text-clamp-4xl sm:text-clamp-5xl xl:text-clamp-6xl font-heading;
+        @apply text-clamp-2xl sm:text-clamp-3xl xl:text-clamp-4xl font-heading;
     }
     h2 {
         @apply text-5xl font-heading;
