@@ -1,22 +1,24 @@
-import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server";
+import { serverSupabaseServiceRole, serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { validRoles } from "@/utils/roles";
+import { create } from "domain";
 
-export async function getUserSession(event) {
+export async function getUserSession(event: any) {
     const userSession = await serverSupabaseUser(event);
 
     if (!userSession) {
-        throw new Error('No active session found. User must be logged in.');
+        throw createError({ statusCode: 401, statusMessage: 'Unauthorized: No active session found. User must be logged in.' });
     }
     if (!userSession.id || !userSession.email) {
-        throw new Error('Invalid session data.');
+        throw createError({ statusCode: 401, statusMessage: 'Unauthorized: No active session found. User must be logged in.' })
     }
 
     return userSession;
 }
 
 // Usage
-// checkUserRole(event, client, 'admin');
-export async function checkUserRole(event, client, role) {
+// checkUserRole(event, 'admin');
+export async function checkUserRole(event: any, role: string) {
+    const client = serverSupabaseServiceRole(event);
     const user = await getUserSession(event);
 
     const { data: userRoles, error } = await client
@@ -33,13 +35,14 @@ export async function checkUserRole(event, client, role) {
     const requiredRoleLevel = validRoles.find(validRole => validRole.value === role)?.level;
 
     if (!userRoleLevel || !requiredRoleLevel || userRoleLevel < requiredRoleLevel) {
-        throw new Error(`Unauthorized: User is not a ${role} or higher`);
+        throw createError({ statusCode: 403, statusMessage: `Unauthorized: User is not a ${role} or higher` });
     }
 }
 
 // Usage
-// await getUserRole(event, client);
-export async function getUserRole(event, client) {
+// await getUserRole(event);
+export async function getUserRole(event: any) {
+    const client = serverSupabaseServiceRole(event);
     const user = await getUserSession(event);
 
     const { data, error } = await client
@@ -49,7 +52,7 @@ export async function getUserRole(event, client) {
         .single();
 
     if (error) {
-        throw new Error(`Error retrieving user roles: ${error.message}`);
+        throw createError({ statusCode: 500, statusMessage: `Error retrieving user roles: ${error.message}` });
     }
 
     return data.role;
