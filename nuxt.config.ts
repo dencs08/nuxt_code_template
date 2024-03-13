@@ -42,14 +42,6 @@ export default defineNuxtConfig({
         // layoutTransition: { name: 'layout', mode: 'out-in' }
     },
 
-    pinia: {
-        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
-    },
-
-    imports: {
-        dirs: ["pinia"],
-    },
-
     // ssr: false, //for static site generation
 
     // nitro: {
