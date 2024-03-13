@@ -33,21 +33,35 @@
  * - `fade(params: AnimationParams)`: Returns an animation configuration for a fade animation.
  * 
  * Each method accepts an `AnimationParams` object as a parameter, which has the following properties:
+ * - `animationType: AnimationType`: The type of the animation. Can be 'top', 'left', 'right', 'bottom', 'pop', or 'fade'.
+ * - `type: 'easeInOut' | 'easeIn' | 'easeOut' | 'linear'`: The easing type of the animation. Defaults to 'easeInOut'.
  * - `delay: number`: The delay before the animation starts, in milliseconds.
- * - `index?: number`: The index of the element, used to calculate the delay for staggered animations. Defaults to 0.
- * - `visible?: boolean`: If true, the animation will only play once when the element becomes visible. Defaults to false.
+ * - `index: number`: The index of the element, used to calculate the delay for staggered animations. Defaults to 0.
+ * - `interval: number`: Delay between staggered elements in the animation in milliseconds. Defaults to 100.
+ * - `visible: boolean`: If true, the animation will only play once when the element becomes visible. Defaults to false.
+ * - `duration: number`: The duration of the animation, in milliseconds. Defaults to 250.
+ * - `stiffness: number`: The stiffness of the animation. Defaults to 1250.
+ * - `damping: number`: The damping of the animation. Defaults to 100.
+ * - `mass: number`: The mass of the animation. Defaults to 0.2.
  */
 
 interface AnimationParams {
-    delay: number;
+    animationType?: AnimationType;
+    type?: 'easeInOut' | 'easeIn' | 'easeOut' | 'linear';
+    delay?: number;
     index?: number;
+    interval?: number;
     visible?: boolean;
+    duration?: number;
+    stiffness?: number;
+    damping?: number;
+    mass?: number;
 }
 
 type AnimationType = 'top' | 'left' | 'right' | 'bottom' | 'pop' | 'fade';
 
 export function useAnimations() {
-    const animation = ({type, delay, index = 0, visible = false}: {type: AnimationType, delay: number, index?: number, visible?: boolean}) => {
+    const animation = ({animationType,type = 'easeInOut', delay = 0, index = 0, interval = 100, visible = false, duration = 250, stiffness = 1250, damping = 100, mass = 0.2}: AnimationParams) => {
         const directionConfig = {
             top: {initial: {y:-100, opacity: 0}, enter: {y:0, opacity:1}},
             left: {initial: {x:-100, opacity: 0}, enter: {x:0, opacity:1}},
@@ -58,33 +72,33 @@ export function useAnimations() {
         };
         const transition = {
             transition: {
-                delay: (delay + (100 * index + 1)),
-                type: 'easeInOut',
-                stiffness: 1250,
-                damping: 100,
-                mass: 0.2,
+                delay: (delay + (interval * index + 1)),
+                type: type,
+                stiffness: stiffness,
+                damping: damping,
+                mass: mass,
                 opacity: {
-                    delay: (delay + (100 * index + 1)),
-                    duration: type === 'fade' ? 500 : 250,
+                    delay: (delay + (interval * index + 1)),
+                    duration: duration,
                 },
             }
         };
 
         return {
-            initial: directionConfig[type as keyof typeof directionConfig].initial,
+            initial: directionConfig[animationType as keyof typeof directionConfig].initial,
             [visible ? "visibleOnce" : "enter"]: {
-                ...directionConfig[type as keyof typeof directionConfig].enter,
+                ...directionConfig[animationType as keyof typeof directionConfig].enter,
                 ...transition
             }
         };
     };
 
-    const slideTop = (params: AnimationParams) => animation({...params, type: 'top'});
-    const slideLeft = (params: AnimationParams) => animation({...params, type: 'left'});
-    const slideRight = (params: AnimationParams) => animation({...params, type: 'right'});
-    const slideBottom = (params: AnimationParams) => animation({...params, type: 'bottom'});
-    const pop = (params: AnimationParams) => animation({...params, type: 'pop'});
-    const fade = (params: AnimationParams) => animation({...params, type: 'fade'});
+    const slideTop = (params: AnimationParams) => animation({...params, animationType: 'top'});
+    const slideLeft = (params: AnimationParams) => animation({...params, animationType: 'left'});
+    const slideRight = (params: AnimationParams) => animation({...params, animationType: 'right'});
+    const slideBottom = (params: AnimationParams) => animation({...params, animationType: 'bottom'});
+    const pop = (params: AnimationParams) => animation({...params, animationType: 'pop'});
+    const fade = (params: AnimationParams) => animation({...params, animationType: 'fade'});
 
     return { slideTop, slideLeft, slideRight, slideBottom, pop, fade };
 }
