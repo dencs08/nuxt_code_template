@@ -1,14 +1,14 @@
-import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server";
+import { serverSupabaseServiceRole } from "#supabase/server";
 import { validRoles } from "@/utils/roles";
 
-export async function assignRole(event, body) {
+export async function assignRole(event: any, body: { id: string; role: string }) {
     const client = serverSupabaseServiceRole(event);
-    await checkUserRole(event, client, 'admin');
+    await checkUserRole(event, 'admin');
 
-    const userRole = await getUserRole(event, client);
+    const userRole = await getUserRole(event);
 
     if (!validRoles.map(role => role.value).includes(body.role)) {
-        throw new Error('Invalid or missing data', role);
+        throw createError({ statusCode: 500, statusMessage: 'Invalid or missing data' });
     }
 
     const { data: currentUserData, error: currentUserError } = await client
@@ -17,18 +17,19 @@ export async function assignRole(event, body) {
         .eq('user_id', body.id)
         .single();
     if (currentUserError) {
-        throw new Error('Error retrieving current user role');
+        throw createError({ statusCode: 500, statusMessage: 'Error retrieving current user role' });
     }
 
     if (userRole === 'admin' && (currentUserData.role === 'admin' || currentUserData.role === 'superadmin')) {
-        throw new Error('Admins cannot change the role of other admins or superadmins');
+        throw createError({ statusCode: 500, statusMessage: 'Admins cannot change the role of other admins or superadmins' });
     }
 
     if (userRole !== 'superadmin' && body.role === 'superadmin') {
-        throw new Error('Only superadmins can assign the superadmin role');
+        throw createError({ statusCode: 500, statusMessage: 'Only superadmins can assign the superadmin role' });
     }
 
     try {
+        //@ts-ignore
         const { data, error } = await client
             .from('user_roles')
             .upsert({
@@ -39,10 +40,10 @@ export async function assignRole(event, body) {
             .select();
 
         if (error) {
-            throw new Error('Error updating user role');
+            throw createError({ statusCode: 500, statusMessage: 'Error updating user role' });
         }
         return { response: 'User role updated' };
     } catch (err) {
-        throw new Error('An error occurred during the update process');
+        throw createError({ statusCode: 500, statusMessage: 'An error occurred during the update process' });
     }
 }
