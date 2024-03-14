@@ -1,15 +1,14 @@
 import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server";
+import { defineWrappedResponseHandler } from '@/server/utils/defaultHandler'
 
-export default eventHandler(async (event) => {
+export default defineWrappedResponseHandler (async (event) => {
     const client = serverSupabaseServiceRole(event);
     const body = await readBody(event);
-
-    await checkUserRole(event, client, 'superadmin');
 
     try {
         const { data, error } = await client.auth.admin.deleteUser(body.userId);
         if (error) {
-            throw new Error('Error deleting user data: ' + error.message);
+            throw createError(500, 'Error deleting user data');
         }
 
         const { data: deletedUser, error: deleteError } = await client
@@ -17,11 +16,11 @@ export default eventHandler(async (event) => {
             .delete()
             .eq('id', body.userId);
         if (deleteError) {
-            throw new Error('Error deleting user from public.users: ' + deleteError.message);
+            throw createError(500, 'Error deleting user from public.users');
         }
 
         return { response: 'User deleted', data: deletedUser };
     } catch (err) {
-        throw new Error('An error occurred during the deletion process ' + err.message);
+        throw createError(500, 'An error occurred during the deletion process ' + err.message);
     }
-});
+}, 'superadmin');

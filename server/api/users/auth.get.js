@@ -1,9 +1,8 @@
 import { serverSupabaseServiceRole } from "#supabase/server";
-import { serverSupabaseUser } from "#supabase/server";
+import { defineWrappedResponseHandler } from '@/server/utils/defaultHandler'
 
-export default eventHandler(async (event) => {
+export default defineWrappedResponseHandler (async (event) => {
     const client = serverSupabaseServiceRole(event);
-    await checkUserRole(event, client, "admin");
 
     let { data: authData, error: authError } = await client.auth.admin.listUsers();
     if (authError) {
@@ -11,4 +10,4 @@ export default eventHandler(async (event) => {
     }
 
     return authData;
-});
+}, 'admin');

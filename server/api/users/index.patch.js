@@ -1,13 +1,12 @@
 import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server";
+import { defineWrappedResponseHandler } from '@/server/utils/defaultHandler'
 
-export default eventHandler(async (event) => {
+export default defineWrappedResponseHandler (async (event) => {
     const client = serverSupabaseServiceRole(event);
     const body = await readBody(event);
 
-    await checkUserRole(event, client, 'admin');
-
     if (!body.id) {
-        throw new Error('Missing data for update');
+        throw createError(400, 'Missing required data');
     }
 
     try {
@@ -28,10 +27,10 @@ export default eventHandler(async (event) => {
             .select();
 
         if (error) {
-            throw new Error('Error updating user data');
+            throw createError(500, 'Error updating user data');
         }
         return { response: 'User updated' };
     } catch (err) {
-        throw new Error('An error occurred during the update process');
+        throw createError(500, 'An error occurred during the update process ' + err.message);
     }
-});
+}, 'admin');

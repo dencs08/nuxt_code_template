@@ -1,9 +1,9 @@
 import { serverSupabaseServiceRole, serverSupabaseUser } from "#supabase/server";
+import { defineWrappedResponseHandler } from '@/server/utils/defaultHandler'
 
-export default eventHandler(async (event) => {
+export default defineWrappedResponseHandler (async (event) => {
     const client = serverSupabaseServiceRole(event);
     const userSession = await serverSupabaseUser(event)
-    await checkUserRole(event, client, 'user');
 
     try {
         const { data: publicUser, error } = await client
@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
             .single();
 
         if (error) {
-            throw new Error('Error confirming email');
+            throw createError(500, 'Error confirming email');
         }
 
         if (publicUser.new_email === userSession.new_email && publicUser.new_email != null) {
@@ -26,7 +26,7 @@ export default eventHandler(async (event) => {
                 .eq('id', userSession.id)
 
             if (error) {
-                throw new Error('Error confirming email');
+                throw createError(500, 'Error confirming email');
             }
         }
 
@@ -41,7 +41,7 @@ export default eventHandler(async (event) => {
                 .eq('id', userSession.id)
 
             if (error) {
-                throw new Error('Error confirming email');
+                throw createError(500, 'Error confirming email');
             }
         }
 
@@ -49,4 +49,4 @@ export default eventHandler(async (event) => {
     } catch (err) {
         return { error: 'An error occurred during the confirmation process', response: err.message };
     }
-});
+}, 'guest');

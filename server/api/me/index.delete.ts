@@ -8,7 +8,7 @@ export default defineWrappedResponseHandler (async (event) => {
     try {
         const { data, error } = await client.auth.admin.deleteUser(userSession!.id)
         if (error) {
-            throw new Error('Error deleting authentication data: ' + error.message);
+            throw createError({ statusCode: 500, statusMessage: 'Error deleting authentication data'});
         }
 
         const { error: deleteError } = await client
