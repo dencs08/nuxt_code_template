@@ -36,8 +36,8 @@ export const useUsersStore = defineStore({
             this.loading = true;
 
             try {
-                const data = await $fetch('/api/fetch-users')
-                this.users = data;
+                const data = await $fetch('/api/users', {method: 'GET'});
+                this.users = data.response;
             } catch (error) {
                 throw new CustomError(error.data.message, error);
             } finally {
@@ -47,19 +47,19 @@ export const useUsersStore = defineStore({
         async addUser(req) {
             this.loading = true;
             try {
-                const { data } = await $fetch('/api/create-user', {
+                const data = await $fetch('/api/users', {
                     method: 'POST',
                     body: {
+                        "name": req.name,
                         "email": req.email,
                         "password": req.password,
                         "role": req.role,
                         "photo": req.photo,
-                        "name": req.name,
                     }
                 });
-                this.users.push(data.user);
+                this.users.push(data.response);
             } catch (error) {
-                throw new CustomError(error.data.message, error);
+                throw new CustomError("Error occured during creation process.", error);
             } finally {
                 this.loading = false;
             }
@@ -67,8 +67,8 @@ export const useUsersStore = defineStore({
         async deleteUser(userId) {
             this.loading = true;
             try {
-                const { data } = await $fetch('/api/delete-user', {
-                    method: 'POST',
+                const { data } = await $fetch('/api/users', {
+                    method: 'DELETE',
                     body: {
                         "userId": userId
                     }
@@ -86,8 +86,8 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 for (let userId of userIds) {
-                    const { data } = await $fetch('/api/delete-user', {
-                        method: 'POST',
+                    const { data } = await $fetch('/api/users', {
+                        method: 'DELETE',
                         body: {
                             "userId": userId
                         }
@@ -107,8 +107,8 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 this.updateLocalUsers(index, req);
-                const { data } = await $fetch('/api/update-user', {
-                    method: 'POST',
+                const { data } = await $fetch('/api/users', {
+                    method: 'PATCH',
                     body: {
                         id: req.id,
                         name: req?.name,
@@ -129,7 +129,7 @@ export const useUsersStore = defineStore({
             this.loading = true;
             try {
                 this.updateLocalUsers(index, req);
-                const { data } = await $fetch('/api/update-role', {
+                const { data } = await $fetch('/api/role', {
                     method: 'POST',
                     body: {
                         id: req.id,
