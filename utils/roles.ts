@@ -8,10 +8,10 @@ export type Role = {
 
 export const validRoles: Role[] = [
     { label: "Guest", value: "guest", level: 0 },
-    { label: "Subscriber", value: "subscriber", level: 0 },
-    { label: "User", value: "user", level: 1 },
-    { label: "Admin", value: "admin", level: 2 },
-    { label: "SuperAdmin", value: "superadmin", level: 3 },
+    { label: "Subscriber", value: "subscriber", level: 1 },
+    { label: "User", value: "user", level: 2 },
+    { label: "Admin", value: "admin", level: 3 },
+    { label: "SuperAdmin", value: "superadmin", level: 4 },
     // add other roles here
 ];
 
@@ -27,7 +27,7 @@ export function useRoles() {
     const getRoleSeverity = (roleValue: string) => {
         switch (roleValue) {
             case "guest":
-                return "secondary";
+                return "info";
             case "subscriber":
                 return "info";
             case "user":
