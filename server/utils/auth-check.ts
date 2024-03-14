@@ -1,6 +1,5 @@
 import { serverSupabaseServiceRole, serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { validRoles } from "@/utils/roles";
-import { create } from "domain";
 
 export async function getUserSession(event: any) {
     const userSession = await serverSupabaseUser(event);
@@ -28,13 +27,13 @@ export async function checkUserRole(event: any, role: string) {
         .single();
 
     if (error) {
-        throw new Error(`Error retrieving user roles: ${error.message}`);
+        throw createError({ statusCode: 500, statusMessage: "Error retrieving user roles" });
     }
 
     const userRoleLevel = validRoles.find(validRole => validRole.value === userRoles.role)?.level;
     const requiredRoleLevel = validRoles.find(validRole => validRole.value === role)?.level;
 
-    if (!userRoleLevel || !requiredRoleLevel || userRoleLevel < requiredRoleLevel) {
+    if (!Number.isInteger(userRoleLevel) || !Number.isInteger(requiredRoleLevel) || userRoleLevel! < requiredRoleLevel!) {
         throw createError({ statusCode: 403, statusMessage: `Unauthorized: User is not a ${role} or higher` });
     }
 }
