@@ -1,8 +1,8 @@
-type AuthProvider = "supabase" | "firebase";
-import { Provider as OAuthProvider } from "@supabase/gotrue-js";
+export type AuthProvider = "supabase" | "firebase";
+import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type SessionScope } from "../utils/types";
 
-interface IAuthenticationService {
+export interface IAuthenticationService {
     signIn: (email: string, password: string) => Promise<any>;
     signUp: (email: string, password: string) => Promise<any>;
     signInWithOAuth: (provider: OAuthProvider) => Promise<any>;
