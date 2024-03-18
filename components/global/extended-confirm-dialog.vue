@@ -19,7 +19,8 @@
                         </div>
                     </div>
                 </div>
-                <slot name="footer" :message="message" :acceptCallback="acceptCallback" :rejectCallback="rejectCallback">
+                <slot name="footer" :message="message" :acceptCallback="acceptCallback"
+                    :rejectCallback="rejectCallback">
                     <div
                         class="flex items-center justify-end gap-2 p-4 border-t bg-surface-50/40 dark:bg-surface-900/35 border-surface-100 dark:border-surface-600">
                         <Button label="Confirm" @click="acceptCallback" :class="message.acceptClass"></Button>
@@ -30,8 +31,8 @@
         </template>
     </ConfirmDialog>
 </template>
-  
-<script setup>
+
+<script setup lang="ts">
 const group = ref('');
 const pt = ref({});
 </script>

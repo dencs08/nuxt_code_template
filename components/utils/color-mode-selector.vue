@@ -6,8 +6,8 @@
         <InputSwitch v-else-if="type === 'switch'" v-model="isDark" />
     </div>
 </template>
-  
-<script setup>
+
+<script setup lang="ts">
 const isDark = useDark();
 const toggle = useToggle(isDark);
 

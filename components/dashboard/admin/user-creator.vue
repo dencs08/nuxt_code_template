@@ -23,8 +23,8 @@
                             <FormKit class="w-full" type='primeInputText' name='name' validation='required'
                                 placeholder='Name' @node="getNode">
                             </FormKit>
-                            <FormKit class="w-full" type='primePassword' name='password' validation='required' toggleMask
-                                :feedback="true" placeholder='Password' @node="getNode">
+                            <FormKit class="w-full" type='primePassword' name='password' validation='required'
+                                toggleMask :feedback="true" placeholder='Password' @node="getNode">
                             </FormKit>
                             <FormKit class="w-full" type='primePassword' name='password_confirm'
                                 validation='required|confirm' toggleMask placeholder='Repeat password' @node="getNode">
@@ -43,7 +43,16 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+interface Form {
+    name: string;
+    email: string;
+    password: string;
+    password_confirm: string;
+    role: string;
+    photo: string;
+}
+
 const { handleSubmit } = useSubmit();
 const { roles } = useRoles();
 const userStore = useUsersStore();
@@ -51,8 +60,7 @@ const visible = ref(false);
 
 const rolesOptions = computed(() => roles.value.map(role => ({ label: role.label, value: role.value })));
 
-const submitForm = async (data) => {
+const submitForm = async (data: Form) => {
     const response = await handleSubmit(userStore.addUser, data, 'User successfully added');
 }
-
 </script>

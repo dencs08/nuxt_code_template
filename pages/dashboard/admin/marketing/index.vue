@@ -3,11 +3,8 @@
     Marketing
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: "dashboard",
 });
 </script>
-<style lang="">
-
-</style>

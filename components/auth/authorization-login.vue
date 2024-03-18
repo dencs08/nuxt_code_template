@@ -7,7 +7,8 @@
 
     <div class="mt-5">
       <div>
-        <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Login">
+        <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
+          submit-label="Login">
           <template #default="{ getNode }">
             <div class="space-y-2 mb-5">
               <FormKit class="w-full" type='primeInputText' name='email' validation='required|email' placeholder='Email'
@@ -58,12 +59,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+interface Form {
+  email: string;
+  password: string;
+}
+
 const localePath = useLocalePath()
 const { signIn } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
-async function handleForm(data) {
+async function handleForm(data: Form) {
   await handleSubmit(signIn, { email: data.email, password: data.password }, 'Redirecting to your dashboard panel', '/dashboard', true);
 }
 </script>

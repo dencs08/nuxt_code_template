@@ -1,9 +1,13 @@
-<script setup>
+<script setup lang="ts">
+interface Form {
+  email: string;
+}
+
 const localePath = useLocalePath()
 const { lostPassword } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
-async function handleForm(data) {
+async function handleForm(data: Form) {
   await handleSubmit(lostPassword, { email: data.email }, 'Reset link sent');
 }
 </script>

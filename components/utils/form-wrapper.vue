@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   handleSubmit: {
     type: Function,
@@ -9,7 +9,7 @@ const props = defineProps({
 const data = reactive({})
 const nodes = ref([])
 
-const getNode = (node) => {
+const getNode = (node: HTMLAllCollection) => {
   nodes.value.push(node)
 }
 
@@ -20,8 +20,8 @@ const reset = () => {
   nodes.value = []
 }
 
-const formSubmitted = (data) => {
-  return new Promise((resolve, reject) => {
+const formSubmitted = (data: any) => {
+  return new Promise<void>((resolve, reject) => {
     const start = Date.now();
 
     props.handleSubmit(data).then(() => {
@@ -33,7 +33,7 @@ const formSubmitted = (data) => {
         reset();
         resolve();
       }, delay);
-    }).catch((error) => {
+    }).catch((error: any) => {
       reset();
       reject(error);
     });

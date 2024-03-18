@@ -18,7 +18,8 @@
                             <ProfileAvatar class="w-28 h-28" :photo="userStore.userSession.photo" />
                             <div class="space-y-3">
                                 <AvatarUpload />
-                                <p class="text-surface-700/70 dark:text-surface-100/70 text-sm font-medium">JPG, JPEG, or
+                                <p class="text-surface-700/70 dark:text-surface-100/70 text-sm font-medium">JPG, JPEG,
+                                    or
                                     PNG. 1MB
                                     max.</p>
                             </div>
@@ -41,7 +42,8 @@
                                     </div>
                                     <div class="col-span-2">
                                         <FormKit class="w-full" type='primeInputNumber' name='phone'
-                                            validation='required|number' placeholder='Phone' v-model="userDetails.phone">
+                                            validation='required|number' placeholder='Phone'
+                                            v-model="userDetails.phone">
                                         </FormKit>
                                     </div>
                                 </div>
@@ -57,13 +59,14 @@
                     </div>
 
                     <div class="col-span-3 md:col-span-2">
-                        <FormWrapper :handleSubmit="onPasswordChange" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
-                            submit-label="Change password" :disabled="userSession.provider !== 'email'">
+                        <FormWrapper :handleSubmit="onPasswordChange"
+                            :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Change password"
+                            :disabled="userSession.provider !== 'email'">
                             <template #default="{ getNode }">
                                 <div class="space-y-3 mb-4">
                                     <FormKit class="w-full" type='primePassword' name='currentpassword'
-                                        validation='required' toggleMask :feedback="false" placeholder='Current password'
-                                        @node="getNode" />
+                                        validation='required' toggleMask :feedback="false"
+                                        placeholder='Current password' @node="getNode" />
                                     <FormKit class="w-full" type='primePassword' name='password' validation='required'
                                         toggleMask :feedback="true" placeholder='Password' @node="getNode">
                                     </FormKit>
@@ -85,13 +88,13 @@
                     </div>
 
                     <div class="col-span-3 md:col-span-2">
-                        <FormWrapper :handleSubmit="onTerminateSession" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
-                            submit-label="Log out">
+                        <FormWrapper :handleSubmit="onTerminateSession"
+                            :submit-attrs="{ inputClass: 'w-full btn-primary' }" submit-label="Log out">
                             <template #default="{ getNode }">
                                 <div class="space-y-3 mb-4">
                                     <FormKit class="w-full" type='primePassword' name='currentpassword'
-                                        validation='required' toggleMask :feedback="false" placeholder='Current password'
-                                        @node="getNode" />
+                                        validation='required' toggleMask :feedback="false"
+                                        placeholder='Current password' @node="getNode" />
                                 </div>
                             </template>
                         </FormWrapper>
@@ -104,12 +107,13 @@
                             <h2 class="text-base font-semibold leading-7">Delete account</h2>
                             <p class="text-sm leading-6">No longer want to use our service? You can delete your
                                 account
-                                here. This action is not reversible. All information related to this account will be deleted
+                                here. This action is not reversible. All information related to this account will be
+                                deleted
                                 permanently.
                             </p>
 
-                            <Button size="small" label="Yes, delete my account" severity="danger" class="max-w-[220px] mt-4"
-                                @click="confirmDeleteAccount">
+                            <Button size="small" label="Yes, delete my account" severity="danger"
+                                class="max-w-[220px] mt-4" @click="confirmDeleteAccount">
                             </Button>
                         </div>
                     </div>
@@ -119,7 +123,7 @@
         </div>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 definePageMeta({
     layout: "dashboard",
 });
@@ -142,7 +146,16 @@ const userDetails = ref({
 })
 let initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 
-const onProfileSave = async (data) => {
+interface FormData {
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    phone?: string;
+    currentpassword?: string;
+    password_confirm?: string;
+}
+
+const onProfileSave = async (data: FormData) => {
     const name = `${data.firstname} ${data.lastname}`;
     const { email, phone } = data;
 
@@ -156,23 +169,23 @@ const onProfileSave = async (data) => {
     initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 }
 
-const onPasswordChange = async (data) => {
+const onPasswordChange = async (data: FormData) => {
     const { currentpassword, password_confirm } = data;
     try {
         await changeUserPassword(currentpassword, password_confirm);
         addToast('success', 'Password updated', 'Your password has been updated successfully')
-    } catch (error) {
+    } catch (error: any) {
         addToast('error', 'Password update failed', error.message)
     }
 }
 
-const onTerminateSession = async (data) => {
+const onTerminateSession = async (data: FormData) => {
     const { currentpassword } = data;
     try {
         await verifyPassword(currentpassword);
         await terminateSession('others');
         addToast('success', 'Other sessions terminated', 'Your sessions have been terminated successfully', 30000)
-    } catch (error) {
+    } catch (error: any) {
         addToast('error', 'Session termination failed', error.message)
     }
 }
@@ -190,5 +203,5 @@ const confirmDeleteAccount = () => {
 };
 </script>
 <style lang="">
-      
+
   </style>

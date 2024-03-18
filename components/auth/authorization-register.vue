@@ -48,12 +48,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+interface Form {
+  email: string;
+  password: string;
+  password_confirm: string;
+}
+
 const localePath = useLocalePath()
 const { signUp } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
-async function handleForm(data) {
+async function handleForm(data: Form) {
   await handleSubmit(signUp, { email: data.email, password: data.password }, 'Registration link sent!');
 }
 </script>

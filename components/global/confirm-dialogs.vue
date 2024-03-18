@@ -9,7 +9,7 @@
                     <div class="flex gap-1">
                         <p class="font-semibold text-surface-700 dark:text-surface-50 ">{{ user.email }}</p>
                         <p class="text-xs font-light text-surface-600 dark:text-surface-100/75">({{
-                            user.userName }}):</p>
+            user.userName }}):</p>
                     </div>
                     <ul class="list-decimal list-inside">
                         <li v-for="(change, i) in user.changes" :key="i" class="flex items-center gap-2 ml-2">
@@ -46,19 +46,19 @@
         </ExtendedConfirmDialog>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const { verifyPassword } = useAuthentication();
 const { addToast } = useToastService();
 const { CustomError } = useCustomError();
 
 const password = ref();
-const checkPassword = async (acceptCallback, rejectCallback) => {
+const checkPassword = async (acceptCallback: Function, rejectCallback: Function) => {
     try {
         if (!password.value) throw new CustomError('Password is required', 'PASSWORD_REQUIRED');
         await verifyPassword(password.value);
         addToast('success', 'Account deletion confirmed', 'Your account will now be permanentaly deleted, you will be logged out automatically.', 30000)
         acceptCallback();
-    } catch (error) {
+    } catch (error: any) {
         addToast('error', 'Account deletion failed', error.message)
     }
 };

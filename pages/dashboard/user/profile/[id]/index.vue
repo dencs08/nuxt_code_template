@@ -19,10 +19,12 @@
         </div>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 //TODO fix [id] in path when path doesnt exist, also propably create different naming convention for public profile pages
 definePageMeta({
     layout: "dashboard",
 });
-// const { user } = useUserSession();
+
+const userStore = useUsersStore();
+const user = userStore.getUserSession;
 </script>

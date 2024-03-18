@@ -23,16 +23,20 @@
         </div> -->
 </template>
 
-<script setup>
+<script setup lang="ts">
+interface FormKit {
+    locale: string;
+}
+
 const router = useRouter();
 const { locales, setLocale, getLocaleCookie } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
-const formKit = inject(Symbol.for('FormKitConfig'))
+const formKit = inject<FormKit>(Symbol.for('FormKitConfig'))
 const isLoading = ref(false);
 
-let selectedLocale = ref('');
-const selectedFormKitLocale = ref('')
+let selectedLocale: Ref<string> = ref('');
+const selectedFormKitLocale: Ref<string> = ref('')
 
 onMounted(async () => {
     selectedLocale.value = await getLocaleCookie();
@@ -48,7 +52,7 @@ const availableLocales = computed(() => {
     return (locales.value).filter(i => i.code)
 })
 
-const changeLocale = (newLocale) => {
+const changeLocale = (newLocale: string) => {
     isLoading.value = true;
     document.body.style.overflow = 'hidden'; // Block scrolling
     setLocale(newLocale);
