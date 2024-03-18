@@ -6,7 +6,7 @@ export default defineWrappedResponseHandler (async (event) => {
     const body = await readBody(event);
 
     if (!body.id) {
-        throw createError(400, 'Missing required data');
+        throw createError({statusCode: 400, statusMessage: 'Missing required data'});
     }
 
     try {
@@ -27,10 +27,10 @@ export default defineWrappedResponseHandler (async (event) => {
             .select();
 
         if (error) {
-            throw createError(500, 'Error updating user data');
+            throw createError({statusCode: 500, statusMessage: 'Error updating user data'});
         }
         return { response: 'User updated' };
     } catch (err) {
-        throw createError(500, 'An error occurred during the update process ' + err.message);
+        throw createError({ statusCode: 500, statusMessage: 'An error occurred during the update process' });
     }
 }, 'admin');

@@ -8,7 +8,7 @@ export default defineWrappedResponseHandler (async (event) => {
     try {
         const { data, error } = await client.auth.admin.deleteUser(body.userId);
         if (error) {
-            throw createError(500, 'Error deleting user data');
+            throw createError({statusCode: 500, statusMessage: 'Error deleting user from auth.users'});
         }
 
         const { data: deletedUser, error: deleteError } = await client
@@ -21,6 +21,6 @@ export default defineWrappedResponseHandler (async (event) => {
 
         return { response: 'User deleted', data: deletedUser };
     } catch (err) {
-        throw createError(500, 'An error occurred during the deletion process ' + err.message);
+        throw createError({ statusCode: 500, statusMessage: 'An error occurred during the deletion process' });
     }
 }, 'superadmin');
