@@ -21,8 +21,12 @@ type PositionType = "bottomleft" | "center" | "top" | "bottom" | "left" | "right
 const position = ref<PositionType>('bottomleft');
 const visible = ref(false);
 
+const cookieConsent = useLocalStorage<boolean>('cookieConsent', null);
+
 onMounted(() => {
-  openPosition('bottomleft')
+  if (cookieConsent.value === null) {
+    openPosition('bottomleft')
+  }
 });
 
 const openPosition = (pos: PositionType) => {
@@ -31,12 +35,12 @@ const openPosition = (pos: PositionType) => {
 }
 
 const acceptCookies = () => {
-  // console.log('accept');
+  cookieConsent.value = true;
   visible.value = false;
 }
 
 const rejectCookies = () => {
-  // console.log('reject');
+  cookieConsent.value = false;
   visible.value = false;
 }
 </script>
