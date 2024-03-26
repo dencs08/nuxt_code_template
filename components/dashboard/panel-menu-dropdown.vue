@@ -9,7 +9,7 @@
                 <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                 <span v-if="item.shortcut"
                     class="ml-auto border border-surface-200 dark:border-surface-700 rounded bg-surface-100 dark:bg-surface-700 text-xs p-1">{{
-                        item.shortcut }}</span>
+        item.shortcut }}</span>
                 <span v-if="item.items"
                     class="pi pi-angle-right text-primary-500 dark:text-primary-400 ml-auto transform transition-transform group-hover:rotate-90"
                     :class="{ 'rotate-90': dropdowns[item.label] }" />
@@ -22,7 +22,7 @@
                 <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                 <span v-if="item.shortcut"
                     class="ml-auto border border-surface-200 dark:border-surface-700 rounded bg-surface-100 dark:bg-surface-700 text-xs p-1">{{
-                        item.shortcut }}</span>
+        item.shortcut }}</span>
                 <span v-if="item.items"
                     class="pi pi-angle-right text-primary-500 dark:text-primary-400 ml-auto transform transition-transform group-hover:rotate-90"
                     :class="{ 'rotate-90': dropdowns[item.label] }" />
