@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="container mx-auto min-h-screen grid place-content-center text-center">
+    <section class="container mx-auto py-32 grid place-content-center text-center">
       <h1 v-motion="slideTop({ delay: 200 })">
         {{ t('pages.index.content.hero.h1') }}
       </h1>
@@ -12,8 +12,8 @@
       </h2>
     </section>
 
-    <section class="container mx-auto my-24 space-y-12">
-      <div class="mt-96">
+    <section class="container mx-auto space-y-12">
+      <div>
         <h3>Test nuxt-img</h3>
         <div class="size-full sm:size-64 md:size-80 lg:size-96">
           <custom-nuxt-img></custom-nuxt-img>
@@ -22,7 +22,7 @@
       <div>
         <h3>Text vert + hover</h3>
         <div class="h-64 bg-gray-100 rounded-xl">
-          <MarqueeBase :clone="true" :duration="1" :gradient="true" :gradient-color="[250, 250, 250]"
+          <MarqueeBase :clone="true" :duration="5" :gradient="true" :gradient-color="[250, 250, 250]"
             gradient-length="25%" :vertical="true">
             <div v-for="el in helloArraySmall" class="my-3 pl-3">
               <div class="font-medium text-3xl">{{ el }}</div>
