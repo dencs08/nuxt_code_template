@@ -9,12 +9,14 @@ import hooks from "./config/hooks";
 import primevue from "./config/primevue";
 import content from "./config/content";
 import image from "./config/image";
-import googleFonts from "./config/googleFonts";
 import webVitals from "./config/webVitals";
 import site from "./config/site";
 import robots from "./config/robots";
 import routeRules from "./config/routeRules";
 import pwa from "./config/pwa";
+import fonts from "./config/fonts";
+
+// import googleFonts from "./config/googleFonts";
 
 export default defineNuxtConfig({
     runtimeConfig,
@@ -26,12 +28,13 @@ export default defineNuxtConfig({
     primevue,
     content,
     image,
-    googleFonts,
     webVitals,
     site,
     robots,
     routeRules,
+    fonts,
     // pwa, //when using nuxt pwa module
+    // googleFonts,
 
     devtools: {
         enabled: true,

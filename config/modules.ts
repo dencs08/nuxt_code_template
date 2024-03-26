@@ -13,14 +13,16 @@ export default [
     "@nuxtjs/supabase",
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/google-fonts",
     "@nuxt/content",
     "@nuxt/image",
+    "@nuxt/fonts",
     "nuxt-icon",
     "nuxt-primevue",
     "@formkit/nuxt",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+
+    // "@nuxtjs/google-fonts", //migrating to official module nuxt-fonts
 
     //optional
     // "@vite-pwa/nuxt", //uncomment for generating a PWA for mobiles.
