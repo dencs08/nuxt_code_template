@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import ColorModeSelector from '@/components/utils/color-mode-selector.vue';
-import LanguageSelector from '@/components/utils/dropdowns/i18n-dropdown.vue';
+import LanguageSelector from '@/components/utils/forms/dropdown/i18n-dropdown.vue';
 
 definePageMeta({
     layout: "dashboard",
