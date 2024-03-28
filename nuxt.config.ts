@@ -13,8 +13,9 @@ import webVitals from "./config/webVitals";
 import site from "./config/site";
 import robots from "./config/robots";
 import routeRules from "./config/routeRules";
-import pwa from "./config/pwa";
+import storybook from "./config/storybook";
 import fonts from "./config/fonts";
+import pwa from "./config/pwa";
 
 // import googleFonts from "./config/googleFonts";
 
@@ -33,6 +34,7 @@ export default defineNuxtConfig({
     robots,
     routeRules,
     fonts,
+    storybook,
     // pwa, //when using nuxt pwa module
     // googleFonts,
 

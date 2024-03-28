@@ -3,6 +3,7 @@
 export default [
     //development
     "@nuxt/devtools",
+    "@nuxtjs/storybook",
     
     //seo
     '@nuxtjs/web-vitals',
