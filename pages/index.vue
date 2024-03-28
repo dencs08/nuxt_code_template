@@ -12,6 +12,11 @@
       </h2>
     </section>
 
+    <section>
+      <AppInputText v-model="parentValue" id="test" placeholder="Placeholder" />
+      <AppInputText v-model="parentValue" id="test2" placeholder="Placeholder" float />
+    </section>
+
     <section class="container mx-auto space-y-12">
       <div>
         <h3>Test nuxt-img</h3>
@@ -97,4 +102,5 @@ const imgArray = ref([
     img: `/img/placeholder.jpg`
   }
 ])
+const parentValue = ref('');
 </script>
