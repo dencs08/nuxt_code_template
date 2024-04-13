@@ -1,4 +1,4 @@
-export type AuthProvider = "supabase" | "firebase" | "kindle";
+export type AuthProvider = "supabase" | "firebase" | "kindle" | "laravel";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type SessionScope } from "../utils/types";
 
