@@ -23,7 +23,77 @@ type SupabaseClientType = ReturnType<typeof useSupabaseClient>;
 
 type ClientType = SupabaseClientType;
 
-export function authenticationService(provider: AuthProvider): IAuthenticationService {
+export function supabaseAuthenticationService(provider: AuthProvider): IAuthenticationService {
+    let client: ClientType;
+
+    switch (provider) {
+        case "supabase":
+            client = useSupabaseClient();
+            break;
+        // case 'firebase':
+        //     client = useFirebaseClient();
+        //     break;
+        default:
+            throw new Error(`Unsupported auth provider: ${provider}`);
+    }
+
+    return {
+        signIn: (email, password) => client.auth.signInWithPassword({ email, password }),
+        signUp: (email, password) => client.auth.signUp({ email, password }),
+        signInWithOAuth: (oauthProvider: OAuthProvider) =>
+            client.auth.signInWithOAuth({ provider: oauthProvider }),
+        signInWithOAuthWithPopup: (oauthProvider: OAuthProvider) =>
+            client.auth.signInWithOAuth({
+                provider: oauthProvider,
+                options: { skipBrowserRedirect: true },
+            }),
+        signOut: () => client.auth.signOut(),
+        updateUser: (attributes, options?) => client.auth.updateUser(attributes, options),
+        resetPassword: (email) => client.auth.resetPasswordForEmail(email),
+        changePassword: (oldPassword: string, newPassword: string) =>
+            new Promise((resolve, reject) => {
+                client
+                    //@ts-ignore
+                    .rpc<any, { current_plain_password: string; new_plain_password: string }>(
+                        "change_user_password",
+                        {
+                            current_plain_password: oldPassword,
+                            new_plain_password: newPassword,
+                        }
+                    )
+                    .then(
+                        (response) => {
+                            if (response.error) {
+                                reject(response.error);
+                            } else {
+                                resolve(response);
+                            }
+                        },
+                        (error) => reject(error)
+                    );
+            }),
+        verifyPassword: (password: string) =>
+            new Promise((resolve, reject) => {
+                client
+                    //@ts-ignore
+                    .rpc<any, { current_plain_password: string }>("verify_user_password", {
+                        current_plain_password: password,
+                    })
+                    .then((response) => {
+                        if (response.error) {
+                            reject(response.error);
+                        } else {
+                            resolve(response);
+                        }
+                    });
+            }),
+        terminateSession: (scope: SessionScope = "others") => {
+            return client.auth.signOut({ scope: scope });
+        },
+    };
+}
+
+export function laravelAuthenticationService(provider: AuthProvider): IAuthenticationService {
     let client: ClientType;
 
     switch (provider) {
