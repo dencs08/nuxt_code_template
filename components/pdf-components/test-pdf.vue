@@ -1,6 +1,7 @@
 <template>
     <div>
         <div ref="pdfSection">
+            <!-- TODO test if it works with inline css? -->
             Thanks for testing out nuxt-pdf!
         </div>
         <button @click="exportToPDF('my-pdf-file.pdf', pdfSection)">
