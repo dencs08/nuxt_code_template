@@ -17,6 +17,6 @@ export default {
     },
     directives: {
         // include: "*",
-        exclude: ['Ripple']
+        // exclude: ['Ripple']
     },
 };
