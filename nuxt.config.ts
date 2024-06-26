@@ -65,7 +65,7 @@ export default defineNuxtConfig({
         // layoutTransition: { name: 'layout', mode: 'out-in' }
     },
 
-    // ssr: false, //for static site generation
+    // ssr: false, //uncomment for client-side generation (disables server-side rendering)
 
     // nitro: {
     //   prerender: {
