@@ -5,7 +5,7 @@ export default [
     "@nuxt/devtools",
     '@nuxtjs/device',
     'nuxt-typed-router',
-    // "@nuxtjs/storybook",
+    // "@nuxtjs/storybook", //right now breaks the app (enabling porbably forces ssr:false)
 
     //core (required for most template features)
     "@nuxtjs/supabase",
@@ -31,12 +31,9 @@ export default [
     "@nuxt/image",
     "nuxt-icon",
     "@nuxt/fonts",
-
-    //additional modules not required but used in the project.
-    "@sidebase/nuxt-pdf",
-
-    // "@nuxtjs/google-fonts", //migrating to official module nuxt-fonts probaly will be removed in future.
-
+    
     //optional
     // "@vite-pwa/nuxt", //uncomment for generating a PWA for mobiles.
+
+    // "@nuxtjs/google-fonts", //migrating to official module nuxt-fonts probaly will be removed in future.
 ];
