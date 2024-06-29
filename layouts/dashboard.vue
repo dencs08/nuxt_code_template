@@ -17,17 +17,7 @@
             <div class="lg:pl-56">
                 <main class="pt-20 min-h-screen">
                     <div class="px-4 sm:px-6 lg:px-8 pb-8">
-                        <Breadcrumbs class="hidden sm:block mb-3" :pt="{
-        root: [
-            'rounded-md',
-            'py-2 pr-4 pl-1',
-            'overflow-x-auto'],
-        separator: [
-            'flex items-center',
-            'mx-1 scale-75',
-            'text-surface-500 dark:text-surface-200/50'
-        ],
-    }" />
+                        <Breadcrumbs class="hidden sm:block mb-3" />
                         <div v-auto-animate>
                             <Menubar v-if="showMenubar" :model="currentSubNavigation" class="mb-6" :pt="{
         root: [
