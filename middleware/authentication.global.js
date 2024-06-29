@@ -2,31 +2,32 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const nuxt = useNuxtApp()
     const user = useSupabaseUser();
-    const auth = to.meta.auth;
+    const authRequired = to.meta.auth;
 
     // If `auth` on a route is set to `false`, allow all users regardless of authentication state.
-    if (auth === false) return;
+    if (authRequired === false) return;
 
     try {
         // Handle routes that should only be accessed by unauthenticated users. (i.e. login page)
-        if (auth && auth.unauthenticatedOnly) {
+        if (authRequired && authRequired.unauthenticatedOnly) {
             // If the user is authenticated, redirect them to a different route.
-            if (user.value !== null) {
-                return navigateTo(nuxt.$localePath({ name: auth.navigateAuthenticatedTo || 'index' }));
+            if (user.value) {
+                return navigateTo(nuxt.$localePath({ name: authRequired.navigateAuthenticatedTo || 'index' }));
             }
             // If the user is not authenticated, allow them to access the route.
-            else {
-                return;
+            return;
+        }
+
+        // If `auth` is undefined or requires authentication, check the user's state
+        if (authRequired === undefined || authRequired === true) {
+            // If the user is not authenticated and the route requires authentication, redirect to the login page.
+            if (!user.value) {
+                return navigateTo(nuxt.$localePath({ name: "login" }));
             }
+            // If the user is authenticated, allow them to access the route.
+            return;
         }
 
-        // If `auth` is undefined, assume the route requires authentication, so if the user is authenticated they can access the route.
-        if (auth === undefined && user.value !== null) return;
-
-        // If the user is not authenticated and the route requires authentication, redirect to the login page.
-        if (user.value === null && auth !== false && to.path !== nuxt.$localePath({ name: "login" })) {
-            return navigateTo(nuxt.$localePath({ name: "login" }));
-        }
     } catch (error) {
         // Log the error and consider redirecting the user to an error page.
         console.error(error);
