@@ -10,7 +10,7 @@ import { en, pl, de } from "@formkit/i18n";
 
 import { generateClasses } from "@formkit/themes";
 import { genesisIcons } from "@formkit/icons";
-// import myTailwindTheme from "./custom_tailwindcss/formKit";
+import myTailwindTheme from "./custom_tailwindcss/formKit";
 
 const config: DefaultConfigOptions = {
     plugins: [
@@ -20,9 +20,9 @@ const config: DefaultConfigOptions = {
     icons: {
         ...genesisIcons,
     },
-    // config: {
-    //     classes: generateClasses(myTailwindTheme),
-    // },
+    config: {
+        classes: generateClasses(myTailwindTheme),
+    },
 
     inputs: {
         ...primeInputs,
