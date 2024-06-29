@@ -1,7 +1,7 @@
 <template>
   <footer aria-labelledby="footer-heading">
     <hr class="w-full text-black" />
-    <div class="container mx-auto py-20">
+    <div class="container mx-auto py-10">
       <div class="flex flex-row justify-between items-center">
         <div class="h-auto w-24">
           <Logo />
@@ -27,7 +27,7 @@
           <h3 class="text-sm font-semibold leading-6 text-gray-900">Newsteller</h3>
           <p class="mt-2 text-sm leading-6 text-gray-600 mb-3">Najnowsze wiadomości, informacje z IT, oferty pracy i
             kursy.</p>
-          <FormWrapper :handleSubmit="onSubmit" :submit-attrs="{ inputClass: 'w-full sm:w-auto md:w-1/2 btn-primary' }"
+          <!-- <FormWrapper :handleSubmit="onSubmit" :submit-attrs="{ inputClass: 'w-full sm:w-auto md:w-1/2 btn-primary' }"
             submit-label="Sign in">
             <template #default="{ getNode }">
               <div class="mb-1.5">
@@ -35,7 +35,7 @@
                   @node="getNode" />
               </div>
             </template>
-          </FormWrapper>
+</FormWrapper> -->
         </div>
       </div>
       <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
@@ -62,22 +62,22 @@ const currentYear = computed(() => new Date().getFullYear());
 const links = ref(
   {
     solutions: [
-      { name: 'Kateogria 1', href: '#' },
-      { name: 'Kateogria 2', href: '#' },
-      { name: 'Kateogria 3', href: '#' },
-      { name: 'Kateogria 4', href: '#' },
+      { name: 'Kategoria 1', href: '#' },
+      { name: 'Kategoria 2', href: '#' },
+      { name: 'Kategoria 3', href: '#' },
+      { name: 'Kategoria 4', href: '#' },
     ],
     support: [
-      { name: 'Kateogria 1', href: '#' },
-      { name: 'Kateogria 2', href: '#' },
-      { name: 'Kateogria 3', href: '#' },
-      { name: 'Kateogria 4', href: '#' },
+      { name: 'Kategoria 1', href: '#' },
+      { name: 'Kategoria 2', href: '#' },
+      { name: 'Kategoria 3', href: '#' },
+      { name: 'Kategoria 4', href: '#' },
     ],
     company: [
-      { name: 'Kateogria 1', href: '#' },
-      { name: 'Kateogria 2', href: '#' },
-      { name: 'Kateogria 3', href: '#' },
-      { name: 'Kateogria 4', href: '#' },
+      { name: 'Kategoria 1', href: '#' },
+      { name: 'Kategoria 2', href: '#' },
+      { name: 'Kategoria 3', href: '#' },
+      { name: 'Kategoria 4', href: '#' },
     ],
     legal: []
   }
