@@ -8,15 +8,21 @@ export default {
         input: 'appearance-none bg-transparent focus:outline-none focus:ring-0 focus:shadow-none py-1.5 px-2 rounded transition',
         label: 'block mb-1 font-bold text-sm',
         legend: 'font-bold text-sm',
-        loaderIcon: 'inline-flex items-center w-4 text-gray-600 animate-spin',
         message: 'text-red-500 mb-1 text-xs',
         messages: 'list-none p-0 mt-1 mb-0',
         outer: 'formkit-disabled:opacity-50',
+        loaderIcon: 'inline-flex items-center w-4 text-gray-600 animate-spin',
         prefixIcon: 'w-10 flex self-stretch grow-0 shrink-0 rounded-tl rounded-bl border-r border-gray-400 bg-white bg-gradient-to-b from-transparent to-gray-200 [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto',
         suffixIcon: 'w-7 pr-3 p-3 flex self-stretch grow-0 shrink-0 [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto'
     },
 
     // // Family styles apply to all inputs that share a common family
+    'family:button': {
+        input: '$reset flex justify-center items-center bg-blue-600 text-white text-sm font-normal py-2.5 px-6 rounded hover:bg-blue-700 hover:shadow-sm transition-all duration-75 focus:outline-2 focus:outline-blue-600 focus:outline-offset-2',
+        wrapper: '',
+        prefixIcon: '$reset block w-4 h-auto -ml-2 mr-2 stretch',
+        suffixIcon: '$reset block w-4 h-auto ml-2 stretch',
+    },
     // 'family:box': {
     //     decorator: 'block relative h-5 w-5 mr-2 rounded bg-white bg-gradient-to-b from-transparent to-gray-200 ring-1 ring-gray-400 peer-checked:ring-blue-500 text-transparent peer-checked:text-blue-500',
     //     decoratorIcon: 'flex p-[3px] w-full h-full absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2',
@@ -25,12 +31,6 @@ export default {
     //     inner: '$remove:formkit-disabled:bg-gray-200',
     //     label: '$reset text-sm text-gray-700 mt-1 select-none',
     //     wrapper: 'flex items-center mb-1',
-    // },
-    // 'family:button': {
-    //     input: '$reset flex justify-center items-center bg-blue-600 text-white text-sm font-normal py-2.5 px-6 rounded hover:bg-blue-700 hover:shadow-sm transition-all duration-75 focus:outline-2 focus:outline-blue-600 focus:outline-offset-2',
-    //     wrapper: '',
-    //     prefixIcon: '$reset block w-4 h-auto -ml-2 mr-2 stretch',
-    //     suffixIcon: '$reset block w-4 h-auto ml-2 stretch',
     // },
     // 'family:dropdown': {
     //     dropdownWrapper: 'my-2 w-full shadow-lg rounded [&::-webkit-scrollbar]:hidden',
