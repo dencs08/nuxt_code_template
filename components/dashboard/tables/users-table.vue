@@ -1,8 +1,8 @@
 <template>
     <DataTable ref="dt" :value="userStore?.users" v-model:selection="selected" v-model:editingRows="editingRows"
-        :loading="userStore?.loading" v-model:filters="filters" dataKey="id" tableStyle="min-width: 50rem;" editMode="row"
-        @row-edit-save="onRowEditSave" :rows="10" :globalFilterFields="['name', 'email', 'phone', 'role']" size="small"
-        removableSort stripedRows paginator>
+        :loading="userStore?.loading" v-model:filters="filters" dataKey="id" tableStyle="min-width: 50rem;"
+        editMode="row" @row-edit-save="onRowEditSave" :rows="10"
+        :globalFilterFields="['name', 'email', 'phone', 'role']" size="small" removableSort stripedRows paginator>
 
         <template #header>
             <div class="flex justify-between items-center">
@@ -14,18 +14,17 @@
                         class="!p-2" :disabled="!changesMade" v-if="changesMade" />
                 </div>
                 <div class="flex justify-between gap-3" :class="!isAdmin ? 'w-full' : ''">
-                    <span class="relative">
-                        <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-                        <InputText v-model="filters['global'].value" placeholder="Keyword Search"
-                            class="pl-10 font-normal" />
-                    </span>
+                    <IconField class="w-full font-normal">
+                        <InputIcon class="pi pi-search" />
+                        <InputText v-model="filters['global'].value" placeholder="Search" class="w-full" />
+                    </IconField>
                     <div class="grid place-content-center">
-                        <Button size="small" class="pi pi-external-link text-surface-700 dark:text-surface-100"
-                            v-tooltip.left="'Export table to CSV'" @click="exportCSV($event)" />
+                        <Button size="small" icon="pi pi-external-link " v-tooltip.left="'Export table to CSV'"
+                            @click="exportCSV($event)" aria-label="Save" />
                     </div>
                     <div class="grid place-content-center">
                         <Button size="small" v-tooltip.left="'Refresh users table'" @click="fetchUsers"
-                            class="pi pi-refresh text-surface-700 dark:text-surface-100" />
+                            icon="pi pi-refresh" aria-label="Save" />
                     </div>
                 </div>
             </div>
@@ -63,9 +62,9 @@
         <Column :rowEditor="true" style="width: 10%; min-width: 6rem" bodyStyle="text-align:center"></Column>
     </DataTable>
 </template>
-  
+
 <script setup>
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode } from '@primevue/core/api';
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
