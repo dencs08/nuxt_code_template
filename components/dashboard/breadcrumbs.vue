@@ -4,14 +4,13 @@
       <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
         <a :href="href" v-bind="props.action" @click="navigate">
           <span :class="[item.icon, 'text-color']" />
-          <span
-            class="text-surface-700 dark:text-surface-100/70 font-light text-xs hover:text-primary-500 dark:hover:text-primary-500 transition">{{
-              item.label
-            }}</span>
+          <span class="font-light text-xs transition">{{
+    item.label
+  }}</span>
         </a>
       </router-link>
       <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-        <span class="text-surface-700 dark:text-surface-0/80">{{ item.label }}</span>
+        <span>{{ item.label }}</span>
       </a>
     </template>
   </Breadcrumb>
@@ -46,4 +45,3 @@ const items = computed(() => {
   });
 });
 </script>
-
