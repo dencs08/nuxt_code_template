@@ -1,0 +1,122 @@
+:root {
+  --formkit-error-color: #ef9a9a;
+}
+
+.formkit-form > .formkit-messages {
+  margin: 4px 0;
+  .formkit-message {
+    font-size: 0.8rem;
+  }
+}
+
+.formkit-outer {
+  margin: 0;
+  padding-bottom: 0.8rem;
+
+  .formkit-inner {
+
+    .p-formkit {
+
+      .p-formkit-icon {
+        box-sizing: border-box;
+        width: 100%;
+      }
+
+      .p-inputtext, .p-password, .p-multiselect, .p-dropdown, .p-textarea {
+        box-sizing: border-box;
+        width: 100%;
+        &.p-colorpicker-preview {
+          width: 2rem;
+        }
+      }
+
+    }
+  }
+
+  ul {
+    margin-block-start: 2px;
+    margin-block-end: 2px;
+  }
+  .formkit-messages {
+    padding: 4px 0 0 0;
+
+    .formkit-message {
+      padding: 0;
+      margin: 0;
+      color: var(--formkit-error-color);
+      list-style: none;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.formkit-outer[data-type="primeInputSwitch"], .formkit-outer[data-type="primeCheckbox"], .formkit-outer[data-type="primeTriStateCheckbox"], .formkit-outer[data-type="primeRadioButton"] {
+  .formkit-inner {
+
+    .formkit-prime-right {
+      margin-left: 10px;
+      font-size: 1rem;
+    }
+
+    .formkit-prime-left {
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+  }
+}
+
+.formkit-label {
+  display: block;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.formkit-fieldset {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+
+  &:focus-within {
+    border: 0;
+  }
+
+  & > .formkit-help {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.formkit-legend {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.formkit-help {
+  margin: 4px 0 0 0 ;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.formkit-messages {
+  padding: 0;
+}
+
+.formkit-message {
+  padding: 0;
+  margin: 0;
+  color: var(--formkit-error-color);
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+.formkit-actions {
+  padding-top: 0.5rem;
+}
+
+.p-formkit-radio-label {
+  margin-left: 1rem;
+}

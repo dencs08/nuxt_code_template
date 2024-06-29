@@ -1,10 +1,18 @@
 @import "./my_utilities.css";
 @import "primeicons/primeicons.css";
-@import "./formKit-PrimeVue-overrides.css";
+@import "./formkit-primevue.scss";
+/* @import "./formKit-PrimeVue-overrides.css"; */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
 
 html,
 body {
@@ -12,37 +20,43 @@ body {
     padding: 0;
 }
 
-@layer base {
-    body {
-        @apply h-full font-body font-normal;
-    }
-    h1 {
-        @apply text-clamp-2xl sm:text-clamp-3xl xl:text-clamp-4xl font-heading;
-    }
-    h2 {
-        @apply text-5xl font-heading;
-    }
-    h3 {
-        font-size: clamp(2rem, 3.6vw, 10rem);
-        /* @apply text-primary; */
-        @apply font-semibold font-heading;
-    }
-    h4 {
-        @apply text-xl font-heading;
-    }
-    h5 {
-        @apply text-xl font-heading;
-    }
-    h6 {
-        @apply text-xl font-heading;
-    }
 
-    img {
-        @apply rounded-none;
-    }
-
-    ul {
-        @apply list-decimal;
-        @apply list-inside;
-    }
+body {
+    @apply h-full font-body font-normal;
 }
+
+h1 {
+    @apply text-clamp-2xl sm:text-clamp-3xl xl:text-clamp-4xl font-heading;
+}
+
+h2 {
+    @apply text-5xl font-heading;
+}
+
+h3 {
+    font-size: clamp(2rem, 3.6vw, 10rem);
+    /* @apply text-primary; */
+    @apply font-semibold font-heading;
+}
+
+h4 {
+    @apply text-xl font-heading;
+}
+
+h5 {
+    @apply text-xl font-heading;
+}
+
+h6 {
+    @apply text-xl font-heading;
+}
+
+img {
+    @apply rounded-none;
+}
+
+ul {
+    @apply list-decimal;
+    @apply list-inside;
+}
+
