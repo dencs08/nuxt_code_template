@@ -17,14 +17,16 @@
         </nuxt-link>
 
         <form class="relative flex flex-1 lg:pl-28 lg:ml-10 w-full items-center">
-          <div class="relative w-full">
-            <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-            <InputText v-model="searchValue" placeholder="Search" class="pl-10 border-0 py-1.5 text-sm w-full" />
-          </div>
+          <IconField class="w-full">
+            <InputIcon class="pi pi-search" />
+            <InputText v-model="value1" placeholder="Search" class="!border-0 !shadow-none w-full" />
+          </IconField>
         </form>
 
         <div class="flex items-center gap-x-4 lg:gap-x-6">
-          <i v-badge.danger class="pi pi-bell hover:text-primary-500 relative cursor-pointer transition-colors" />
+          <OverlayBadge value="1">
+            <i class="pi pi-bell hover:text-primary-500 relative cursor-pointer transition-colors text-md" />
+          </OverlayBadge>
           <ColorModeSelector />
           <!-- Profile dropdown -->
           <button type="button" icon="pi pi-user" rounded text @click="toggleUserMenu" aria-haspopup="true"
@@ -38,7 +40,7 @@
     </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
-    <Sidebar v-model:visible="sidebarOpen">
+    <Drawer v-model:visible="sidebarOpen">
       <template #container="{ closeCallback }">
         <div class="flex flex-col h-full">
           <div class="flex items-center justify-between px-4 pt-4 shrink-0">
@@ -60,7 +62,7 @@
           </div>
         </div>
       </template>
-    </Sidebar>
+    </Drawer>
 
     <!-- Static sidebar for desktop -->
     <div
@@ -79,6 +81,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 const props = defineProps({
   navigation: Array,
@@ -86,8 +89,6 @@ const props = defineProps({
   userNavigation: Array,
 });
 
-// const { useAccessChecks } = useRoleCheck();
-// console.log(useAccessChecks.value);
 const { dashboardNavigation, dashboardSettings } = useNavigation();
 const { signOut } = useAuthentication();
 const localePath = useLocalePath()
@@ -119,7 +120,7 @@ const userNavigation = computed(() => [
         icon: 'pi pi-sign-out',
         command: async () => {
           try {
-            const response = await signOut();
+            await signOut();
             navigateTo(localePath({ name: 'login' }));
           } catch (error) {
             console.error(error);
@@ -132,18 +133,5 @@ const userNavigation = computed(() => [
 </script>
 
 <style scoped>
-.dashboard-custom-panel :deep(div[data-pc-section="headercontent"]),
-.dashboard-custom-panel :deep(div[data-pc-section="menucontent"]),
-.dashboard-custom-panel :deep(div[data-pc-section="header"]),
-.dashboard-custom-panel :deep(div[data-pc-section="menu"]) {
-  border: none !important;
-  outline: none !important;
-  background-color: #00000000 !important;
-}
-
-.dashboard-custom-panel :deep(div[data-pc-section="menu"]),
-.dashboard-custom-panel :deep(div[data-pc-section="menucontent"]) {
-  margin-left: 10px !important;
-  margin-top: -8px !important;
-}
+/* Add your styles here */
 </style>
