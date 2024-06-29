@@ -16,41 +16,13 @@
       <AppInputText v-model="parentValue" id="test" placeholder="Placeholder" />
       <AppInputText v-model="parentValue" id="test2" placeholder="Placeholder" float />
 
-      <FormWrapper :handleSubmit="() => { }" submit-label="Login" :plugins="[zodPlugin]">
-        <template #default="{ getNode }">
-          <div class="space-y-2 mb-5">
-            <FormKit class="w-full" type='primeInputText' name='email' validation='required|email' placeholder='Email'
-              @node="getNode">
-            </FormKit>
-
-            <FormKit class="w-full" type='primeInputText' name='firstName' validation='required|string|length:3,25'
-              placeholder='firstName' @node="getNode">
-            </FormKit>
-            <FormKit class="w-full" type='primeInputText' name='lastName' validation='required|string|length:3,25'
-              placeholder='lastName' @node="getNode">
-            </FormKit>
-          </div>
-
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-              <FormKit type="primeCheckbox" name='remember-me' id="remember-me" />
-              <label for="remember-me">Remember me</label>
-            </div>
-          </div>
-        </template>
+      <FormWrapper :zodSchema="zodSchema" :handleSubmit="handleForm">
+        <div>
+          <FormKit type="primeInputText" name="email" placeholder="Email" validation="required|email|length:3,25" />
+          <FormKit type="primeInputText" name="firstName" placeholder="First Name" />
+          <FormKit type="primeInputText" name="lastName" placeholder="Last Name" />
+        </div>
       </FormWrapper>
-
-      <!-- <PrimeInput header="Formkit Demo" :schema="schema" :data="data" /> -->
-
-      <div class="myFormkit">
-        <FormKit class="w-full" id="form" v-model="data" type="form" :submit-attrs="{
-        inputClass: 'btn btn-primary btn-sm',
-      }" @submit="() => { }">
-          <FormKitSchema class="w-full" :schema="schema" :data="data" />
-        </FormKit>
-      </div>
-      <h4>Data</h4>
-      <pre>{{ data }}</pre>
     </section>
 
     <section class="container mx-auto space-y-12">
@@ -140,91 +112,20 @@ const imgArray = ref([
 ])
 const parentValue = ref('');
 
-const { addElement } = useFormKitSchema();
+interface Form {
+  email: string;
+  firstName: string;
+  lastName: string;
+}
 
-import { createZodPlugin } from '@formkit/zod'
-import { z } from 'zod'
+import { z } from 'zod';
 const zodSchema = z.object({
-  firstName: z.string().min(3).max(25),
-  lastName: z.string().min(3).max(25),
   email: z.string().email(),
-})
-
-const [zodPlugin, submitHandler] = createZodPlugin(
-  zodSchema,
-  async (formData) => {
-    // fake submit handler, but this is where you
-    // do something with your valid data.
-    await new Promise((r) => setTimeout(r, 2000))
-    alert('Form was submitted!')
-    console.log(formData)
-  }
-)
-
-const options = [
-  { label: 'Every page load', value: 'refresh' },
-  { label: 'Every hour', value: 'hourly' },
-  { label: 'Every day', value: 'daily' },
-]
-
-const schema = reactive(
-  [
-    addElement('h2', ['Register ', '$email']),
-    addElement('h3', 'Header Text H3'),
-    {
-      $formkit: 'primeInputText',
-      name: 'email',
-      label: 'Email',
-      help: 'This will be used for your account.',
-      validation: 'required|email',
-    },
-    {
-      $formkit: 'primeTextarea',
-      name: 'myText',
-      label: 'Text',
-      validation: '',
-      rows: '3',
-    },
-    {
-      $formkit: 'primeEditor',
-      name: 'myEditor',
-      label: 'Editor',
-      style: 'height: 160px; margin-bottom:80px;',
-    },
-    {
-      $formkit: 'primePassword',
-      name: 'password',
-      label: 'Password',
-      help: 'Enter your new password.',
-      validation: 'required|length:5,16',
-      feedback: true,
-    },
-    {
-      $formkit: 'primePassword',
-      name: 'password_confirm',
-      label: 'Confirm password',
-      help: 'Enter your new password again.',
-      validation: 'required|confirm',
-      validationLabel: 'password confirmation',
-    },
-    {
-      $formkit: 'primeCheckbox',
-      name: 'eu_citizen',
-      id: 'eu',
-      label: 'Are you a european citizen?',
-    },
-    {
-      $formkit: 'primeDropdown',
-      if: '$get(eu).value', // 👀 Oooo, conditionals!
-      name: 'cookie_notice',
-      label: 'Cookie notice frequency',
-      optionLabel: 'label',
-      optionValue: 'value',
-      options,
-      help: 'How often should we display a cookie notice?',
-    },
-  ],
-)
-
-const data = ref({ email: 'tom@sfxcode.com' })
+  firstName: z.string().min(2).max(25),
+  lastName: z.string().min(2).max(25),
+});
+async function handleForm(data: Form) {
+  // alert('Form submitted successfully!');
+  // await handleSubmit(signIn, { email: data.email, password: data.firstName }, 'Redirecting to your dashboard panel', '/dashboard', true);
+}
 </script>
