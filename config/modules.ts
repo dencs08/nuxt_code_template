@@ -27,7 +27,8 @@ export default [
     
     //ui/ux
     "@nuxtjs/tailwindcss",
-    "nuxt-primevue",
+    // "nuxt-primevue",
+    '@primevue/nuxt-module',
     "@nuxt/image",
     "nuxt-icon",
     "@nuxt/fonts",
