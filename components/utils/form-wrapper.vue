@@ -43,8 +43,8 @@ const formSubmitted = (data: any) => {
 </script>
 
 <template>
-  <FormKit type="form" v-model="data" :submit-attrs="{ inputClass: 'w-full btn-dark' }" @submit="formSubmitted"
-    :incomplete-message="false">
+  <FormKit type="form" v-model="data" :submit-attrs="{ inputClass: 'btn btn-primary btn-sm w-full' }"
+    @submit="formSubmitted" :incomplete-message="false">
     <slot v-bind:getNode="getNode"></slot>
   </FormKit>
 </template>
