@@ -1,10 +1,10 @@
 <template>
-    <button class="btn rounded-md text-white font-semibold grid place-content-center"
-        :class="['btn-' + computedStyling, 'btn-' + computedSize]" :disabled="disabled ? true : false">
+    <button class="btn grid place-content-center" :class="['btn-' + computedStyling, 'btn-' + computedSize]"
+        :disabled="disabled ? true : false">
         <slot></slot>
     </button>
 </template>
-  
+
 <script setup lang="ts">
 const props = defineProps({
     styling: {
@@ -42,7 +42,8 @@ const computedSize = computed(() => {
     padding-right: clamp(1.25em, 1.3vw, 2em);
     padding-bottom: clamp(0.5em, 0.5vw, 0.8em);
     padding-left: clamp(1.25em, 1.3vw, 2em);
-    @apply transition-all duration-75 font-medium;
+    @apply font-semibold rounded;
+    @apply transition-all duration-75;
 }
 
 .btn-xs {
@@ -59,7 +60,7 @@ const computedSize = computed(() => {
 }
 
 .btn-md {
-    font-size: clamp(0.8rem, 0.7vw, 2rem) !important;
+    font-size: clamp(0.8rem, 0.85vw, 2rem) !important;
 }
 
 .btn-lg {
@@ -69,6 +70,7 @@ const computedSize = computed(() => {
 .btn-primary {
     @apply bg-gradient-to-r from-primary-500 via-primary-500 to-85% to-secondary-300;
     @apply bg-[length:150%_150%] bg-[0px_0px];
+    @apply text-white text-sm;
 
     &:disabled {
         @apply from-surface-200/50 to-surface-200/50 bg-surface-200/50 text-surface-50;
