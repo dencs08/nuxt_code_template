@@ -2,8 +2,7 @@
 import type { DefaultConfigOptions } from "@formkit/vue";
 import { createAutoAnimatePlugin } from '@formkit/addons'
 
-// import { primeInputs } from "@sfxcode/formkit-primevue";
-import { primeInputs } from "@/components/utils/forms/formkit/src";
+import { primeInputs } from "@sfxcode/formkit-primevue";
 // import { appInputs } from "@/components/utils/forms/formkit/definitions";
 
 import { en, pl, de } from "@formkit/i18n";
