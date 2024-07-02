@@ -5,6 +5,14 @@
         <title>App is loading...</title>
     </head>
     <body>
-        Test loading...
+        <div
+        class="h-screen w-screen flex flex-col justify-center items-center gap-4"
+      >
+        <Logo type="logotype" color="black" height="50px" width="150px" />
+        <h1 class="text-2xl font-bold">The app is loading please wait...</h1>
+        <div class="w-1/2">
+          <ProgressBar mode="indeterminate" style="height: 6px"></ProgressBar>
+        </div>
+      </div>
     </body>
 </html>
