@@ -7,23 +7,20 @@
 
     <div class="mt-5">
       <div>
-        <FormWrapper :handleSubmit="handleForm" :submit-attrs="{ inputClass: 'w-full btn-primary' }"
-          submit-label="Register">
-          <template #default="{ getNode }">
-            <div class="space-y-2 mb-5">
-              <FormKit class="w-full" type='primeInputText' name='email' validation='required|email' placeholder='Email'
-                @node="getNode">
-              </FormKit>
-
-              <FormKit class="w-full" type='primePassword' name='password' validation='required' toggleMask
-                :feedback="true" placeholder='Password' @node="getNode">
-              </FormKit>
-
-              <FormKit class="w-full" type='primePassword' name='password_confirm' validation='required|confirm'
-                toggleMask placeholder='Repeat password' @node="getNode">
-              </FormKit>
-            </div>
-          </template>
+        <FormWrapper :zodSchema="registerSchema" :handleSubmit="handleForm"
+          :submitAttrs="{ inputClass: 'w-full btn-primary' }" submitLabel="Register">
+          <div class="space-y-2 mb-5">
+            <FormKit class="w-full" type='primeInputText' name='name' validation='required' placeholder='Name'>
+            </FormKit>
+            <FormKit class="w-full" type='primeInputText' name='email' validation='required|email' placeholder='Email'>
+            </FormKit>
+            <FormKit class="w-full" type='primePassword' name='password' validation='required|length:6' toggleMask
+              :feedback="true" placeholder='Password'>
+            </FormKit>
+            <FormKit class="w-full" type='primePassword' name='password_confirm' validation='required|confirm'
+              toggleMask placeholder='Repeat password'>
+            </FormKit>
+          </div>
         </FormWrapper>
         <div>
           <div class="relative mt-7">
@@ -49,17 +46,14 @@
 </template>
 
 <script setup lang="ts">
-interface Form {
-  email: string;
-  password: string;
-  password_confirm: string;
-}
+import { registerSchema } from '@/utils/schemas';
+import { type RegisterForm } from '@/utils/types/register';
 
 const localePath = useLocalePath()
 const { signUp } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
-async function handleForm(data: Form) {
+async function handleForm(data: RegisterForm) {
   await handleSubmit(signUp, { email: data.email, password: data.password }, 'Registration link sent!');
 }
 </script>
