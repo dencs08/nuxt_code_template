@@ -26,50 +26,52 @@ import image from "./config/image";
 import webVitals from "./config/webVitals";
 import site from "./config/site";
 import routeRules from "./config/routeRules";
+import turnstile from "./config/turnstile";
 // import apollo from "./config/apollo"
 
 export default defineNuxtConfig({
-    // Core
-    runtimeConfig,
-    modules,
-    components,
-    hooks,
-    routeRules,
-    supabase,
-    content,
-    image,
-    site,
-    i18n,
-    // apollo,
+  // Core
+  runtimeConfig,
+  modules,
+  components,
+  hooks,
+  routeRules,
+  supabase,
+  content,
+  image,
+  site,
+  turnstile,
+  i18n,
+  // apollo,
 
-    // Development
-    devtools: {
-        enabled: true,
-    },
-    storybook,
-    device,
-    
-    // SEO
-    robots,
-    ogImage,
-    linkChecker,
+  // Development
+  devtools: {
+    enabled: true,
+  },
+  storybook,
+  device,
 
-    // UI/UX
-    primevue,
-    fonts,
-    pwa,
-    webVitals,
+  // SEO
+  robots,
+  ogImage,
+  linkChecker,
 
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        // layoutTransition: { name: 'layout', mode: 'out-in' }
-    },
+  // UI/UX
+  primevue,
+  fonts,
+  pwa,
+  webVitals,
 
-    // ssr: false, //uncomment for client-side generation (disables server-side rendering)
+  app: {
+    pageTransition: { name: "page", mode: "out-in" },
+    // layoutTransition: { name: 'layout', mode: 'out-in' }
+  },
 
-    // nitro: {
-    //   prerender: {
-    //     routes: ["/"],
-    //   },
-    // },
+  // ssr: false, //uncomment for client-side generation (disables server-side rendering)
+
+  // nitro: {
+  //   prerender: {
+  //     routes: ["/"],
+  //   },
+  // },
 });
