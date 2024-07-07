@@ -1,20 +1,20 @@
-//! note: when changing this file you need to restart the server it doesnt support hot reload yet.
-
-//extending page hook of nuxt
-//useful if want to assign new name to the page, redirect to another page, or change the path.
+//env environment variables control global settings for all routes this file is overriding them for each route
+//the name of the route should be the same as newName in routes.ts (if newName is not set, use name)
 export const routes = [
   //design pages
   {
-    name: "index", //actual page name
-    newName: "index", //assign new name
-    path: "/", //change the path //TODO check how this works with new i18n path defining per language
-    file: "@/pages/index.vue", //specify the file
+    name: "index",
+    newName: "index",
+    path: "/",
+    file: "@/pages/index.vue",
+    settings: { auth: false, access: "" },
   },
   {
     name: "contact",
     newName: "contact",
     path: "/contact",
     file: "@/pages/contact.vue",
+    settings: { auth: false, access: "" },
   },
 
   //legal pages
@@ -23,18 +23,21 @@ export const routes = [
     newName: "terms",
     path: "/terms",
     file: "@/pages/terms-and-conditions.vue",
+    settings: { auth: false, access: "" },
   },
   {
     name: "privacy-policy",
     newName: "privacy",
     path: "/privacy",
     file: "@/pages/privacy-policy.vue",
+    settings: { auth: false, access: "" },
   },
   {
     name: "cookies-policy",
     newName: "cookies",
     path: "/cookies",
     file: "@/pages/cookies-policy.vue",
+    settings: { auth: false, access: "" },
   },
 
   //auth pages
@@ -43,30 +46,46 @@ export const routes = [
     newName: "login",
     path: "/login",
     file: "@/pages/login.vue",
+    settings: {
+      auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: "dash-home",
+      },
+      access: "",
+    },
   },
   {
     name: "register",
     newName: "register",
     path: "/register",
     file: "@/pages/register.vue",
+    settings: {
+      auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: "dash-home",
+      },
+      access: "",
+    },
   },
   {
     name: "lost-password",
     newName: "lost-password",
     path: "/lost-password",
     file: "@/pages/lost-password.vue",
+    settings: {
+      auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: "dash-home",
+      },
+      access: "",
+    },
   },
   {
     name: "auth-verify",
     newName: "auth-verify",
     path: "/auth/verify",
     file: "@/pages/auth/verify.vue",
-  },
-  {
-    name: "update-password",
-    newName: "update-password",
-    path: "/dashboard/user/account/update-password",
-    file: "@/pages/dashboard/user/account/update-password.vue",
+    settings: { auth: false, access: "" },
   },
 
   //dashboard pages
@@ -75,57 +94,62 @@ export const routes = [
     newName: "dash",
     path: "/dashboard",
     file: "@/pages/dashboard/index.vue",
+    settings: { auth: true },
   },
   {
     name: "dashboard-home",
     newName: "dash-home",
     path: "/dashboard/home",
     file: "@/pages/dashboard/home/index.vue",
+    settings: { auth: true },
   },
   {
     name: "dashboard-mail-inbox",
     newName: "dash-mail-inbox",
     path: "/dashboard/mail/inbox",
     file: "@/pages/dashboard/mail/inbox.vue",
+    settings: { auth: true },
   },
-
-  //dashboard admin pages
   {
     name: "dashboard-admin-users",
     newName: "dash-admin-users",
     path: "/dashboard/admin/users",
     file: "@/pages/dashboard/admin/users/index.vue",
+    settings: { auth: true },
   },
   {
     name: "dashboard-admin-marketing",
     newName: "dash-admin-marketing",
     path: "/dashboard/admin/marketing",
     file: "@/pages/dashboard/admin/marketing/index.vue",
+    settings: { auth: true },
   },
   {
     name: "dashboard-admin-analytics",
     newName: "dash-admin-analytics",
     path: "/dashboard/admin/analytics",
     file: "@/pages/dashboard/admin/analytics/index.vue",
+    settings: { auth: true },
   },
   {
     name: "dashboard-admin-analytics-users",
     newName: "dash-admin-analytics-users",
     path: "/dashboard/admin/analytics/users",
     file: "@/pages/dashboard/admin/analytics/users/index.vue",
+    settings: { auth: true },
   },
-
-  //dashboard user pages
   {
     name: "dashboard-user-account",
     newName: "dash-user-account",
     path: "/dashboard/user/account",
     file: "@/pages/dashboard/user/account/index.vue",
+    settings: { auth: true, access: "guest" },
   },
   {
     name: "dashboard-user-profile",
     newName: "dash-user-profile",
     path: "/dashboard/user/profile",
     file: "@/pages/dashboard/user/profile/index.vue",
+    settings: { auth: true, access: "guest" },
   },
 ];
