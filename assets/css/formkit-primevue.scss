@@ -11,7 +11,7 @@
 
 .formkit-outer {
   margin: 0;
-  padding-bottom: 0.8rem;
+  // padding-bottom: 0.8rem;
 
   .formkit-inner {
 
@@ -132,6 +132,11 @@
 
 .p-dropdown-panel {
   z-index: 9999 !important;
+}
+
+.p-formkit{
+  display:flex;
+  align-items: center;
 }
 
 .p-formkit .p-dropdown {
