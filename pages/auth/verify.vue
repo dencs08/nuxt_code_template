@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { RoutesNamesList } from "@typed-router/__routes";
+
 definePageMeta({
   layout: "default",
   middleware: "check-reset-token",
@@ -19,13 +21,17 @@ definePageMeta({
 const user = useSupabaseUser();
 const localePath = useLocalePath();
 
+const { passwordChangePage } = useRedirections();
+
 watch(
   user,
   () => {
     if (user.value) {
       setTimeout(() => {
         // TODO set this path somewhere centralized as it can change during development and production.
-        navigateTo("/dashboard/user/account/update-password");
+        navigateTo(
+          localePath({ name: passwordChangePage() as RoutesNamesList })
+        );
       }, 2500);
     }
   },
