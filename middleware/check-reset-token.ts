@@ -3,6 +3,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const nuxt = useNuxtApp();
   const client = useSupabaseClient();
+  const { generalPage } = useRedirections();
 
   const tokenHash = to.query.token_hash as string;
   const type = to.query.type as EmailOtpType;
@@ -21,7 +22,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       });
 
       if (error) {
-        return navigateTo(nuxt.$localePath({ name: "index" }));
+        return navigateTo(nuxt.$localePath({ name: generalPage() }));
       }
 
       if (data && data.user) {
@@ -32,12 +33,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         // console.log('User authenticated:', data.user);
         // return navigateTo(nuxt.$localePath(redirectTo), { replace: true, external: true}); //right now the verify page redirects the user.
       } else {
-        return navigateTo(nuxt.$localePath({ name: "index" })); //home or error page
+        return navigateTo(nuxt.$localePath({ name: generalPage() })); //home or error page
       }
     } catch (error) {
-      return navigateTo(nuxt.$localePath({ name: "index" })); //home or error page
+      return navigateTo(nuxt.$localePath({ name: generalPage() })); //home or error page
     }
   } else {
-    return navigateTo(nuxt.$localePath({ name: "index" })); //home or error page
+    return navigateTo(nuxt.$localePath({ name: generalPage() })); //home or error page
   }
 });
