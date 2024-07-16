@@ -1,10 +1,10 @@
 <template>
-    <Dropdown :modelValue="selectedRole" @update:modelValue="updateRole" :options="mutableRoles" optionLabel="label"
+    <Select :modelValue="selectedRole" @update:modelValue="updateRole" :options="mutableRoles" optionLabel="label"
         optionValue="value">
         <template #option="slotProps">
             <Tag :value="slotProps.option.label" :severity="getRoleSeverity(slotProps.option.value)" />
         </template>
-    </Dropdown>
+    </Select>
 </template>
 
 <script setup lang="ts">
