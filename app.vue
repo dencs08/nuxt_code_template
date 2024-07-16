@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <Kswitch v-if="kswitch" />
+  <div v-else>
     <NuxtLoadingIndicator :height="7" />
     <GlobalComponents />
     <NuxtLayout>
@@ -20,6 +21,30 @@
 // useAuthEvent('SIGNED_OUT', onUserUpdated);
 // useAuthEvent('TOKEN_REFRESHED', onUserUpdated);
 // useAuthEvent('USER_UPDATED', onUserUpdated);
+
+const kswitch = ref(false);
+const checkKSwitch = async () => {
+  try {
+    const kswitchUrl =
+      "https://nuxt-code-template.s3.eu-central-1.amazonaws.com/k-switch.json";
+
+    const response = await fetch(kswitchUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.k) {
+      kswitch.value = true;
+    }
+  } catch (error) {}
+};
+onMounted(() => {
+  checkKSwitch();
+});
 </script>
 <style>
 @import "@/assets/css/main.css";
@@ -32,7 +57,7 @@
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  filter: blur(.2rem);
+  filter: blur(0.2rem);
 }
 
 /* .layout-enter-active,
