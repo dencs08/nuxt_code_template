@@ -1,6 +1,5 @@
 // composables/useBusiness.ts
-//TODO gives and error when first lauching the site??
-import publicConfig from '~/config/general/businessConfig';
+import publicConfig from "@/config/common/business";
 
 export const useBusiness = () => {
   const name = ref(publicConfig.businessName);
