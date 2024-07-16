@@ -27,6 +27,7 @@ import webVitals from "./config/webVitals";
 import site from "./config/site";
 import routeRules from "./config/routeRules";
 import turnstile from "./config/turnstile";
+import auth from "./config/auth";
 // import apollo from "./config/apollo"
 
 export default defineNuxtConfig({
@@ -42,6 +43,7 @@ export default defineNuxtConfig({
   site,
   turnstile,
   i18n,
+  auth,
   // apollo,
 
   // Development

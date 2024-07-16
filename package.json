@@ -23,6 +23,7 @@
     "@nuxtjs/web-vitals": "^0.2.6",
     "@primevue/nuxt-module": "^4.0.0-rc.3",
     "@sfxcode/formkit-primevue": "^2.0.2",
+    "@sidebase/nuxt-auth": "^0.8.0",
     "@types/node": "^18.17.5",
     "@vite-pwa/nuxt": "^0.1.0",
     "@vue/test-utils": "^2.4.6",
