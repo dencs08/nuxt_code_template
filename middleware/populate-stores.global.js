@@ -1,4 +1,4 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const usersStore = useUsersStore();
-    await usersStore.fetchUserSession();
-});
+    const response = await useAsyncData(async () => new Promise((resolve) => resolve(usersStore.fetchUsers())));
+  });
