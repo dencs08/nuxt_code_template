@@ -61,7 +61,7 @@
           </div>
         </FormWrapper>
 
-        <div>
+        <div class="mb-3">
           <div class="relative mt-5">
             <div class="absolute inset-0 flex items-center" aria-hidden="true">
               <div class="w-full border-t border-gray-200" />
@@ -76,7 +76,7 @@
           <OAuth />
         </div>
 
-        <div class="mt-3 text-center">
+        <div class="mb-3 text-center">
           <NuxtLink
             :to="localePath({ name: 'register' })"
             class="text-sm font-medium text-gray-600"
@@ -84,6 +84,10 @@
             Don't have an account yet?
             <span class="text-primary-500">Create one!</span>
           </NuxtLink>
+        </div>
+
+        <div class="grid place-content-center">
+          <NuxtTurnstile ref="captchaToken" v-model="captchaToken" />
         </div>
       </div>
     </div>
@@ -98,13 +102,17 @@ const localePath = useLocalePath();
 const { signIn } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
+//TODO cannot test if this captcha works without deploying to production - also test the supabase captcha settings and if it works (on production).
+const captchaToken = ref();
+
 async function handleForm(data: LoginForm) {
   await handleSubmit(
     signIn,
-    { email: data.email, password: data.password },
+    { email: data.email, password: data.password, options: { captchaToken } },
     "Redirecting to your dashboard panel",
     "/dashboard",
     true
   );
+  captchaToken.value.reset();
 }
 </script>
