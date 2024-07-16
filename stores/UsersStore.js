@@ -1,5 +1,5 @@
 const { CustomError } = useCustomError();
-import { fetchPublicUserSession } from '../services/userSession';
+
 export const useUsersStore = defineStore({
     id: 'usersStore',
 
@@ -145,7 +145,12 @@ export const useUsersStore = defineStore({
         async fetchUserSession() {
             this.loading = true;
             try {
-                const user = await fetchPublicUserSession();
+                const { getPublicUserSession } = useAuthentication();
+
+                if (!getPublicUserSession) {
+                    throw new Error('getPublicUserSession is not available.');
+                }
+                const user = await getPublicUserSession();
                 this.userSession = user;
             } catch (error) {
                 console.error('Error in fetchAuthenticatedUser:', error);
@@ -157,6 +162,9 @@ export const useUsersStore = defineStore({
         },
         async updateLocalUsers(index, data) {
             this.users[index] = data;
-        }
+        },
+        setUser(user) {
+            this.userSession = user;
+        },
     }
 });
