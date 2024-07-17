@@ -2,25 +2,21 @@ import { getAuthService } from "@/services/auth/AuthServiceInterface";
 import type { IAuthenticationService } from "@/services/auth/AuthServiceInterface";
 import { type SessionScope } from "../utils/types";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
-import { callWithNuxt } from "#app";
 
 export function useAuthentication() {
+  let authService: IAuthenticationService | null = null;
   const runtimeConfig = useRuntimeConfig();
 
-  let authService: IAuthenticationService | null = null;
-
-  async function initializeAuthService() {
-    const authProvider = runtimeConfig.public.authProvider as
-      | "supabase"
-      | "sidebase";
-    authService = await getAuthService(authProvider);
-  }
-
-  const ensureAuthServiceInitialized = async () => {
-    if (!authService) await initializeAuthService();
+  const initializeAuthService = async () => {
+    if (!authService) {
+      const authProvider = runtimeConfig.public.authProvider as
+        | "supabase"
+        | "sidebase";
+      authService = await getAuthService(authProvider);
+    }
   };
 
-  async function signIn({
+  const signIn = async ({
     email,
     password,
     options,
@@ -28,13 +24,13 @@ export function useAuthentication() {
     email: string;
     password: string;
     options: { captchaToken: string };
-  }): Promise<void> {
-    await ensureAuthServiceInitialized();
+  }) => {
+    await initializeAuthService();
     const response = await authService.signIn(email, password, options);
     handleRequestError(response);
-  }
+  };
 
-  async function signUp({
+  const signUp = async ({
     email,
     password,
     options,
@@ -42,89 +38,81 @@ export function useAuthentication() {
     email: string;
     password: string;
     options: { captchaToken: string };
-  }): Promise<void> {
-    await ensureAuthServiceInitialized();
+  }) => {
+    await initializeAuthService();
     const response = await authService.signUp(email, password, options);
     handleRequestError(response);
-  }
+  };
 
-  const signInWithOAuth = async (provider: OAuthProvider): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const signInWithOAuth = async (provider: OAuthProvider) => {
+    await initializeAuthService();
     const response = await authService.signInWithOAuth(provider);
     handleRequestError(response);
   };
 
-  const signInWithOAuthPopup = async (
-    provider: OAuthProvider
-  ): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const signInWithOAuthPopup = async (provider: OAuthProvider) => {
+    await initializeAuthService();
     const response = await authService.signInWithOAuthWithPopup(provider);
     handleRequestError(response);
     redirectInPopup(response.data.url);
   };
 
-  const signOut = async (): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const signOut = async () => {
+    await initializeAuthService();
     const response = await authService.signOut();
     handleRequestError(response);
   };
 
-  async function lostPassword({ email }: { email: string }): Promise<void> {
-    await ensureAuthServiceInitialized();
+  const lostPassword = async ({ email }: { email: string }) => {
+    await initializeAuthService();
     const response = await authService.resetPassword(email);
     handleRequestError(response);
-  }
+  };
 
-  async function updateAuthProfile(
-    attributes: any,
-    options?: any
-  ): Promise<void> {
-    await ensureAuthServiceInitialized();
+  const updateAuthProfile = async (attributes: any, options?: any) => {
+    await initializeAuthService();
     const response = await authService.updateUser(attributes, options);
-    // handleRequestError(response); // Uncomment if you need to handle errors here
-  }
+  };
 
-  const updatePassword = (password: string): Promise<void> =>
-    updateAuthProfile({ password });
+  const updatePassword = (password: string) => updateAuthProfile({ password });
 
-  const updateEmail = (
-    email: string,
-    emailRedirectTo?: string
-  ): Promise<void> => updateAuthProfile({ email }, { emailRedirectTo });
+  const updateEmail = (email: string, emailRedirectTo?: string) =>
+    updateAuthProfile({ email }, { emailRedirectTo });
 
   const changeUserPassword = async (
     currentPassword: string,
     newPassword: string
-  ): Promise<any> => {
-    await ensureAuthServiceInitialized();
+  ) => {
+    await initializeAuthService();
     return authService.changePassword(currentPassword, newPassword);
   };
 
-  const terminateSession = async (scope: SessionScope): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const terminateSession = async (scope: SessionScope) => {
+    await initializeAuthService();
     const response = await authService.terminateSession(scope);
     handleRequestError(response);
   };
 
-  const verifyPassword = async (password: string): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const verifyPassword = async (password: string) => {
+    await initializeAuthService();
     const response = await authService.verifyPassword(password);
     handleRequestError(response);
   };
 
-  const getUserSession = async (): Promise<void> => {
-    await ensureAuthServiceInitialized();
+  const getUserSession = async () => {
+    await initializeAuthService();
     const response = await authService.getUserSession();
     handleRequestError(response);
   };
 
-  const getPublicUserSession = async (): Promise<any> => {
-    await ensureAuthServiceInitialized();
-    const { data } = await useAsyncData<any>(
-      () =>
-        new Promise((resolve) => resolve(authService.getPublicUserSession()))
-    );
-    return data;
+  const getPublicUserSession = async () => {
+    const nuxtApp = useNuxtApp();
+    await initializeAuthService();
+    let user;
+    await nuxtApp.runWithContext(async () => {
+      user = await authService.getPublicUserSession();
+    });
+    return user;
   };
 
   return {

@@ -1,6 +1,7 @@
 //@ts-ignore
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type SessionScope } from "@/utils/types";
+import { SupabaseAuthService } from "./SupabaseAuthService";
 
 export interface IAuthenticationService {
   signIn: (
@@ -29,10 +30,10 @@ export async function getAuthService(
   serviceName: "supabase" | "sidebase"
 ): Promise<IAuthenticationService> {
   if (serviceName === "supabase") {
-    const { SupabaseAuthService } = await import("./SupabaseAuthService");
-    return new SupabaseAuthService();
-  } else {
-    //   const { SidebaseAuthService } = await import("./SidebaseAuthService");
-    //   return new SidebaseAuthService();
+    const authService = new SupabaseAuthService();
+    return authService;
+  } else if (serviceName === "sidebase") {
+    // const authService = new SidebaseAuthService();
+    // return authService;
   }
 }

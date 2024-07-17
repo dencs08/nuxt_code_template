@@ -1,11 +1,18 @@
 //@ts-ignore
+import { SupabaseClient } from "@supabase/supabase-js";
+import { type IAuthenticationService } from "./AuthServiceInterface";
+import { SupabaseUserSession } from "./SupabaseUserSession";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
-import { type IAuthenticationService } from "@/services/auth/AuthServiceInterface";
-import { SupabaseUserSession } from "@/services/auth/SupabaseUserSession";
 
 export class SupabaseAuthService implements IAuthenticationService {
-  private client = useSupabaseClient();
-  private userSessionService = new SupabaseUserSession();
+  private client: SupabaseClient;
+  private userSessionService: SupabaseUserSession;
+
+  constructor() {
+    const nuxtApp = useNuxtApp();
+    this.client = nuxtApp.$supabaseClient as unknown as SupabaseClient;
+    this.userSessionService = new SupabaseUserSession();
+  }
 
   async signIn(
     email: string,
@@ -61,14 +68,14 @@ export class SupabaseAuthService implements IAuthenticationService {
           new_plain_password: newPassword,
         })
         .then(
-          (response) => {
+          (response: any) => {
             if (response.error) {
               reject(response.error);
             } else {
               resolve(response);
             }
           },
-          (error) => reject(error)
+          (error: any) => reject(error)
         );
     });
   }
@@ -80,7 +87,7 @@ export class SupabaseAuthService implements IAuthenticationService {
         .rpc<any, { current_plain_password: string }>("verify_user_password", {
           current_plain_password: password,
         })
-        .then((response) => {
+        .then((response: any) => {
           if (response.error) {
             reject(response.error);
           } else {
@@ -100,6 +107,6 @@ export class SupabaseAuthService implements IAuthenticationService {
   }
 
   async getPublicUserSession() {
-    return this.userSessionService.fetchPublicUserSession();
+    return await this.userSessionService.fetchPublicUserSession();
   }
 }
