@@ -1,69 +1,55 @@
 import { profileNavigation } from "./navigations/profileNavigation";
 import { settingsNavigation } from "./navigations/settingsNavigation";
 import { mainDashboardNavigation } from "./navigations/main-dashboard";
+import { navbar, social, legal } from "@/config/common/menus";
+import type { RoutesNamesList } from "@typed-router/__routes";
 
 export function useNavigation() {
-    const localePath = useLocalePath(); //if outside of useNavigation causes error 500 - not sure why...
+  const localePath = useLocalePath();
 
-    const navigation = computed(() => [
-        {
-            label: "Home",
-            route: localePath({ name: "index" }),
-        },
-        {
-            label: "Kontakt",
-            route: localePath({ name: "contact" }),
-        },
-        {
-            label: "FAQ",
-            route: localePath({ name: "faq" }),
-        },
-    ]);
+  const navbarMenu = computed(() =>
+    navbar.map((item) => ({
+      label: item.label,
+      route: localePath({ name: item.routeName as RoutesNamesList }),
+    }))
+  );
 
-    const legal = computed(() => [
-        { name: "Polityka prywatności", href: localePath({ name: "privacy" }) },
-        { name: "Warunki korzystania", href: localePath({ name: "terms" }) },
-        { name: "Polityka ciasteczek", href: localePath({ name: "cookies" }) },
-        { name: "Ustawienia ciasteczek", href: localePath({ name: "cookies" }) },
-    ]);
+  const legalMenu = computed(() =>
+    legal.map((item) => ({
+      label: item.label,
+      route: localePath({ name: item.routeName as RoutesNamesList }),
+    }))
+  );
 
-    const social = computed(() => [
-        {
-            name: "Facebook",
-            href: "#",
-            icon: "ic:round-facebook",
-        },
-        {
-            name: "Instagram",
-            href: "#",
-            icon: "mdi:instagram",
-        },
+  // TODO - Add icons to social menu, implement in the footer and navbar
+  const socialMenu = computed(() =>
+    social.map((item) => ({
+      label: item.label,
+      href: item.href,
+    }))
+  );
 
-        {
-            name: "LinkedIn",
-            href: "#",
-            icon: "mdi:linkedin",
-        },
-    ]);
+  const dashboardSettings = computed(() => [
+    {
+      label: "Settings",
+      icon: "pi pi-cog",
+      route: localePath("/dashboard/settings"),
+    },
+  ]);
 
-    const dashboardSettings = computed(() => [
-        {
-            label: "Settings",
-            icon: "pi pi-cog",
-            route: localePath("/dashboard/settings"),
-        },
-    ]);
+  const dashboardSubNavigation = computed(() => [
+    profileNavigation(),
+    settingsNavigation(),
+  ]);
 
-    const dashboardSubNavigation = computed(() => [profileNavigation(), settingsNavigation()]);
+  const dashboardNavigation = mainDashboardNavigation();
 
-    const dashboardNavigation = mainDashboardNavigation();
-
-    return {
-        navigation,
-        legal,
-        social,
-        dashboardNavigation,
-        dashboardSettings,
-        dashboardSubNavigation,
-    };
+  return {
+    navbarMenu,
+    legalMenu,
+    socialMenu,
+    dashboardNavigation,
+    dashboardSettings,
+    dashboardSubNavigation,
+  };
 }
