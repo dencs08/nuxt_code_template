@@ -1,18 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>App is loading...</title>
-    </head>
-    <body>
-        <div
-        class="h-screen w-screen flex flex-col justify-center items-center gap-4"
-      >
-        <Logo type="logotype" color="black" height="50px" width="150px" />
-        <h1 class="text-2xl font-bold">The app is loading please wait...</h1>
-        <div class="w-1/2">
-          <ProgressBar mode="indeterminate" style="height: 6px"></ProgressBar>
+  <head>
+    <meta charset="UTF-8" />
+    <title>App is loading...</title>
+    <style>
+      .load-4 .ring-1 {
+        animation: loading 2s 0.3s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+
+        scale: 1.25;
+      }
+      .ring-1 {
+        width: 8px;
+        height: 8px;
+        margin: 0 auto;
+        padding: 16px;
+        border: 8px dotted #797979;
+        border-radius: 100px;
+
+        box-shadow: none;
+        outline: none;
+      }
+
+      .load-wrapp:last-child {
+        margin-right: 0;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="h-screen w-screen flex flex-col justify-center items-center gap-4"
+    >
+      <Logo type="logotype" color="black" height="50px" width="150px" />
+      <!-- <h1 class="text-2xl font-bold">The app is loading please wait...</h1> -->
+      <div>
+        <div class="load-wrapp">
+          <div class="load-4">
+            <div class="ring-1"></div>
+          </div>
         </div>
       </div>
-    </body>
+    </div>
+  </body>
 </html>
