@@ -17,14 +17,8 @@ export default [
   "@nuxtjs/turnstile",
   // "nuxtjs/apollo", //uncomment when using wordpress backend with graphql
 
-  //seo
-  "@nuxtjs/web-vitals",
-  "@nuxtjs/robots",
-  "@nuxtjs/sitemap",
-  "nuxt-link-checker",
-  "nuxt-schema-org",
-  "nuxt-og-image",
-  // "nuxt-gtag", //uncomment for adding gtag integration
+  //auth
+  // "@sidebase/nuxt-auth",
 
   //ui/ux
   "@nuxtjs/tailwindcss",
@@ -33,6 +27,15 @@ export default [
   "nuxt-icon",
   "@nuxt/fonts",
   // "nuxt-primevue",
+
+  //seo
+  "@nuxtjs/web-vitals",
+  "@nuxtjs/robots",
+  "@nuxtjs/sitemap",
+  "nuxt-link-checker",
+  "nuxt-schema-org",
+  "nuxt-og-image",
+  // "nuxt-gtag", //uncomment for adding gtag integration
 
   //optional
   // "@vite-pwa/nuxt", //uncomment for generating a PWA for mobiles.
