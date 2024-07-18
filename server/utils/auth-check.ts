@@ -1,58 +1,87 @@
-import { serverSupabaseServiceRole, serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
+import {
+  serverSupabaseServiceRole,
+  serverSupabaseUser,
+  serverSupabaseClient,
+} from "#supabase/server";
 import { validRoles } from "@/utils/roles";
 
 export async function getUserSession(event: any) {
-    const userSession = await serverSupabaseUser(event);
+  const userSession = await serverSupabaseUser(event);
 
-    if (!userSession) {
-        throw createError({ statusCode: 401, statusMessage: 'Unauthorized: No active session found. User must be logged in.' });
-    }
-    if (!userSession.id || !userSession.email) {
-        throw createError({ statusCode: 401, statusMessage: 'Unauthorized: No active session found. User must be logged in.' })
-    }
+  if (!userSession) {
+    throw createError({
+      statusCode: 401,
+      statusMessage:
+        "Unauthorized: No active session found. User must be logged in.",
+    });
+  }
+  if (!userSession.id || !userSession.email) {
+    throw createError({
+      statusCode: 401,
+      statusMessage:
+        "Unauthorized: No active session found. User must be logged in.",
+    });
+  }
 
-    return userSession;
+  return userSession;
 }
 
 // Usage
 // checkUserRole(event, 'admin');
 export async function checkUserRole(event: any, role: string) {
-    const client = serverSupabaseServiceRole(event);
-    const user = await getUserSession(event);
+  const client = serverSupabaseServiceRole(event);
+  const user = await getUserSession(event);
 
-    const { data: userRoles, error } = await client
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
+  const { data: userRoles, error } = await client
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .single();
 
-    if (error) {
-        throw createError({ statusCode: 500, statusMessage: "Error retrieving user roles" });
-    }
+  if (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Error retrieving user roles",
+    });
+  }
 
-    const userRoleLevel = validRoles.find(validRole => validRole.value === userRoles.role)?.level;
-    const requiredRoleLevel = validRoles.find(validRole => validRole.value === role)?.level;
+  const userRoleLevel = validRoles.find(
+    (validRole) => validRole.value === userRoles.role
+  )?.level;
+  const requiredRoleLevel = validRoles.find(
+    (validRole) => validRole.value === role
+  )?.level;
 
-    if (!Number.isInteger(userRoleLevel) || !Number.isInteger(requiredRoleLevel) || userRoleLevel! < requiredRoleLevel!) {
-        throw createError({ statusCode: 403, statusMessage: `Unauthorized: User is not a ${role} or higher` });
-    }
+  if (
+    !Number.isInteger(userRoleLevel) ||
+    !Number.isInteger(requiredRoleLevel) ||
+    userRoleLevel! < requiredRoleLevel!
+  ) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: `Unauthorized: User is not a ${role} or higher`,
+    });
+  }
 }
 
 // Usage
 // await getUserRole(event);
 export async function getUserRole(event: any) {
-    const client = serverSupabaseServiceRole(event);
-    const user = await getUserSession(event);
+  const client = serverSupabaseServiceRole(event);
+  const user = await getUserSession(event);
 
-    const { data, error } = await client
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
+  const { data, error } = await client
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .single();
 
-    if (error) {
-        throw createError({ statusCode: 500, statusMessage: `Error retrieving user roles: ${error.message}` });
-    }
+  if (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Error retrieving user roles: ${error.message}`,
+    });
+  }
 
-    return data.role;
+  return data.role;
 }

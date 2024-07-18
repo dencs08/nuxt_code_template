@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-const user = useSupabaseUser();
+const { getPublicUserSession } = useAuthentication();
+const user = await getPublicUserSession();
 
 // Get redirect path from cookies
 const cookieName = useRuntimeConfig().public.supabase.cookieName;
@@ -12,7 +13,7 @@ const redirectPath = useCookie(`${cookieName}-redirect-path`).value;
 watch(
   user,
   () => {
-    if (user.value) {
+    if (user) {
       // Clear cookie
       useCookie(`${cookieName}-redirect-path`).value = null;
       // Redirect to path

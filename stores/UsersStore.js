@@ -146,9 +146,9 @@ export const useUsersStore = defineStore({
     async fetchUserSession() {
       this.loading = true;
       try {
-        const { getPublicUserSession } = useAuthentication();
-        const user = await getPublicUserSession();
+        const user = await useAuthentication().getPublicUserSession();
         this.userSession = user;
+        // console.log(user);
       } catch (error) {
         console.error("Error in fetchAuthenticatedUser:", error);
         this.userSession = null;

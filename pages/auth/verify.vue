@@ -18,7 +18,8 @@ definePageMeta({
   middleware: "check-reset-token",
 });
 
-const user = useSupabaseUser();
+const { getPublicUserSession } = useAuthentication();
+const user = await getPublicUserSession();
 const localePath = useLocalePath();
 
 const { passwordChangePage } = useRedirections();
@@ -26,7 +27,7 @@ const { passwordChangePage } = useRedirections();
 watch(
   user,
   () => {
-    if (user.value) {
+    if (user) {
       setTimeout(() => {
         // TODO set this path somewhere centralized as it can change during development and production.
         navigateTo(

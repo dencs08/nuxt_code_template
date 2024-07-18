@@ -1,10 +1,10 @@
 // services/userService.ts
-import { type User } from "@/utils/types";
+import { type UserAuthPublicSession } from "@/utils/types";
 const { CustomError } = useCustomError();
 import { type IUserSessionService } from "./UserSessionInterface";
 
 export class SupabaseUserSession {
-  async fetchPublicUserSession(): Promise<User | null> {
+  async fetchPublicUserSession(): Promise<UserAuthPublicSession | null> {
     const client = useSupabaseClient();
     const userAuthSession = useSupabaseUser();
 
@@ -17,7 +17,7 @@ export class SupabaseUserSession {
         .from("users")
         .select("*, user_roles!inner(role)")
         .eq("id", userAuthSession.value.id)
-        .single()) as { data: User | null };
+        .single()) as { data: UserAuthPublicSession | null };
 
       if (user) {
         user.role = user.user_roles.role;

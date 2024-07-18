@@ -10,7 +10,7 @@ export class SupabaseAuthService implements IAuthenticationService {
 
   constructor() {
     const nuxtApp = useNuxtApp();
-    this.client = nuxtApp.$supabaseClient as unknown as SupabaseClient;
+    this.client = useSupabaseClient();
     this.userSessionService = new SupabaseUserSession();
   }
 

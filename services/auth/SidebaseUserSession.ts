@@ -1,11 +1,11 @@
 // services/userService.ts
-import { type User } from "@/utils/types";
+import { type UserAuthPublicSession } from "@/utils/types";
 const { CustomError } = useCustomError();
 import { type IUserSessionService } from "./UserSessionInterface";
 
 // TODO instead of supabase do a sidebase implementation
 export class SidebaseUserSession implements IUserSessionService {
-  async fetchPublicUserSession(): Promise<User> {
+  async fetchPublicUserSession(): Promise<UserAuthPublicSession> {
     const client = useSupabaseClient();
     const userAuthSession = useSupabaseUser();
 
@@ -17,7 +17,7 @@ export class SidebaseUserSession implements IUserSessionService {
         .from("users")
         .select(`*, user_roles!inner(role)`)
         .eq("id", userAuthSession.value.id)
-        .single()) as { data: User | null };
+        .single()) as { data: UserAuthPublicSession | null };
       if (user) {
         user.role = user.user_roles.role;
         delete user.user_roles;
