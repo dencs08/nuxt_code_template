@@ -1,8 +1,9 @@
 import { routes } from "../config/common/routes";
 import { validRoles } from "../utils/roles";
+import mainConfig from "./common/main";
 
-const globalAuth = process.env.GLOBAL_ROUTE_AUTH === "true";
-const globalAccess = process.env.GLOBAL_ROUTE_ACCESS;
+const globalAuth = mainConfig.GLOBAL_ROUTE_AUTH === "true";
+const globalAccess = mainConfig.GLOBAL_ROUTE_ACCESS;
 
 export default {
   "pages:extend": (pages: any) => {
