@@ -101,12 +101,12 @@ export class SupabaseAuthService implements IAuthenticationService {
     return this.client.auth.signOut({ scope });
   }
 
-  async getUserSession() {
+  async getAllUser() {
     const userAuthSession = useSupabaseUser();
     return userAuthSession.value;
   }
 
-  async getPublicUserSession() {
-    return await this.userSessionService.fetchPublicUserSession();
+  async getUser() {
+    return await this.userSessionService.fetchUser();
   }
 }

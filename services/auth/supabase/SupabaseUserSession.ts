@@ -1,10 +1,10 @@
 // services/userService.ts
 import { type UserAuthPublicSession } from "@/utils/types";
 const { CustomError } = useCustomError();
-import { type IUserSessionService } from "./UserSessionInterface";
+import { type IUserSessionService } from "../UserSessionInterface";
 
-export class SupabaseUserSession {
-  async fetchPublicUserSession(): Promise<UserAuthPublicSession | null> {
+export class SupabaseUserSession implements IUserSessionService {
+  async fetchUser(): Promise<UserAuthPublicSession | null> {
     const client = useSupabaseClient();
     const userAuthSession = useSupabaseUser();
 
