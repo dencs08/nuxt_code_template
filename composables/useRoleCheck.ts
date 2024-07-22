@@ -1,17 +1,27 @@
 import { type Role, validRoles } from "@/utils/roles";
+import mainConfig from "@/config/common/main";
 
-export function useRoleCheck(defaultRoleCheck = "guest") {
+export function useRoleCheck(
+  defaultRoleCheck = mainConfig.GLOBAL_ROUTE_ACCESS
+) {
   const { roles } = useRoles();
   const userStore = useUsersStore();
-  //   await userStore.fetchUserSession();
+
+  console.log("role", userStore.userRole);
+
   //   const response = await useAsyncData(async () => new Promise((resolve) => resolve(usersStore.fetchUsers())));
 
-  const role = userStore.userRole || defaultRoleCheck;
-  const userRole = computed(() => roles.value.find((r) => r.value === role));
+  // const role = userStore.userRole || defaultRoleCheck;
+  const userRole = computed(() =>
+    roles.value.find((r) => r.value === userStore.userRole)
+  );
 
   const checkAccess = (requiredRoleValue: Role["value"]): boolean => {
-    const userRoleLevel = validRoles.find((r) => r.value === role)?.level;
+    const userRoleLevel = validRoles.find(
+      (r) => r.value === (userStore.userRole || defaultRoleCheck)
+    )?.level;
     const requiredRole = validRoles.find((r) => r.value === requiredRoleValue);
+    console.log("userRoleLevel", userRoleLevel);
     return requiredRole && userRoleLevel >= requiredRole.level;
   };
 
