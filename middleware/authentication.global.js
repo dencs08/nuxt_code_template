@@ -1,20 +1,21 @@
 // This Nuxt middleware function checks the user's authentication state and performs redirects based on route metadata.
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const nuxt = useNuxtApp();
   const authRequired = to.meta.auth;
-
-  const user = useSupabaseUser();
-  // const user = useAuthentication().getPublicUserSession();
-  console.log("user", user);
 
   // If `auth` on a route is set to `false`, allow all users regardless of authentication state.
   if (authRequired === false) return;
+
+  const nuxt = useNuxtApp();
+  const user = await useAuthentication().getUser();
+  // const user = useSupabaseUser();
+  // const { user } = useAppUser();
+  // console.log("user from middleware", user);
 
   try {
     // Handle routes that should only be accessed by unauthenticated users. (i.e. login page)
     if (authRequired && authRequired.unauthenticatedOnly) {
       // If the user is authenticated, redirect them to a different route.
-      if (user.value) {
+      if (user) {
         return navigateTo(
           nuxt.$localePath({
             name: authRequired.navigateAuthenticatedTo || "index",
@@ -28,7 +29,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // If `auth` is undefined or requires authentication, check the user's state
     if (authRequired === undefined || authRequired === true) {
       // If the user is not authenticated and the route requires authentication, redirect to the login page.
-      if (!user.value) {
+      if (!user) {
         return navigateTo(nuxt.$localePath({ name: "login" }));
       }
       // If the user is authenticated, allow them to access the route.
