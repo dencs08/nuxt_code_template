@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 const userStore = useUsersStore();
-const userSession = await userStore.getUser;
+const user = await userStore.getUser;
 const photoSrc = ref(props.photo || user.photo);
 
 watch(
