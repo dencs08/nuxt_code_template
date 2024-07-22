@@ -55,7 +55,7 @@ export function useAuthentication() {
     await initializeAuthService();
     const response = await authService.signInWithOAuthWithPopup(provider);
     handleRequestError(response);
-    redirectInPopup(response.data.url);
+    // redirectInPopup(response.data.url);
   };
 
   const signOut = async () => {
@@ -100,22 +100,28 @@ export function useAuthentication() {
     handleRequestError(response);
   };
 
-  const getUserSession = async () => {
+  const getAllUser = async () => {
     await initializeAuthService();
-    const response = await authService.getUserSession();
+    const response = await authService.getAllUser();
     handleRequestError(response);
   };
 
-  const getPublicUserSession =
-    async (): Promise<UserAuthPublicSession | null> => {
-      const nuxtApp = useNuxtApp();
-      await initializeAuthService();
-      let user: UserAuthPublicSession | null = null;
-      await nuxtApp.runWithContext(async () => {
-        user = await authService.getPublicUserSession();
-      });
-      return user;
-    };
+  const getUser = async (): Promise<UserAuthPublicSession | null> => {
+    const nuxtApp = useNuxtApp();
+    await initializeAuthService();
+    let user: UserAuthPublicSession | null = null;
+    await nuxtApp.runWithContext(async () => {
+      user = await authService.getUser();
+    });
+    return user;
+  };
+
+  const getSession = async () => {
+    // await initializeAuthService();
+    // const response = await authService.getSession();
+    // handleRequestError(response);
+    // return response.data;
+  };
 
   return {
     signIn,
@@ -130,8 +136,9 @@ export function useAuthentication() {
     changeUserPassword,
     terminateSession,
     verifyPassword,
-    getUserSession,
-    getPublicUserSession,
+    getAllUser,
+    getUser,
+    getSession,
   };
 }
 
@@ -139,24 +146,3 @@ const handleRequestError = (response: any): void => {
   if (!response) throw new CustomError("Response is null or undefined");
   if (response.error) throw new CustomError(response.error.message, response);
 };
-
-function redirectInPopup(url: string): void {
-  const width = 600;
-  const height = 600;
-  const left = (window.innerWidth - width) / 2;
-  const top = (window.innerHeight - height) / 2;
-
-  const popup = window.open(
-    url,
-    "_blank",
-    `width=${width},height=${height},left=${left},top=${top}`
-  );
-  if (!popup) return;
-
-  const { handleAuthListener } = useAuthListeners();
-  const customFunction = (event: any, session: any) => {
-    popup.close();
-  };
-
-  handleAuthListener("SIGNED_IN", customFunction);
-}
