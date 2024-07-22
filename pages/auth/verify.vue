@@ -18,8 +18,8 @@ definePageMeta({
   middleware: "check-reset-token",
 });
 
-const { getPublicUserSession } = useAuthentication();
-const user = await getPublicUserSession();
+const { getUser } = useAuthentication();
+const user = await getUser();
 const localePath = useLocalePath();
 
 const { passwordChangePage } = useRedirections();

@@ -20,10 +20,7 @@
 
           <div class="col-span-3 md:col-span-2">
             <div class="flex items-center gap-6 mb-4">
-              <ProfileAvatar
-                class="w-28 h-28"
-                :photo="userStore.userSession.photo"
-              />
+              <ProfileAvatar class="w-28 h-28" :photo="userStore.user.photo" />
               <div class="space-y-3">
                 <AvatarUpload />
                 <p
@@ -202,8 +199,8 @@ const { addToast } = useToastService();
 const { confirmAction } = useConfirmation();
 const { deleteAccount } = useAccount();
 const userStore = useUsersStore();
-userStore.fetchUserSession();
-const userSession = await userStore.getUserSession;
+userStore.fetchUser();
+const userSession = await userStore.getUser;
 const localePath = useLocalePath();
 const userDetails = ref({
   firstname: userStore.firstName,

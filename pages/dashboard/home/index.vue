@@ -89,7 +89,7 @@ definePageMeta({
 });
 
 const userStore = useUsersStore();
-const user = userStore.userSession;
+const user = userStore.user;
 
 const quickActions = [
   {

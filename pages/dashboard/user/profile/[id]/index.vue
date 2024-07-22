@@ -26,5 +26,5 @@ definePageMeta({
 });
 
 const userStore = useUsersStore();
-const user = userStore.getUserSession;
+const user = userStore.getUser;
 </script>

@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-const { getPublicUserSession } = useAuthentication();
-const user = await getPublicUserSession();
+const { getUser } = useAuthentication();
+const user = await getUser();
 
 // Get redirect path from cookies
 const cookieName = useRuntimeConfig().public.supabase.cookieName;
