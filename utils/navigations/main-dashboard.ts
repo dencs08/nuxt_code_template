@@ -50,6 +50,7 @@ export function mainDashboardNavigation() {
       const accessLevel = getAccessLevelForRoute(item.checkRoute || item.route);
 
       const hasItemAccess = hasAccess(accessLevel);
+      // console.log(accessLevel, hasItemAccess, hasItemAccess);
 
       if (hasItemAccess || (item.items && item.items.length > 0)) {
         let newItem = { ...item };
