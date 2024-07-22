@@ -1,10 +1,10 @@
 // services/auth/AuthServiceInterface.ts
-import { SupabaseUserSession } from "./SupabaseUserSession";
-import { SidebaseUserSession } from "./SidebaseUserSession";
+import { SupabaseUserSession } from "./supabase/SupabaseUserSession";
+import { SidebaseUserSession } from "./sidebase/SidebaseUserSession";
 import { type UserAuthPublicSession } from "@/utils/types";
 
 export interface IUserSessionService {
-  fetchPublicUserSession(): Promise<UserAuthPublicSession>;
+  fetchUser(): Promise<UserAuthPublicSession>;
 }
 
 export function createUserSessionService() {

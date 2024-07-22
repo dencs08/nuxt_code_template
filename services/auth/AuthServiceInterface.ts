@@ -1,7 +1,7 @@
 //@ts-ignore
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type SessionScope } from "@/utils/types";
-import { SupabaseAuthService } from "./SupabaseAuthService";
+import { SupabaseAuthService } from "./supabase/SupabaseAuthService";
 
 export interface IAuthenticationService {
   signIn: (
@@ -22,8 +22,8 @@ export interface IAuthenticationService {
   changePassword: (oldPassword: string, newPassword: string) => Promise<any>;
   terminateSession: (scope: SessionScope) => Promise<any>;
   verifyPassword: (password: string) => Promise<any>;
-  getUserSession: () => Promise<any>;
-  getPublicUserSession: () => Promise<any>;
+  getAllUser: () => Promise<any>;
+  getUser: () => Promise<any>;
 }
 
 export async function getAuthService(
