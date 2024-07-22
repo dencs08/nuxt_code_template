@@ -6,30 +6,28 @@ export const useUsersStore = defineStore({
   state: () => ({
     users: [],
     loading: false,
-    userSession: null,
+    user: null,
   }),
 
   getters: {
     totalCount(state) {
       return state.users.length;
     },
-    getUserSession: (state) => {
-      return state.userSession;
+    getUser: (state) => {
+      return state.user;
     },
     firstName: (state) => {
-      return state.userSession ? state.userSession.name.split(" ")[0] : null;
+      return state.user ? state.user.name.split(" ")[0] : null;
     },
     lastName: (state) => {
-      const nameParts = state.userSession
-        ? state.userSession.name.split(" ")
-        : [];
+      const nameParts = state.user ? state.user.name.split(" ") : [];
       return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
     },
     userRole: (state) => {
-      return state.userSession ? state.userSession.role : null;
+      return state.user ? state.user.role : null;
     },
     photo: (state) => {
-      return state.userSession ? state.userSession.photo : null;
+      return state.user ? state.user.photo : null;
     },
   },
 
@@ -143,16 +141,18 @@ export const useUsersStore = defineStore({
         this.loading = false;
       }
     },
-    async fetchUserSession() {
+    async fetchUser() {
       this.loading = true;
       try {
-        const user = await useAuthentication().getPublicUserSession();
-        this.userSession = user;
-        // console.log(user);
+        const user = await useAuthentication().getUser();
+        this.user = user;
       } catch (error) {
         console.error("Error in fetchAuthenticatedUser:", error);
-        this.userSession = null;
-        throw new CustomError(error.data.message, error);
+        this.user = null;
+        console.log("error log", error);
+        const errorMessage =
+          error?.data?.message || "An unknown error occurred";
+        throw new CustomError(errorMessage, error);
       } finally {
         this.loading = false;
       }
@@ -161,7 +161,7 @@ export const useUsersStore = defineStore({
       this.users[index] = data;
     },
     setUser(user) {
-      this.userSession = user;
+      this.user = user;
     },
   },
 });
