@@ -1,5 +1,8 @@
 export const useProvider = () => {
-  const userSession = useSupabaseUser();
+  // const userSession = useSupabaseUser();
+  const usersStore = useUsersStore();
+  const userSession = usersStore.getUser;
+
   const { addToast } = useToastService();
 
   const checkProvider = (provider: string) => {
