@@ -1,5 +1,7 @@
 //env environment variables control global settings for all routes this file is overriding them for each route
 //the name of the route should be the same as newName in routes.ts (if newName is not set, use name)
+
+import mainConfig from "./main";
 export const routes = [
   //design pages
   {
@@ -14,6 +16,13 @@ export const routes = [
     newName: "contact",
     path: "/contact",
     file: "@/pages/contact.vue",
+    settings: { auth: false, access: "" },
+  },
+  {
+    name: "faq",
+    newName: "faq",
+    path: "/faq",
+    file: "@/pages/faq.vue",
     settings: { auth: false, access: "" },
   },
 
@@ -143,13 +152,13 @@ export const routes = [
     newName: "dash-user-account",
     path: "/dashboard/user/account",
     file: "@/pages/dashboard/user/account/index.vue",
-    settings: { auth: true, access: "guest" },
+    settings: { auth: true, access: mainConfig.GLOBAL_ROUTE_ACCESS },
   },
   {
     name: "dashboard-user-profile",
     newName: "dash-user-profile",
     path: "/dashboard/user/profile",
     file: "@/pages/dashboard/user/profile/index.vue",
-    settings: { auth: true, access: "guest" },
+    settings: { auth: true, access: mainConfig.GLOBAL_ROUTE_ACCESS },
   },
 ];
