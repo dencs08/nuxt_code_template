@@ -1,11 +1,14 @@
 import { type UserAuthPublicSession } from "../utils/types";
 
-//TODO check if useAuthentication functions are wrapped here or not - and used in app from here or the useAuthentication
+//TODO check if it still works after the refactor to own service wrapper
 export function useUser() {
   const client = useSupabaseClient();
-  const userAuthSession = useSupabaseUser();
+  // const userAuthSession = useSupabaseUser();
+  const usersStore = useUsersStore();
+  const userAuthSession = usersStore.getUser;
+
   const { CustomError } = useCustomError();
-  const { updateEmail, getPublicUserSession } = useAuthentication();
+  const { updateEmail, getUser } = useAuthentication();
   const { addToast } = useToastService();
   const { checkProvider } = useProvider();
 
