@@ -9,19 +9,6 @@
   </div>
 </template>
 <script setup lang="ts">
-// import { type Session } from '@supabase/supabase-js';
-// const { useAuthEvent } = useAuthListeners();
-
-// const onUserUpdated = (event: string, session: Session | null) => {
-//   console.log('User updated', event, session);
-// };
-
-// useAuthEvent('INITIAL_SESSION', onUserUpdated);
-// useAuthEvent('SIGNED_IN', onUserUpdated);
-// useAuthEvent('SIGNED_OUT', onUserUpdated);
-// useAuthEvent('TOKEN_REFRESHED', onUserUpdated);
-// useAuthEvent('USER_UPDATED', onUserUpdated);
-
 const kswitch = ref(false);
 const checkKSwitch = async () => {
   try {
