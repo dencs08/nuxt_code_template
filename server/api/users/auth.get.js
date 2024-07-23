@@ -1,13 +1,14 @@
 import { serverSupabaseServiceRole } from "#supabase/server";
-import { defineWrappedResponseHandler } from '@/server/utils/defaultHandler'
+import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
-export default defineWrappedResponseHandler (async (event) => {
-    const client = serverSupabaseServiceRole(event);
+export default defineWrappedResponseHandler(async (event) => {
+  const client = serverSupabaseServiceRole(event);
 
-    let { data: authData, error: authError } = await client.auth.admin.listUsers();
-    if (authError) {
-        throw authError;
-    }
+  let { data: authData, error: authError } =
+    await client.auth.admin.listUsers();
+  if (authError) {
+    throw authError;
+  }
 
-    return authData;
-}, 'admin');
+  return authData;
+}, "admin");

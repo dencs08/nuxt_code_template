@@ -2,7 +2,7 @@ import {
   serverSupabaseServiceRole,
   serverSupabaseUser,
 } from "#supabase/server";
-import { defineWrappedResponseHandler } from "@/server/utils/defaultHandler";
+import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
 export default defineWrappedResponseHandler(async (event) => {
   const client = serverSupabaseServiceRole(event);

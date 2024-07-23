@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --no-fork --host 127.0.0.1",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -22,7 +22,7 @@
     "@nuxtjs/turnstile": "^0.9.0",
     "@nuxtjs/web-vitals": "^0.2.6",
     "@primevue/nuxt-module": "^4.0.0-rc.3",
-    "@sfxcode/formkit-primevue": "^2.0.2",
+    "@sfxcode/formkit-primevue": "^2.3.2",
     "@sidebase/nuxt-auth": "^0.8.0",
     "@types/node": "^18.17.5",
     "@vite-pwa/nuxt": "^0.1.0",
@@ -30,7 +30,7 @@
     "@vueuse/nuxt": "^10.2.1",
     "eslint": "^8.45.0",
     "happy-dom": "^14.12.3",
-    "nuxt": "^3.12.2",
+    "nuxt": "^3.12.4",
     "nuxt-delay-hydration": "^1.3.3",
     "nuxt-gtag": "^0.5.7",
     "nuxt-icon": "^0.4.2",

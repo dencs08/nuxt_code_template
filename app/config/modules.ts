@@ -34,7 +34,7 @@ export default [
   "@nuxtjs/sitemap",
   "nuxt-link-checker",
   "nuxt-schema-org",
-  "nuxt-og-image",
+  // "nuxt-og-image", //crashes the 4 compoatibility version right now
   // "nuxt-gtag", //uncomment for adding gtag integration
 
   //optional

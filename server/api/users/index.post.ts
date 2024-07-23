@@ -1,5 +1,5 @@
 import { serverSupabaseServiceRole } from "#supabase/server";
-import { defineWrappedResponseHandler } from "@/server/utils/defaultHandler";
+import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 import { UserAuthPublicSession } from "@/utils/types";
 
 export default defineWrappedResponseHandler(async (event) => {
