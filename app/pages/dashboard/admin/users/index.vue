@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <div class="rounded-lg overflow-hidden">
-            <UsersTable />
+  <div>
+    <div class="rounded-lg overflow-hidden">
+      <UsersTable />
 
-            <!-- <BaseTable :items="userStore?.users" :loading="userStore?.loading" :columns="columns"
+      <!-- <BaseTable :items="userStore?.users" :loading="userStore?.loading" :columns="columns"
                 :globalFilterFields="['name', 'email', 'phone', 'role']" @row-edit-save="onRowEditSave"
                 @save-changes="onSaveChanges" :editable="true" selectable="multiple" removableSort stripedRows paginator>
 
@@ -20,19 +20,19 @@
                 </template>
 
             </BaseTable> -->
-        </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-    layout: "dashboard",
+  layout: "dashboard",
 });
 
 // const { handleSubmit } = useSubmit();
 // const { getRoleSeverity } = useRoles();
 // const { hasAccess } = useRoleCheck('admin');
-// const userStore = useUsersStore();
+// const userStore = useUserStore();
 
 // const originalUsers = ref([]);
 // const changesMade = ref(false);

@@ -1,17 +1,17 @@
 <script setup>
-const userStore = useUsersStore();
+const usersStore = useUsersStore();
 const { handleSubmit } = useSubmit();
 
 const updateUser = async (data) => {
-  await handleSubmit(userStore.updateUser, { data }, "User updated");
+  await handleSubmit(usersStore.updateUser, { data }, "User updated");
 };
 
 const fetchUserSession = async () => {
-  await handleSubmit(userStore.fetchUser, {}, "User fetched");
+  // await handleSubmit(userStore.fetchUser, {}, "User fetched");
 };
 
 const fetchUsers = async () => {
-  await handleSubmit(userStore.fetchUsers, {}, "Users fetched");
+  await handleSubmit(usersStore.fetchUsers, {}, "Users fetched");
 };
 </script>
 

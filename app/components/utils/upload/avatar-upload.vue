@@ -16,7 +16,7 @@ import imageCompression from "browser-image-compression";
 
 const client = useSupabaseClient();
 const { addToast } = useToastService();
-const userStore = useUsersStore();
+const userStore = useUserStore();
 let userSession = userStore.getUser;
 
 const compressedFile = ref(null);

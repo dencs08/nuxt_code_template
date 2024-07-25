@@ -26,8 +26,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       }
 
       if (data && data.user) {
-        // const usersStore = useUsersStore();
-        // usersStore.setUser(data.user);
+        // const userStore = useUserStore();
+        // userStore.setUser(data.user);
         verifiedToken.value = tokenHash;
 
         // console.log('User authenticated:', data.user);

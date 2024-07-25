@@ -22,7 +22,7 @@ const props = defineProps({
 const formId = ref(uuidv4());
 const formRef = ref<HTMLElement | null>(null);
 
-const defaultSchema = z.object({});
+const defaultSchema = z.any();
 const schema = props.zodSchema || defaultSchema;
 
 const [zodPlugin, submitHandler] = createZodPlugin(

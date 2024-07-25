@@ -7,9 +7,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const nuxt = useNuxtApp();
   const user = await useAuthentication().getUser();
-  // const user = useSupabaseUser();
-  // const { user } = useAppUser();
-  // console.log("user from middleware", user);
 
   try {
     // Handle routes that should only be accessed by unauthenticated users. (i.e. login page)

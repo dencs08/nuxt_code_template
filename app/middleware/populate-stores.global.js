@@ -1,16 +1,16 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const usersStore = useUsersStore();
+  const userStore = useUserStore();
   const authRequired = to.meta.auth;
 
   if (authRequired && authRequired.unauthenticatedOnly) {
-    if (!usersStore.user) {
-      await usersStore.fetchUser();
+    if (!userStore.user) {
+      await userStore.fetchUser();
     }
   }
 
   if (authRequired === undefined || authRequired === true) {
-    if (!usersStore.user) {
-      await usersStore.fetchUser();
+    if (!userStore.user) {
+      await userStore.fetchUser();
     }
   }
 });

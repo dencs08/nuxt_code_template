@@ -107,9 +107,9 @@ const { dashboardSubNavigation, dashboardNavigation } = useNavigation();
 const { errorHandler } = useErrorHandler();
 errorHandler();
 
-// const userStore = useUsersStore();
+// const userStore = useUserStore();
 // await userStore.fetchUser();
-// const userSession = userStore.user;
+// const userSession = userStore.getUser;
 // if (!userSession) {
 //   navigateTo(localePath({ name: "login" }));
 // }

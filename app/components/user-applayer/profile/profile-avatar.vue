@@ -3,7 +3,7 @@
     class="border border-surface-500 dark:border-surface-600 rounded overflow-hidden shadow-[0_1px_10px_-1px_rgba(0,0,0,0.5)]"
   >
     <Skeleton
-      v-if="(!userSession && !photoSrc) || userStore.loading"
+      v-if="(!user && !photoSrc) || userStore.loading"
       height="100%"
       width="100%"
       class="object-cover"
@@ -27,8 +27,8 @@ const props = defineProps({
   photo: String,
 });
 
-const userStore = useUsersStore();
-const user = await userStore.getUser;
+const userStore = useUserStore();
+const user = userStore.getUser;
 const photoSrc = ref(props.photo || user.photo);
 
 watch(

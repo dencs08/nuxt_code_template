@@ -69,7 +69,7 @@
                 <div class="col-span-2">
                   <FormKit
                     class="w-full"
-                    type="primeInputNumber"
+                    type="primeInputText"
                     name="phone"
                     validation="required|number"
                     placeholder="Phone"
@@ -193,12 +193,12 @@ definePageMeta({
 
 const { changeUserPassword, verifyPassword, terminateSession } =
   useAuthentication();
-const { updateProfile, updateUserEmail } = await useUser();
+const { updateUserAccount, updateUserEmail } = await useUser();
 const { handleSubmit } = useSubmit();
 const { addToast } = useToastService();
 const { confirmAction } = useConfirmation();
-const { deleteAccount } = useAccount();
-const userStore = useUsersStore();
+const { deleteUserAccount } = useUser();
+const userStore = useUserStore();
 userStore.fetchUser();
 const userSession = await userStore.getUser;
 const localePath = useLocalePath();
@@ -214,7 +214,7 @@ interface FormData {
   firstname?: string;
   lastname?: string;
   email?: string;
-  phone?: string;
+  phone?: number;
   currentpassword?: string;
   password_confirm?: string;
 }
@@ -229,12 +229,13 @@ const onProfileSave = async (data: FormData) => {
     initialUserDetails.phone !== data.phone
   ) {
     await handleSubmit(
-      updateProfile,
+      updateUserAccount,
       { name, phone },
       "User profile successfully updated"
     );
   }
 
+  //TODO add a non-hardcoded link from redirects.ts and then composable to get the link.
   if (initialUserDetails.email !== data.email) {
     await updateUserEmail(
       email,
@@ -248,11 +249,7 @@ const onPasswordChange = async (data: FormData) => {
   const { currentpassword, password_confirm } = data;
   try {
     await changeUserPassword(currentpassword, password_confirm);
-    addToast(
-      "success",
-      "Password updated",
-      "Your password has been updated successfully"
-    );
+    addToast("success", "Password changed", "Your password has been changed.");
   } catch (error: any) {
     addToast("error", "Password update failed", error.message);
   }
@@ -277,7 +274,7 @@ const onTerminateSession = async (data: FormData) => {
 const confirmDeleteAccount = () => {
   confirmAction(
     async () => {
-      await deleteAccount();
+      await deleteUserAccount();
     },
     {
       header: "Do you want to delete your account?",
