@@ -1,21 +1,15 @@
-import { getAuthService } from "@/services/auth/AuthServiceInterface";
 import type { IAuthenticationService } from "@/services/auth/AuthServiceInterface";
 import { type SessionScope } from "../utils/types";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type UserAuthPublicSession } from "../utils/types";
 
 export function useAuthentication() {
-  let authService: IAuthenticationService | null = null;
-  const runtimeConfig = useRuntimeConfig();
+  const nuxtApp = useNuxtApp();
+  const { $authProvider } = useNuxtApp();
 
-  const initializeAuthService = async () => {
-    if (!authService) {
-      const authProvider = runtimeConfig.public.authProvider as
-        | "supabase"
-        | "sidebase";
-      authService = await getAuthService(authProvider);
-    }
-  };
+  if (!$authProvider) {
+    throw new Error("Auth provider not found");
+  }
 
   const signIn = async ({
     email,
@@ -26,8 +20,7 @@ export function useAuthentication() {
     password: string;
     options: { captchaToken: string };
   }) => {
-    await initializeAuthService();
-    const response = await authService.signIn(email, password, options);
+    const response = await $authProvider.signIn(email, password, options);
     handleRequestError(response);
   };
 
@@ -40,39 +33,34 @@ export function useAuthentication() {
     password: string;
     options: { captchaToken: string };
   }) => {
-    await initializeAuthService();
-    const response = await authService.signUp(email, password, options);
+    const response = await $authProvider.signUp(email, password, options);
     handleRequestError(response);
   };
 
   const signInWithOAuth = async (provider: OAuthProvider) => {
-    await initializeAuthService();
-    const response = await authService.signInWithOAuth(provider);
+    const response = await $authProvider.signInWithOAuth(provider);
     handleRequestError(response);
   };
 
   const signInWithOAuthPopup = async (provider: OAuthProvider) => {
-    await initializeAuthService();
-    const response = await authService.signInWithOAuthWithPopup(provider);
+    const response = await $authProvider.signInWithOAuthWithPopup(provider);
     handleRequestError(response);
     // redirectInPopup(response.data.url);
   };
 
   const signOut = async () => {
-    await initializeAuthService();
-    const response = await authService.signOut();
+    const response = await $authProvider.signOut();
     handleRequestError(response);
   };
 
   const lostPassword = async ({ email }: { email: string }) => {
-    await initializeAuthService();
-    const response = await authService.resetPassword(email);
+    const response = await $authProvider.resetPassword(email);
     handleRequestError(response);
   };
 
   const updateAuthProfile = async (attributes: any, options?: any) => {
-    await initializeAuthService();
-    const response = await authService.updateUser(attributes, options);
+    const response = await $authProvider.updateUser(attributes, options);
+    handleRequestError(response);
   };
 
   const updatePassword = (password: string) => updateAuthProfile({ password });
@@ -84,35 +72,34 @@ export function useAuthentication() {
     currentPassword: string,
     newPassword: string
   ) => {
-    await initializeAuthService();
-    return authService.changePassword(currentPassword, newPassword);
+    const response = await $authProvider.changePassword(
+      currentPassword,
+      newPassword
+    );
+    // console.log(response);
+
+    handleRequestError(response);
+    return response;
   };
 
   const terminateSession = async (scope: SessionScope) => {
-    await initializeAuthService();
-    const response = await authService.terminateSession(scope);
+    const response = await $authProvider.terminateSession(scope);
     handleRequestError(response);
   };
 
   const verifyPassword = async (password: string) => {
-    await initializeAuthService();
-    const response = await authService.verifyPassword(password);
+    const response = await $authProvider.verifyPassword(password);
     handleRequestError(response);
   };
 
-  const getAllUser = async () => {
-    await initializeAuthService();
-    const response = await authService.getAllUser();
-    handleRequestError(response);
-  };
-
-  const getUser = async (): Promise<UserAuthPublicSession | null> => {
+  const getUser = async (): Promise<any | null> => {
     const nuxtApp = useNuxtApp();
-    await initializeAuthService();
-    let user: UserAuthPublicSession | null = null;
+    let user: any | null = null;
     await nuxtApp.runWithContext(async () => {
-      user = await authService.getUser();
+      user = await $authProvider.getUser();
     });
+    console.log("getUser", user);
+
     return user;
   };
 
@@ -134,9 +121,8 @@ export function useAuthentication() {
     updateEmail,
     updateAuthProfile,
     changeUserPassword,
-    terminateSession,
     verifyPassword,
-    getAllUser,
+    terminateSession,
     getUser,
     getSession,
   };

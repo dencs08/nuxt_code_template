@@ -1,17 +1,14 @@
 //@ts-ignore
 import { SupabaseClient } from "@supabase/supabase-js";
-import { type IAuthenticationService } from "./AuthServiceInterface";
-import { SupabaseUserSession } from "./SupabaseUserSession";
+import { type IAuthenticationService } from "../AuthServiceInterface.js";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 
 export class SupabaseAuthService implements IAuthenticationService {
   private client: SupabaseClient;
-  private userSessionService: SupabaseUserSession;
 
   constructor() {
-    const nuxtApp = useNuxtApp();
+    // const nuxtApp = useNuxtApp();
     this.client = useSupabaseClient();
-    this.userSessionService = new SupabaseUserSession();
   }
 
   async signIn(
@@ -56,7 +53,7 @@ export class SupabaseAuthService implements IAuthenticationService {
   }
 
   async changePassword(oldPassword: string, newPassword: string) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.client
         //@ts-ignore
         .rpc<
@@ -81,7 +78,7 @@ export class SupabaseAuthService implements IAuthenticationService {
   }
 
   async verifyPassword(password: string) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.client
         //@ts-ignore
         .rpc<any, { current_plain_password: string }>("verify_user_password", {
@@ -101,12 +98,46 @@ export class SupabaseAuthService implements IAuthenticationService {
     return this.client.auth.signOut({ scope });
   }
 
-  async getAllUser() {
+  async getUser() {
     const userAuthSession = useSupabaseUser();
-    return userAuthSession.value;
+
+    const additionalFields = await this.getAdditionalUserFields(
+      userAuthSession.value.id
+    );
+
+    const provider = userAuthSession.value.app_metadata.provider;
+
+    return {
+      ...userAuthSession.value,
+      ...additionalFields,
+      provider,
+    };
   }
 
-  async getUser() {
-    return await this.userSessionService.fetchUser();
+  private async getAdditionalUserFields(userId: string) {
+    if (!userId) {
+      return null;
+    }
+
+    try {
+      const { data: user } = (await this.client
+        .from("users")
+        .select("*, user_roles!inner(role)")
+        .eq("id", userId)
+        .single()) as { data: UserAuthPublicSession | null };
+
+      if (user) {
+        user.role = user.user_roles.role;
+        delete user.user_roles;
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new CustomError(error.message, error);
+      } else {
+        throw error;
+      }
+    }
   }
 }
