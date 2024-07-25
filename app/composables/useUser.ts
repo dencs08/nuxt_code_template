@@ -3,16 +3,17 @@ import { type UserAuthPublicSession } from "../utils/types";
 //TODO check if it still works after the refactor to own service wrapper
 export function useUser() {
   const client = useSupabaseClient();
-  // const userAuthSession = useSupabaseUser();
-  const usersStore = useUsersStore();
-  const userAuthSession = usersStore.getUser;
+  const userStore = useUserStore();
+  const userAuthSession = userStore.getUser;
 
   const { CustomError } = useCustomError();
-  const { updateEmail, getUser } = useAuthentication();
+  const { updateEmail } = useAuthentication();
   const { addToast } = useToastService();
   const { checkProvider } = useProvider();
 
-  const updateProfile = async (profileData: Partial<UserAuthPublicSession>) => {
+  const updateUserAccount = async (
+    profileData: Partial<UserAuthPublicSession>
+  ) => {
     try {
       const { error } = await client
         .from("users")
@@ -21,7 +22,7 @@ export function useUser() {
           name: profileData.name,
           phone: profileData.phone,
         })
-        .eq("id", userAuthSession.value.id)
+        .eq("id", userAuthSession.id)
         .select();
 
       if (error) {
@@ -36,7 +37,7 @@ export function useUser() {
 
   const updateUserEmail = async (email: string, emailRedirectTo?: string) => {
     try {
-      if (email && email !== userAuthSession.value.email) {
+      if (email && email !== userAuthSession.email) {
         if (!checkProvider("email")) return;
         await updateEmail(email, emailRedirectTo);
         addToast(
@@ -53,7 +54,7 @@ export function useUser() {
           .update({
             new_email: email,
           })
-          .eq("id", userAuthSession.value.id)
+          .eq("id", userAuthSession.id)
           .select();
 
         if (error) {
@@ -66,5 +67,43 @@ export function useUser() {
     }
   };
 
-  return { updateProfile, updateUserEmail };
+  const deleteUserAccount = async () => {
+    try {
+      const { error } = (await $fetch("/api/me", {
+        method: "DELETE",
+      })) as { error?: any };
+      if (error) {
+        throw new CustomError("Error deleting the account", error);
+      }
+    } catch (error) {
+      // console.error(error);
+      throw new CustomError("Failed to delete the account", error);
+    }
+  };
+
+  const confirmUserEmail = async () => {
+    try {
+      const { data, error } = (await $fetch("/api/auth/confirm-email", {
+        method: "POST",
+      })) as {
+        data?: any;
+        error?: any;
+      };
+      if (error) {
+        throw new CustomError("Error occured during confirmation", error);
+      }
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new CustomError("Error occured during confirmation", error);
+    }
+  };
+
+  return {
+    updateUserAccount,
+    updateUserEmail,
+    deleteUserAccount,
+    confirmUserEmail,
+  };
 }

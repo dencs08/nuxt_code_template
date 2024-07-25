@@ -1,16 +1,15 @@
 export const useProvider = () => {
-  // const userSession = useSupabaseUser();
-  const usersStore = useUsersStore();
-  const userSession = usersStore.getUser;
+  const userStore = useUserStore();
+  const userSession = userStore.getUser;
 
   const { addToast } = useToastService();
 
   const checkProvider = (provider: string) => {
-    if (userSession.value.app_metadata.provider !== provider) {
+    if (userSession.app_metadata.provider !== provider) {
       addToast(
         "error",
-        `Login method ${userSession.value.app_metadata.provider}`,
-        `Users using the ${userSession.value.app_metadata.provider} login method cannot perform this action.`,
+        `Login method ${userSession.app_metadata.provider}`,
+        `Users using the ${userSession.app_metadata.provider} login method cannot perform this action.`,
         20000
       );
       return false;

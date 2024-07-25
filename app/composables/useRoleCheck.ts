@@ -5,13 +5,11 @@ export function useRoleCheck(
   defaultRoleCheck = mainConfig.GLOBAL_ROUTE_ACCESS
 ) {
   const { roles } = useRoles();
-  const userStore = useUsersStore();
+  const userStore = useUserStore();
 
-  console.log("role", userStore.userRole);
-
-  //   const response = await useAsyncData(async () => new Promise((resolve) => resolve(usersStore.fetchUsers())));
-
+  // console.log("role", userStore.userRole);
   // const role = userStore.userRole || defaultRoleCheck;
+
   const userRole = computed(() =>
     roles.value.find((r) => r.value === userStore.userRole)
   );
