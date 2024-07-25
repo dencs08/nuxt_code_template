@@ -9,6 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
+//TODO ADD kswitch config path in main.ts config
 const kswitch = ref(false);
 const checkKSwitch = async () => {
   try {
