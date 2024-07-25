@@ -6,28 +6,11 @@ export const useUsersStore = defineStore({
   state: () => ({
     users: [],
     loading: false,
-    user: null,
   }),
 
   getters: {
     totalCount(state) {
       return state.users.length;
-    },
-    getUser: (state) => {
-      return state.user;
-    },
-    firstName: (state) => {
-      return state.user ? state.user.name.split(" ")[0] : null;
-    },
-    lastName: (state) => {
-      const nameParts = state.user ? state.user.name.split(" ") : [];
-      return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
-    },
-    userRole: (state) => {
-      return state.user ? state.user.role : null;
-    },
-    photo: (state) => {
-      return state.user ? state.user.photo : null;
     },
   },
 
@@ -141,27 +124,8 @@ export const useUsersStore = defineStore({
         this.loading = false;
       }
     },
-    async fetchUser() {
-      this.loading = true;
-      try {
-        const user = await useAuthentication().getUser();
-        this.user = user;
-      } catch (error) {
-        console.error("Error in fetchAuthenticatedUser:", error);
-        this.user = null;
-        console.log("error log", error);
-        const errorMessage =
-          error?.data?.message || "An unknown error occurred";
-        throw new CustomError(errorMessage, error);
-      } finally {
-        this.loading = false;
-      }
-    },
     async updateLocalUsers(index, data) {
       this.users[index] = data;
-    },
-    setUser(user) {
-      this.user = user;
     },
   },
 });
