@@ -34,6 +34,6 @@ export default defineNuxtPlugin(() => {
   //     );
   //   }
 
-  console.log("Global Route Auth:", mainConfig.GLOBAL_ROUTE_AUTH);
-  console.log("Backend Provider:", mainConfig.BACKEND_PROVIDER);
+  // console.log("Global Route Auth:", mainConfig.GLOBAL_ROUTE_AUTH);
+  // console.log("Backend Provider:", mainConfig.BACKEND_PROVIDER);
 });
