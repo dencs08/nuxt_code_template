@@ -14,7 +14,7 @@ export default [
   "@formkit/nuxt",
   "@pinia/nuxt",
   "@vueuse/nuxt",
-  "@nuxtjs/turnstile",
+  "@prisma/nuxt",
   // "nuxtjs/apollo", //uncomment when using wordpress backend with graphql
 
   //auth
@@ -22,10 +22,11 @@ export default [
 
   //ui/ux
   "@nuxtjs/tailwindcss",
-  "@primevue/nuxt-module",
+  "@nuxtjs/turnstile",
   "@nuxt/image",
-  "nuxt-icon",
   "@nuxt/fonts",
+  "nuxt-icon",
+  "@primevue/nuxt-module",
   // "nuxt-primevue",
 
   //seo
