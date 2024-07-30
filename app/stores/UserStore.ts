@@ -34,16 +34,13 @@ export const useUserStore = defineStore({
         const user = await useAuthentication().getUser();
         this.setUser(user);
       } catch (error) {
-        console.error("Error in fetchAuthenticatedUser:", error);
         this.clearUser();
-        console.log("error log", error);
         const errorMessage =
           (error as { data?: { message: string } })?.data?.message ||
           "An unknown error occurred";
         throw new CustomError(errorMessage, error);
       } finally {
         this.loading = false;
-        console.log("fetchUser", this.user);
       }
     },
     // async checkAuth(authProvider: AuthProvider) {
