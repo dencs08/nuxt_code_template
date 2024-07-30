@@ -101,6 +101,10 @@ export class SupabaseAuthService implements IAuthenticationService {
   async getUser() {
     const userAuthSession = useSupabaseUser();
 
+    if (!userAuthSession.value) {
+      return null; // Return null if no user is logged in
+    }
+
     const additionalFields = await this.getAdditionalUserFields(
       userAuthSession.value.id
     );
