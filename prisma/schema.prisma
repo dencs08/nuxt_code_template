@@ -6,22 +6,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
+model users {
+  id    String  @id @default(uuid())
   email String  @unique
   name  String?
-  posts Post[]
+  phone String?
+  photo String?
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model user_roles {
+  id   Int    @id @default(autoincrement())
+  role String
 }
