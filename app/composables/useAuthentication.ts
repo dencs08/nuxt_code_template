@@ -1,4 +1,3 @@
-import type { IAuthenticationService } from "@/services/auth/AuthServiceInterface";
 import { type SessionScope } from "../utils/types";
 import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type UserAuthPublicSession } from "../utils/types";
@@ -98,7 +97,7 @@ export function useAuthentication() {
     await nuxtApp.runWithContext(async () => {
       user = await $authProvider.getUser();
     });
-    console.log("getUser", user);
+    // console.log("getUser", user);
 
     return user;
   };
