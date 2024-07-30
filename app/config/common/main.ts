@@ -1,6 +1,6 @@
 //file for most common configurations
 
-// BACKEND_PROVIDER supabase | laravel
+// BACKEND_PROVIDER supabase | prisma
 // AUTH_PROVIDER supabase | sidebase
 // AUTH_SIDEBASE authjs | local | refresh
 //TODO change gloablrouteaccess to a level of access and not a name of a role
