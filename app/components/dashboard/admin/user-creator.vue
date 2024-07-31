@@ -67,7 +67,6 @@
               placeholder="Repeat password"
             >
             </FormKit>
-            <!-- TODO change primeDropdown to primeSelect after the sfxcode is corrected -->
             <FormKit
               class="w-full"
               type="primeSelect"
