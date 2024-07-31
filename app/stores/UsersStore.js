@@ -78,7 +78,6 @@ export const useUsersStore = defineStore({
           this.users = this.users.filter((user) => user.id !== userId);
         }
 
-        console.log("Delete operation completed");
         return { status: "success" };
       } catch (error) {
         throw new CustomError(error.data.message, error);
