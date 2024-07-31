@@ -19,7 +19,6 @@ export function useRoleCheck(
       (r) => r.value === (userStore.userRole || defaultRoleCheck)
     )?.level;
     const requiredRole = validRoles.find((r) => r.value === requiredRoleValue);
-    console.log("userRoleLevel", userRoleLevel);
     return requiredRole && userRoleLevel >= requiredRole.level;
   };
 
