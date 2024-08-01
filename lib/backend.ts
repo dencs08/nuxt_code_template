@@ -3,7 +3,7 @@ import type { BackendClient } from "../types/backend";
 import { SupabaseClient } from "./supabaseClient";
 import { PrismaClient } from "./prismaClient";
 
-let backendClient: BackendClient | null = null;
+let backendClient: any;
 
 export const getBackendClient = async (
   event: any,

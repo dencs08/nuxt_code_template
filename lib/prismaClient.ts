@@ -7,6 +7,22 @@ export class PrismaClient implements BackendClient {
     return await this.client.users.findMany();
   }
 
+  async getAuthUsers(): Promise<any[]> {
+    return;
+  }
+
+  async createUser(data: any): Promise<any> {}
+
+  async updateUser(user: any): Promise<any> {}
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.client.users.delete({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
   //TODO: Add a way to retrieve a user from current session (laravel passport)
   async getCurrentUser(userId?: string): Promise<any> {
     if (!userId) {
