@@ -1,12 +1,9 @@
-import {
-  serverSupabaseServiceRole,
-  serverSupabaseUser,
-  serverSupabaseClient,
-} from "#supabase/server";
 import { validRoles } from "@/utils/roles";
+import { getBackendClient } from "../../lib/backend";
 
 export async function getUserSession(event: any) {
-  const userSession = await serverSupabaseUser(event);
+  const client = await getBackendClient(event);
+  const userSession = await client.getCurrentUser();
 
   if (!userSession) {
     throw createError({
@@ -29,24 +26,10 @@ export async function getUserSession(event: any) {
 // Usage
 // checkUserRole(event, 'admin');
 export async function checkUserRole(event: any, role: string) {
-  const client = serverSupabaseServiceRole(event);
   const user = await getUserSession(event);
 
-  const { data: userRoles, error } = await client
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .single();
-
-  if (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Error retrieving user roles",
-    });
-  }
-
   const userRoleLevel = validRoles.find(
-    (validRole) => validRole.value === userRoles.role
+    (validRole) => validRole.value === user.role
   )?.level;
   const requiredRoleLevel = validRoles.find(
     (validRole) => validRole.value === role
@@ -67,21 +50,6 @@ export async function checkUserRole(event: any, role: string) {
 // Usage
 // await getUserRole(event);
 export async function getUserRole(event: any) {
-  const client = serverSupabaseServiceRole(event);
   const user = await getUserSession(event);
-
-  const { data, error } = await client
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .single();
-
-  if (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Error retrieving user roles: ${error.message}`,
-    });
-  }
-
-  return data.role;
+  return user.role;
 }

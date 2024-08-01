@@ -1,19 +1,19 @@
 import type { EventHandler, EventHandlerRequest, H3Event } from "h3";
-import { serverSupabaseUser } from "#supabase/server";
+import { getBackendClient } from "../../lib/backend";
 
 type ExtendedEventHandler<T extends EventHandlerRequest, D> = (
   event: H3Event<T>,
   userSession: any
 ) => Promise<D>;
-
+//TODO add a way of controling the what user role is needed in global config for each endpoint api
 export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   handler: ExtendedEventHandler<T, D>,
   minRole?: string
 ): EventHandler<T, D> =>
   defineEventHandler<T>(async (event) => {
     try {
-      const userSession = await serverSupabaseUser(event);
-
+      const client = await getBackendClient(event);
+      const userSession = await client.getCurrentUser();
       if (minRole) {
         await checkUserRole(event, minRole);
       }
