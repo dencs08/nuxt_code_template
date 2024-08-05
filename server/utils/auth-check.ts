@@ -42,7 +42,7 @@ export async function checkUserRole(event: any, role: string) {
   ) {
     throw createError({
       statusCode: 403,
-      statusMessage: `Unauthorized: User is not a ${role} or higher`,
+      statusMessage: `Unauthorized access`,
     });
   }
 }

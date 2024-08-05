@@ -1,17 +1,17 @@
 import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
-import { getBackendClient } from "../../lib/backend";
+import { getBackendClient } from "../../../lib/backend";
 
 export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient();
+  const client = await getBackendClient(event, true);
   const body = await readBody(event);
 
   try {
-    const data = await client.deleteUser(body.id);
+    const data = await client.deleteUser(body.userId);
     return { response: "User deleted", data: data };
-  } catch (err) {
+  } catch (err: any) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "An error occurred during the deletion process",
+      statusCode: err.code || 500,
+      statusMessage: err.message,
     });
   }
 }, "superadmin");

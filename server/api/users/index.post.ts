@@ -3,17 +3,16 @@ import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 import { UserAuthPublicSession } from "@/utils/types";
 
 export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
+  const client = await getBackendClient(event, true);
   let body = await readBody(event);
 
   try {
-    const user = await client.createUser(body);
+    const user = await client.createUser(body, event);
     return user;
   } catch (err: any) {
     throw createError({
       statusCode: 500,
-      statusMessage:
-        "An error occurred during the creation process " + err.message,
+      statusMessage: err,
     });
   }
 }, "admin");

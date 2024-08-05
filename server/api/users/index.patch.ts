@@ -3,7 +3,7 @@ import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
 export default defineWrappedResponseHandler(async (event) => {
   const body = await readBody(event);
-  const client = await getBackendClient();
+  const client = await getBackendClient(event, true);
 
   if (!body.id) {
     throw createError({
@@ -14,11 +14,11 @@ export default defineWrappedResponseHandler(async (event) => {
 
   try {
     await client.updateUser(body);
-    return { response: "User updated" };
-  } catch (err) {
+    return { message: "User updated", data: body };
+  } catch (err: any) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "An error occurred during the update process",
+      statusCode: err.code,
+      statusMessage: err.message,
     });
   }
 }, "admin");

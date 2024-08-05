@@ -9,6 +9,6 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: "Missing required data",
     });
   }
-
-  await assignRole(event, body);
+  const response = await assignRole(event, body);
+  return response;
 }, "admin");

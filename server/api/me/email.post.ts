@@ -7,8 +7,11 @@ export default defineWrappedResponseHandler(async (event) => {
   const body = await readBody(event);
 
   try {
-    const response = await client.updateMe(user, body);
-    return { response };
+    if (body.email && body.email !== user.email) {
+      if (user.provider != "email") return;
+      const response = await client.updateMeEmail(user, body);
+    }
+    return { response: "Verification link sent" };
   } catch (err: any) {
     throw createError({
       statusCode: 500,
