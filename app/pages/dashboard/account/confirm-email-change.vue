@@ -20,7 +20,7 @@ onMounted(async () => {
     }, 500);
     status.value.completed = true;
     setTimeout(() => {
-      navigateTo(localePath({ name: "dash-user-profile" }));
+      navigateTo(localePath({ name: "dash-account" }));
     }, 5500);
   } catch (error) {
     setTimeout(() => {
@@ -67,7 +67,7 @@ onMounted(async () => {
           <h4 class="mb-4">
             You can try again.
             <nuxt-link
-              :to="localePath({ name: 'dash-user-profile' })"
+              :to="localePath({ name: 'dash-account' })"
               class="text-blue-500 hover:underline"
               @click.prevent="confirmUserEmail"
               >here</nuxt-link
