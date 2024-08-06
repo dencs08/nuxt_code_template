@@ -2,7 +2,6 @@ import { type UserAuthPublicSession } from "../utils/types";
 
 //TODO check if it still works after the refactor to own service wrapper
 export function useUser() {
-  const client = useSupabaseClient();
   const userStore = useUserStore();
   const userAuthSession = userStore.getUser;
 
@@ -15,16 +14,10 @@ export function useUser() {
     profileData: Partial<UserAuthPublicSession>
   ) => {
     try {
-      const { error } = await client
-        .from("users")
-        //@ts-ignore
-        .update({
-          name: profileData.name,
-          phone: profileData.phone,
-        })
-        .eq("id", userAuthSession.id)
-        .select();
-
+      const { error } = (await $fetch("/api/me", {
+        method: "PATCH",
+        body: profileData,
+      })) as { error?: any };
       if (error) {
         throw new CustomError("Error updating user data", error);
       }
@@ -47,16 +40,10 @@ export function useUser() {
           60000
         );
 
-        //update email_change and token in public.users
-        const { error } = await client
-          .from("users")
-          //@ts-ignore
-          .update({
-            new_email: email,
-          })
-          .eq("id", userAuthSession.id)
-          .select();
-
+        const { error } = (await $fetch("/api/me/email", {
+          method: "POST",
+          body: email,
+        })) as { error?: any };
         if (error) {
           throw new CustomError("Error updating user data", error);
         }
