@@ -14,33 +14,31 @@
 <script setup lang="ts">
 import imageCompression from "browser-image-compression";
 
-const client = useSupabaseClient();
 const { addToast } = useToastService();
 const userStore = useUserStore();
 let userSession = userStore.getUser;
-
 const compressedFile = ref(null);
-
 const fileName = "avatar";
 const bucketName = "user_avatars";
-const maxFileSize = 20000000; //kbs (20mb before compression, actual max file size is set in the supabase bucket)
+const maxFileSize = 20000000; // 20MB before compression
 const filePath = `${userSession.id}/${fileName}`;
 
 const handleUploadSuccess = async (fileUrl: string) => {
   try {
     compressedFile.value = null;
-    //@ts-ignore
-    const { error: userError } = await client
-      .from("users")
-      .update({ photo: fileUrl })
-      .eq("id", userSession.id);
-    if (userError) throw userError;
+
+    const { data, error } = await useFetch("/api/me/photo", {
+      method: "POST",
+      body: { photoUrl: fileUrl },
+    });
+
+    if (error.value) throw error.value;
 
     const fileToDelete = `${userSession.id}/${userSession.photo.split("/").pop()}`;
-    const { error: deleteError } = await client.storage
-      .from(bucketName)
-      .remove([fileToDelete]);
-    if (deleteError) throw deleteError;
+    await useFetch("/api/upload", {
+      method: "DELETE",
+      body: { bucketName, filePath: fileToDelete },
+    });
 
     await userStore.fetchUser();
     userSession = userStore.getUser;
@@ -49,7 +47,6 @@ const handleUploadSuccess = async (fileUrl: string) => {
       "File uploaded",
       "Your photo has been uploaded successfully"
     );
-    // console.log('5. avatar-upload handleUploadSuccess done');
   } catch (error) {
     handleUploadError((error as Error).message);
   }
@@ -60,16 +57,13 @@ const handleUploadError = (errorMessage: string) => {
 };
 
 const handleFileSelected = async (files: any) => {
-  // console.log('2. avatar-upload file selected', files);
   if (!files || files.length === 0) {
     return;
   }
-
   try {
     const file = files[0];
-
     const options = {
-      maxSizeMB: maxFileSize / 1000000, //max file size before compression in MB
+      maxSizeMB: maxFileSize / 1000000,
       maxWidthOrHeight: 1080,
       useWebWorker: true,
       fileType: "image/jpeg",
@@ -78,7 +72,6 @@ const handleFileSelected = async (files: any) => {
       alwaysKeepResolution: false,
     };
     compressedFile.value = await imageCompression(file, options);
-    // console.log('3. avatar-upload compressedFile sent', files);
   } catch (error) {
     console.error("Error during image compression:", error);
     handleUploadError("Failed to compress image");
