@@ -43,14 +43,6 @@ export const useUserStore = defineStore({
         this.loading = false;
       }
     },
-    // async checkAuth(authProvider: AuthProvider) {
-    //   const user = await authProvider.getUser()
-    //   if (user) {
-    //     this.setUser(user)
-    //   } else {
-    //     this.clearUser()
-    //   }
-    // },
     setUser(user: User | null) {
       this.user = user;
       this.isAuthenticated = !!user;
