@@ -1,12 +1,11 @@
-import type { EmailOtpType } from "@supabase/supabase-js";
+import type { GenericOtpType } from "@/services/auth/AuthServiceInterface";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const nuxt = useNuxtApp();
-  const client = useSupabaseClient();
   const { generalPage } = useRedirections();
 
   const tokenHash = to.query.token_hash as string;
-  const type = to.query.type as EmailOtpType;
+  const type = to.query.type as GenericOtpType;
   const verifiedToken = useCookie("verified_token");
   // const redirectTo = (to.query.redirect_to as string) || '/dashboard/user/account/update-password';
   // console.log('SSR:', import.meta.server);
@@ -16,17 +15,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (tokenHash && type) {
     try {
-      const { data, error } = await client.auth.verifyOtp({
-        token_hash: tokenHash,
-        type,
-      });
+      const data = await useAuthentication().verifyOtp(tokenHash, type);
 
-      if (error) {
+      if (!data || !data.user) {
         return navigateTo(nuxt.$localePath({ name: generalPage() }));
       }
 
       if (data && data.user) {
-        // const userStore = useUserStore();
+        const userStore = useUserStore();
+        //TODO check if it redirect the user (it happens on the verify page by watching)
         // userStore.setUser(data.user);
         verifiedToken.value = tokenHash;
 
