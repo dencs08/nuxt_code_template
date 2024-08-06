@@ -58,6 +58,19 @@ export const routes = [
     settings: {
       auth: {
         unauthenticatedOnly: true,
+        navigateAuthenticatedTo: "main",
+      },
+      access: "",
+    },
+  },
+  {
+    name: "dashboard-login",
+    newName: "dash-login",
+    path: "/dashboard-login",
+    file: "@/pages/dashboard-login.vue",
+    settings: {
+      auth: {
+        unauthenticatedOnly: true,
         navigateAuthenticatedTo: "dash-home",
       },
       access: "",
@@ -148,10 +161,10 @@ export const routes = [
     settings: { auth: true },
   },
   {
-    name: "dashboard-user-account",
-    newName: "dash-user-account",
-    path: "/dashboard/user/account",
-    file: "@/pages/dashboard/user/account/index.vue",
+    name: "dashboard-account",
+    newName: "dash-account",
+    path: "/dashboard/account",
+    file: "@/pages/dashboard/account/index.vue",
     settings: { auth: true, access: mainConfig.GLOBAL_ROUTE_ACCESS },
   },
   {

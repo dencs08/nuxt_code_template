@@ -159,7 +159,7 @@ const userNavigation = computed(() => [
         label: "Your profile",
         icon: "pi pi-user",
         command: () => {
-          navigateTo(localePath({ name: "dash-user-account" }));
+          navigateTo(localePath({ name: "dash-account" }));
         },
       },
       {
