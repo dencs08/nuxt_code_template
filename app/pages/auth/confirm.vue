@@ -7,6 +7,7 @@ const { getUser } = useAuthentication();
 const user = await getUser();
 
 // Get redirect path from cookies
+//TODO change from supabase to your own cookie name?
 const cookieName = useRuntimeConfig().public.supabase.cookieName;
 const redirectPath = useCookie(`${cookieName}-redirect-path`).value;
 
