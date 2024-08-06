@@ -1,5 +1,8 @@
 import { type SessionScope } from "../utils/types";
-import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
+import type {
+  GenericOAuthProvider,
+  GenericOtpType,
+} from "@/services/auth/AuthServiceInterface";
 import { type UserAuthPublicSession } from "../utils/types";
 
 export function useAuthentication() {
@@ -36,12 +39,12 @@ export function useAuthentication() {
     handleRequestError(response);
   };
 
-  const signInWithOAuth = async (provider: OAuthProvider) => {
+  const signInWithOAuth = async (provider: GenericOAuthProvider) => {
     const response = await $authProvider.signInWithOAuth(provider);
     handleRequestError(response);
   };
 
-  const signInWithOAuthPopup = async (provider: OAuthProvider) => {
+  const signInWithOAuthPopup = async (provider: GenericOAuthProvider) => {
     const response = await $authProvider.signInWithOAuthWithPopup(provider);
     handleRequestError(response);
     // redirectInPopup(response.data.url);
@@ -109,6 +112,17 @@ export function useAuthentication() {
     // return response.data;
   };
 
+  const verifyOtp = async (tokenHash: string, type: GenericOtpType) => {
+    const result = await $authProvider.verifyOtp(tokenHash, type);
+    if (result) {
+      const user = result.user;
+      const session = result.session;
+      return { user, session };
+    } else {
+      return { user: null, session: null };
+    }
+  };
+
   return {
     signIn,
     signInWithOAuth,
@@ -124,6 +138,7 @@ export function useAuthentication() {
     terminateSession,
     getUser,
     getSession,
+    verifyOtp,
   };
 }
 

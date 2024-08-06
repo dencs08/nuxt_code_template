@@ -1,6 +1,7 @@
-//@ts-ignore
-import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
 import { type SessionScope } from "@/utils/types";
+
+export type GenericOAuthProvider = any;
+export type GenericOtpType = any;
 
 export interface IAuthenticationService {
   signIn: (
@@ -13,8 +14,8 @@ export interface IAuthenticationService {
     password: string,
     options?: { captchaToken?: string }
   ) => Promise<any>;
-  signInWithOAuth: (provider: OAuthProvider) => Promise<any>;
-  signInWithOAuthWithPopup: (provider: OAuthProvider) => Promise<any>;
+  signInWithOAuth: (provider: GenericOAuthProvider) => Promise<any>;
+  signInWithOAuthWithPopup: (provider: GenericOAuthProvider) => Promise<any>;
   signOut: () => Promise<any>;
   resetPassword: (email: string) => Promise<any>;
   updateUser: (attributes: any, options?: any) => Promise<any>;
@@ -22,4 +23,8 @@ export interface IAuthenticationService {
   terminateSession: (scope: SessionScope) => Promise<any>;
   verifyPassword: (password: string) => Promise<any>;
   getUser: () => Promise<any>;
+  verifyOtp: (
+    tokenHash: string,
+    type: GenericOtpType
+  ) => Promise<{ user: any; session: any } | { user: null; session: null }>;
 }

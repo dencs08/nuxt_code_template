@@ -1,7 +1,7 @@
-//@ts-ignore
 import { SupabaseClient } from "@supabase/supabase-js";
 import { type IAuthenticationService } from "../AuthServiceInterface.js";
-import type { Provider as OAuthProvider } from "@supabase/gotrue-js";
+import type { Provider as OAuthProvider } from "@supabase/supabase-js";
+import type { EmailOtpType } from "@supabase/supabase-js";
 
 export class SupabaseAuthService implements IAuthenticationService {
   private client: SupabaseClient;
@@ -96,6 +96,22 @@ export class SupabaseAuthService implements IAuthenticationService {
 
   async terminateSession(scope: SessionScope = "others") {
     return this.client.auth.signOut({ scope });
+  }
+
+  async verifyOtp(
+    tokenHash: string,
+    type: EmailOtpType
+  ): Promise<{ user: any; session: any } | { user: null; session: null }> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      token_hash: tokenHash,
+      type,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   }
 
   async getUser() {
