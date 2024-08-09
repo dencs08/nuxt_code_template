@@ -9,4 +9,6 @@ export default {
   businessCity: "City Name",
   businessZip: "12-123",
   businessStreet: "123 Business St",
+
+  businessSupportEmail: "support@domain.pl",
 };
