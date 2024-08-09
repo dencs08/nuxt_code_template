@@ -21,8 +21,32 @@
 import { emailSchema } from "~/utils/schemas";
 import { type EmailForm } from "@/utils/types/email";
 
-// TODO make it work
+const { addToast } = useToastService();
+
 const handleSubmit = async (email: EmailForm) => {
-  // const response = await handleSubmit(authStore.logout, data, 'User successfully logged out');
+  try {
+    const response = await $fetch("/api/newsletter", {
+      method: "POST",
+      body: email,
+    });
+
+    if (response.response.success) {
+      addToast(
+        "success",
+        "Success",
+        "Thank you for subscribing to our newsletter"
+      );
+    }
+  } catch (error: any) {
+    if (error.response?.status === 409) {
+      addToast(
+        "error",
+        "Error",
+        "You are already subscribed to our newsletter"
+      );
+    } else {
+      addToast("error", "Error", "An error occurred. Please try again later");
+    }
+  }
 };
 </script>
