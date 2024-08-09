@@ -1,7 +1,7 @@
 <template>
   <footer aria-labelledby="footer-heading">
     <hr class="w-full text-black" />
-    <div class="container mx-auto py-10">
+    <div class="container mx-auto pt-5 md:pt-10">
       <div class="flex flex-row justify-between items-center">
         <div class="h-auto w-24">
           <Logo />
@@ -32,6 +32,7 @@
             </div>
           </div>
         </div>
+        <SocialIcons class="flex mt-8 md:hidden" />
         <div class="mt-10 xl:mt-0">
           <h3 class="text-sm font-semibold leading-6 text-gray-900">
             Newsteller
@@ -43,29 +44,19 @@
         </div>
       </div>
       <div
-        class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24"
+        class="my-4 border-t border-gray-900/10 pt-5 sm:pt-10 sm:my-10 text-center md:flex md:items-center md:justify-between lg:my-10"
       >
-        <div class="flex space-x-6 md:order-2">
-          <a
-            v-for="item in social"
-            :key="item.label"
-            :href="item.href"
-            class="text-gray-400 hover:text-primary-500 hover:scale-110 transition-all"
-          >
-            <span class="sr-only">{{ item.label }}</span>
-            <Icon :name="item.icon" class="h-6 w-auto" />
-          </a>
-        </div>
-        <p class="mt-8 text-xs leading-5 text-gray-500 md:order-1 md:mt-0">
+        <div class="text-xs leading-5 text-gray-500">
           &copy; {{ currentYear }} Wszelkie prawa zastrzeżone.
-        </p>
+        </div>
+        <SocialIcons class="hidden md:flex" />
       </div>
     </div>
   </footer>
 </template>
 
 <script setup>
-const { legalMenu, socialMenu } = useNavigation();
+const { legalMenu } = useNavigation();
 
 const currentYear = computed(() => new Date().getFullYear());
 
@@ -92,8 +83,4 @@ const links = ref({
 });
 
 links.value.legal = legalMenu.value;
-
-const onSubmit = async (data) => {
-  // const response = await handleSubmit(authStore.logout, data, 'User successfully logged out');
-};
 </script>
