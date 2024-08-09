@@ -1,9 +1,11 @@
-<template></template>
-<script setup lang=ts>
+<template>
+  <NuxtPage />
+</template>
+<script setup lang="ts">
 definePageMeta({
-    layout: "dashboard",
+  layout: "dashboard",
 });
 
-const localePath = useLocalePath();
-navigateTo(localePath({ name: "dash-home" }));
+// const localePath = useLocalePath();
+// navigateTo(localePath({ name: "dash-home" }));
 </script>
