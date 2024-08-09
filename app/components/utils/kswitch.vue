@@ -3,12 +3,15 @@
     <h1>Application has been disabled</h1>
     <h2>
       Contact the support at
-      <!-- TODO add a global way of defining the support email -->
-      <a class="underline" href="mailto:support@domain.pl">support@domain.pl</a>
+      <a class="underline" :href="`mailto:${supportEmail}`">{{
+        supportEmail
+      }}</a>
     </h2>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const { supportEmail } = useBusiness();
+</script>
 
 <style></style>
