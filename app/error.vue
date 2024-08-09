@@ -1,58 +1,45 @@
 <template>
-  <Body
-    class="overflow-hidden gradient-radial bg-gradient-to-r from-primary-500 to-secondary-500"
-  >
+  <Body class="overflow-hidden bg-dark-900">
     <div class="overflow-hidden">
       <div
-        class="h-screen w-screen flex flex-col justify-center md:justify-end items-start"
+        class="h-screen w-screen flex flex-col justify-center md:justify-end items-start z-[999]"
       >
         <div
-          class="text-center md:text-left flex flex-col items-center md:block max-w-3xl lg:max-w-4xl px-8 md:px-24 py-0 xs:py-40 space-y-3"
+          class="w-full text-center flex flex-col items-center px-8 md:px-24 py-0 xs:py-40 space-y-3 z-[999]"
         >
-          <div class="block md:hidden">
-            <h1 class="text-7xl xs:text-8xl text-accent-300 font-bold">
-              {{ error.statusCode }}
-            </h1>
-          </div>
           <h2
-            class="uppercase text-surface-700 lg:text-surface-900 text-4xl sm:text-6xl md:text-8xl font-bold lg:mix-blend-overlay"
+            class="uppercase text-surface-50 text-4xl sm:text-6xl md:text-8xl font-bold"
           >
-            {{ error.message }}
+            {{ getUserFriendlyErrorMessage(error.statusCode) }}
           </h2>
-          <p class="md:text-lg text-surface-50">
-            We're sorry, but something went wrong. Please try again later or
-            contact support if the problem persists.
+          <p class="md:text-lg text-surface-100">
+            {{ getUserFriendlyErrorDescription(error.statusCode) }}
           </p>
-          <MyButton @click="handleError" styling="light">Go Back</MyButton>
+          <MyButton @click="handleError" styling="primary">Go Back</MyButton>
         </div>
       </div>
     </div>
-    <!-- Error animation -->
     <div
-      class="hidden md:block absolute top-1/4 xl:top-[38%] left-1/2 md:left-[55%] 2xl:left-[65%] w-full -translate-y-1/2 -translate-x-1/2 cursor-none pointer-events-none z-[-9999] scale-[15%] xs:scale-[35%] md:scale-75 xl:scale-100 glitch"
+      class="block absolute top-1/2 left-1/2 -mt-48 md:-mt-24 w-full -translate-y-1/2 -translate-x-1/2 cursor-none pointer-events-none z-[-9999] glitch"
     >
       <h1
-        class="text-accent-200 text-center mt-0 uppercase font-bold md:rotate-[28deg] md:-skew-x-[25deg]"
+        class="text-light-50 text-center mt-0 uppercase font-bold"
         ref="glitchedHeader"
-        :style="{ textShadow: longShadow }"
       >
         {{ error.statusCode }}
       </h1>
       <div
-        class="glitch-window absolute top-0 left-[-2px] w-full overflow-hidden bg-transparent"
+        class="glitch-window absolute top-0 left-[-5px] w-full overflow-hidden"
         ref="glitchWindow"
       ></div>
-      <div
-        class="shadow-window absolute top-[40px] left-[1px] w-full !bg-transparent overflow-hidden z-[-1] blur-lg"
-        ref="shadowWindow"
-      ></div>
     </div>
+    <div
+      class="absolute inset-0 z-[10] bg-gradient-to-b from-black/25 via-black/90 to-black pointer-events-none h-screen"
+    ></div>
   </Body>
 </template>
 
 <script setup lang="ts">
-//TODO create custom messages for different error codes
-// TODO change to a more user-friendly error design
 const props = defineProps({
   error: Object,
 });
@@ -60,70 +47,61 @@ const props = defineProps({
 const router = useRouter();
 const glitchedHeader = ref(null);
 const glitchWindow = ref(null);
-const shadowWindow = ref(null);
-const shadowColor = ref(null);
 
 const handleError = () => {
   clearError({ redirect: "/" });
 };
 
+const getUserFriendlyErrorMessage = (statusCode: number): string => {
+  const errorMessages: Record<number, string> = {
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Page Not Found",
+    500: "Internal Server Error",
+  };
+  return errorMessages[statusCode] || "Oops! Something went wrong";
+};
+
+const getUserFriendlyErrorDescription = (statusCode: number): string => {
+  const errorDescriptions: Record<number, string> = {
+    400: "The request couldn't be understood. Please check your input and try again.",
+    401: "You need to be logged in to access this page. Please sign in and try again.",
+    403: "You don't have permission to access this page. If you think this is a mistake, please contact support.",
+    404: "We couldn't find the page you're looking for. It might have been moved or deleted.",
+    500: "Our servers encountered an unexpected error. Please try again later or contact support if the problem persists.",
+  };
+  return (
+    errorDescriptions[statusCode] ||
+    "We're sorry, but something went wrong. Please try again later or contact support if the problem persists."
+  );
+};
+
 onMounted(() => {
-  if (glitchedHeader.value && glitchWindow.value && shadowWindow.value) {
+  if (glitchedHeader.value && glitchWindow.value) {
     const clone = glitchedHeader.value.cloneNode(true);
     glitchWindow.value.appendChild(clone);
-
-    const shadowClone = glitchedHeader.value.cloneNode(true);
-    shadowClone.removeAttribute("style");
-    shadowWindow.value.appendChild(shadowClone);
-
-    const h1Color = window.getComputedStyle(glitchedHeader.value).color;
-    const rgb = h1Color.match(/\d+/g);
-    const hexColor = rgb
-      ? `#${((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1)}`
-      : "#000000";
-    shadowColor.value = darkenColor(hexColor, -15);
   }
 });
-
-const longShadow = computed(() => {
-  let shadow = "";
-  for (let i = 0; i < 30; i++) {
-    shadow += `${i > 0 ? "," : ""}${i}px ${i}px 0 ${shadowColor.value}`;
-  }
-  return shadow;
-});
-
-function darkenColor(color: string, percent: number) {
-  color = color.slice(1);
-
-  const num = parseInt(color, 16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) + amt,
-    G = ((num >> 8) & 0x00ff) + amt,
-    B = (num & 0x0000ff) + amt;
-
-  return (
-    "#" +
-    (
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255)
-    )
-      .toString(16)
-      .slice(1)
-  );
-}
 </script>
 
-<style scoped lang="scss">
-$background-color: #f9f8f8;
-$headline-color: #f1f1f1;
-$size: 35em;
+<style lang="scss">
+$background-color: #828282;
+$headline-color: #343434;
+
+:root {
+  --size: clamp(20em, 50vw, 100em);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --size: clamp(5em, 35vw, 50em);
+  }
+}
 
 div.glitch {
   h1 {
-    font-size: $size;
+    font-size: var(--size);
   }
 }
 
@@ -131,61 +109,54 @@ div.glitch {
   color: $headline-color;
   text-shadow:
     2px 0 $background-color,
-    -1px 0 yellow,
-    -2px 0 green;
-  animation: crt-me 1500ms infinite linear alternate-reverse;
-}
-
-.shadow-window {
-  h1 {
-    color: rgba(26, 26, 26, 0.5) !important;
-    text-shadow: rgba(100, 100, 100, 0) !important;
-  }
+    -1px 0 rgb(213, 213, 121),
+    -2px 0 rgb(60, 162, 60);
+  animation: crt-me 750ms infinite linear alternate-reverse;
 }
 
 @keyframes crt-me {
   0% {
-    clip: rect(0.24 * $size, 9999px, 0.59 * $size, 0);
+    clip: rect(calc(0.24 * var(--size)), 9999px, calc(0.59 * var(--size)), 0);
   }
 
   10% {
-    clip: rect(0.7 * $size, 9999px, 0.48 * $size, 0);
+    clip: rect(calc(0.7 * var(--size)), 9999px, calc(0.48 * var(--size)), 0);
   }
 
   20% {
-    clip: rect(0.53 * $size, 9999px, 0.48 * $size, 0);
+    clip: rect(calc(0.53 * var(--size)), 9999px, calc(0.48 * var(--size)), 0);
   }
 
   30% {
-    clip: rect(0.17 * $size, 9999px, 0.61 * $size, 0);
+    clip: rect(calc(0.17 * var(--size)), 9999px, calc(0.61 * var(--size)), 0);
   }
 
   40% {
-    clip: rect(0.4 * $size, 9999px, 0.61 * $size, 0);
+    clip: rect(calc(0.4 * var(--size)), 9999px, calc(0.61 * var(--size)), 0);
   }
 
   50% {
-    clip: rect(0.38 * $size, 9999px, 0.53 * $size, 0);
+    clip: rect(calc(0.38 * var(--size)), 9999px, calc(0.53 * var(--size)), 0);
   }
 
   60% {
-    clip: rect(0.62 * $size, 9999px, 0.9 * $size, 0);
+    clip: rect(calc(0.62 * var(--size)), 9999px, calc(0.9 * var(--size)), 0);
   }
 
   70% {
-    clip: rect(0.21 * $size, 9999px, 0.91 * $size, 0);
+    clip: rect(calc(0.21 * var(--size)), 9999px, calc(0.91 * var(--size)), 0);
   }
 
   80% {
-    clip: rect(0.61 * $size, 9999px, 1.01 * $size, 0);
+    clip: rect(calc(0.61 * var(--size)), 9999px, calc(1.01 * var(--size)), 0);
   }
 
   90% {
-    clip: rect(0.27 * $size, 9999px, 0.8 * $size, 0);
+    clip: rect(calc(0.27 * var(--size)), 9999px, calc(0.8 * var(--size)), 0);
   }
 
   100% {
-    clip: rect(0.75 * $size, 9999px, 0.5 * $size, 0);
+    clip: rect(calc(0.75 * var(--size)), 9999px, calc(0.5 * var(--size)), 0);
   }
 }
 </style>
