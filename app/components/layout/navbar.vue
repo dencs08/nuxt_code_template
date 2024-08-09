@@ -77,6 +77,9 @@
                 <MyButton class="w-full" size="xs"> Login </MyButton>
               </NuxtLink>
             </div>
+            <div class="w-full flex justify-center items-center">
+              <SocialIcons class="mt-4" />
+            </div>
           </div>
         </div>
       </template>
