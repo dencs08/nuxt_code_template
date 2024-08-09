@@ -16,6 +16,8 @@ export const useBusiness = () => {
     return `${street.value}, ${zip.value} ${city.value}`;
   });
 
+  const supportEmail = ref(publicConfig.businessSupportEmail);
+
   // Return all the refs and computed properties
   return {
     name,
@@ -26,5 +28,6 @@ export const useBusiness = () => {
     zip,
     street,
     address,
+    supportEmail,
   };
 };
