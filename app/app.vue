@@ -9,12 +9,11 @@
   </div>
 </template>
 <script setup lang="ts">
-//TODO ADD kswitch config path in main.ts config
+import kswitchConfig from "~/config/common/kswitch";
 const kswitch = ref(false);
 const checkKSwitch = async () => {
   try {
-    const kswitchUrl =
-      "https://nuxt-code-template.s3.eu-central-1.amazonaws.com/k-switch.json";
+    const kswitchUrl = kswitchConfig.KSWITCH_URL;
 
     const response = await fetch(kswitchUrl, {
       method: "GET",
