@@ -29,7 +29,6 @@ watch(
   () => {
     if (user) {
       setTimeout(() => {
-        // TODO set this path somewhere centralized as it can change during development and production.
         navigateTo(
           localePath({ name: passwordChangePage() as RoutesNamesList })
         );
