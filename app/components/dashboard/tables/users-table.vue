@@ -61,7 +61,7 @@
               icon="pi pi-external-link "
               v-tooltip.left="'Export table to CSV'"
               @click="exportCSV($event)"
-              aria-label="Save"
+              aria-label="Export"
             />
           </div>
           <div class="grid place-content-center">
@@ -70,7 +70,7 @@
               v-tooltip.left="'Refresh users table'"
               @click="fetchUsers"
               icon="pi pi-refresh"
-              aria-label="Save"
+              aria-label="Refresh"
             />
           </div>
         </div>
@@ -119,9 +119,32 @@
     </Column>
     <Column
       :rowEditor="true"
-      style="width: 10%; min-width: 6rem"
+      style="width: 5%; min-width: 1rem"
       bodyStyle="text-align:center"
     ></Column>
+    <Column style="width: 5%; min-width: 1rem" bodyStyle="text-align:center;">
+      <template #body="slotProps">
+        <div class="flex flex-row gap-1">
+          <div>
+            <Button
+              icon="pi pi-cog"
+              rounded
+              text
+              aria-label="Permissions"
+              @click="selectPermissions(slotProps.data)"
+            />
+          </div>
+          <div>
+            <NuxtLink
+              :to="localePath(`/dashboard/admin/users/${slotProps.data.id}`)"
+              class="font-medium text-primary-500 hover:text-primary-600"
+            >
+              <Button icon="pi pi-arrow-right" rounded text aria-label="Open" />
+            </NuxtLink>
+          </div>
+        </div>
+      </template>
+    </Column>
   </DataTable>
 </template>
 
@@ -134,6 +157,7 @@ const filters = ref({
 const { handleSubmit } = useSubmit();
 const { getRoleSeverity } = useRoles();
 const { hasAccess } = useRoleCheck();
+const localePath = useLocalePath();
 
 const isAdmin = hasAccess("admin");
 const usersStore = useUsersStore();
@@ -143,6 +167,12 @@ const editingRows = ref([]);
 const selected = ref();
 const changesMade = ref(false);
 let originalUsers = ref([]);
+
+const emit = defineEmits(["showPermissions"]);
+
+const selectPermissions = (user) => {
+  emit("showPermissions", user);
+};
 
 onMounted(() => {
   fetchUsers();
