@@ -3,7 +3,6 @@
     <div class="mt-5">
       <h2 class="text-db-h2">Your account</h2>
       <!-- TODO Add a way of accessing the update-password after the user requests one in the forgot password but restrict from accessing if not requested -->
-      <!-- <NuxtLink :to="localePath('/dashboard/profile/update-password')" class="link-primary">Password reset</NuxtLink> -->
 
       <div>
         <div
@@ -140,7 +139,6 @@
             </p>
           </div>
 
-          <!-- TODO add form for set password for people how registered with Oauth and then enable them to change passwords. -->
           <div class="col-span-3 md:col-span-2">
             <FormWrapper
               :handleSubmit="onTerminateSession"
@@ -198,6 +196,7 @@ const { handleSubmit } = useSubmit();
 const { addToast } = useToastService();
 const { confirmAction } = useConfirmation();
 const { deleteUserAccount } = useUser();
+const { emailRequestChangePage } = useRedirections();
 const userStore = useUserStore();
 userStore.fetchUser();
 const userSession = await userStore.getUser;
@@ -235,12 +234,9 @@ const onProfileSave = async (data: FormData) => {
     );
   }
 
-  //TODO add a non-hardcoded link from redirects.ts and then composable to get the link.
   if (initialUserDetails.email !== data.email) {
-    await updateUserEmail(
-      email,
-      `${window.location.origin}/dashboard/account/confirm-email-change/`
-    );
+    const emailChangePage = emailRequestChangePage();
+    await updateUserEmail(email, `${window.location.origin}${emailChangePage}`);
   }
   initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 };
