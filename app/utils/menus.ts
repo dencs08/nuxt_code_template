@@ -21,11 +21,11 @@ export function useNavigation() {
     }))
   );
 
-  // TODO - Add icons to social menu, implement in the footer and navbar
   const socialMenu = computed(() =>
     social.map((item) => ({
       label: item.label,
       href: item.href,
+      icon: item.icon,
     }))
   );
 
