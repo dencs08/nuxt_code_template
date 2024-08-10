@@ -1,6 +1,6 @@
-import { getBackendClient } from "../../../lib/backend";
-import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
-
+import { getBackendClient } from "~~/lib/backend";
+import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+//TODO check if this works
 export default defineWrappedResponseHandler(async (event) => {
   const client = await getBackendClient(event);
   const user = await client.getCurrentUser();
