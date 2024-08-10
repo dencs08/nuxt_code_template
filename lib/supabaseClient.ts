@@ -10,21 +10,26 @@ export class SupabaseClient implements BackendClient {
     let { data, error } = await this.client.from("users").select(`
       *,
       user_roles (
-          role
-      )
-  `);
+          role_id,
+          roles (
+              name
+          )
+    )`);
 
     if (!data || data.length === 0)
       throw createError({ statusCode: 404, statusMessage: "No users found" });
 
-    users = await data.map((user: any) => {
-      const newUser = {
-        ...user,
-        role: user.user_roles ? user.user_roles.role : "No role assigned",
-      };
-      delete newUser.user_roles;
-      return newUser;
-    });
+    users = await Promise.all(
+      data.map(async (user: any) => {
+        const roleName = await this.getRoleName(user.user_roles?.role_id);
+        const newUser = {
+          ...user,
+          role: roleName || "No role assigned",
+        };
+        delete newUser.user_roles;
+        return newUser;
+      })
+    );
 
     if (error) {
       throw createError({
@@ -34,6 +39,37 @@ export class SupabaseClient implements BackendClient {
     }
 
     return users;
+  }
+
+  async getUser(userId: string): Promise<any> {
+    let user = {} as any;
+    let { data, error } = await this.client
+      .from("users")
+      .select(
+        `
+        *,
+        user_roles (
+            role_id
+        )
+      `
+      )
+      .eq("id", userId)
+      .single();
+
+    if (data) {
+      const roleName = await this.getRoleName(data.user_roles?.role_id);
+      user = { ...data, role: roleName };
+      delete user.user_roles;
+    }
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: error.message,
+      });
+    }
+
+    return user;
   }
   async getAuthUsers(): Promise<any[]> {
     let { data: authData, error: authError } =
@@ -170,12 +206,13 @@ export class SupabaseClient implements BackendClient {
     try {
       const { data: user } = (await this.client
         .from("users")
-        .select("*, user_roles!inner(role)")
+        .select("*, user_roles!inner(role_id)")
         .eq("id", userId)
         .single()) as { data: UserAuthPublicSession | null };
 
       if (user) {
-        user.role = user.user_roles.role;
+        let roleName = await this.getRoleName(user.user_roles?.role_id);
+        user.role = roleName;
         delete user.user_roles;
       }
 
@@ -201,22 +238,39 @@ export class SupabaseClient implements BackendClient {
       });
     }
 
-    const { data: currentUserData, error: currentUserError } = await this.client
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", body.id)
+    const { data: roleData, error: roleError } = await this.client
+      .from("roles")
+      .select("id")
+      .eq("name", body.role)
       .single();
-    if (currentUserError) {
+
+    if (roleError || !roleData) {
       throw createError({
-        statusCode: currentUserError.code,
-        statusMessage: currentUserError.message, //"Error retrieving current user role"
+        statusCode: 500,
+        statusMessage: "Error retrieving role data",
       });
     }
 
+    const roleId = roleData.id;
+
+    const { data: currentUserData, error: currentUserError } = await this.client
+      .from("user_roles")
+      .select("role_id")
+      .eq("user_id", body.id)
+      .single();
+
+    if (currentUserError) {
+      throw createError({
+        statusCode: currentUserError.code,
+        statusMessage: currentUserError.message,
+      });
+    }
+
+    const currentRoleName = await this.getRoleName(currentUserData?.role_id);
+
     if (
       userRole === "admin" &&
-      (currentUserData.role === "admin" ||
-        currentUserData.role === "superadmin")
+      (currentRoleName === "admin" || currentRoleName === "superadmin")
     ) {
       throw createError({
         statusCode: 500,
@@ -237,15 +291,15 @@ export class SupabaseClient implements BackendClient {
         .from("user_roles")
         .upsert({
           user_id: body.id,
-          role: body.role,
+          role_id: roleId,
         })
-        .eq("user_id", body.id) // Make sure to update only the passed body.id
+        .eq("user_id", body.id)
         .select();
 
       if (error) {
         throw createError({
           statusCode: error.code,
-          statusMessage: error.message, //"Error updating user role"
+          statusMessage: error.message,
         });
       }
       return { response: "User role updated" };
@@ -312,6 +366,22 @@ export class SupabaseClient implements BackendClient {
     }
 
     return { response: "Email confirmation successful" };
+  }
+  private async getRoleName(roleId: number): Promise<string | null> {
+    if (!roleId) return null;
+
+    let { data, error } = await this.client
+      .from("roles")
+      .select("*")
+      .eq("id", roleId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching role name:", error);
+      return "Unknown Role";
+    }
+
+    return data?.name || "Unknown Role";
   }
 
   //me
@@ -391,6 +461,35 @@ export class SupabaseClient implements BackendClient {
 
     return { success: true };
   }
+  async getMePermissions(): Promise<any> {
+    let { data: userPermissions, error: userPermissionsError } =
+      await this.client.from("user_permissions").select("*");
+
+    if (userPermissionsError) {
+      throw createError({
+        statusCode: userPermissionsError.code,
+        statusMessage: userPermissionsError?.message,
+      });
+    }
+
+    const permissionIds = userPermissions.map(
+      (perm: any) => perm.permission_id
+    );
+
+    let { data: permissions, error: permissionsError } = await this.client
+      .from("permissions")
+      .select("name, resource, action")
+      .in("id", permissionIds);
+
+    if (permissionsError) {
+      throw createError({
+        statusCode: permissionsError.code,
+        statusMessage: permissionsError?.message,
+      });
+    }
+
+    return permissions;
+  }
 
   //storage
   async uploadFile(
@@ -436,5 +535,321 @@ export class SupabaseClient implements BackendClient {
     }
 
     return { success: true };
+  }
+
+  //permissions
+  async getPermissions(userId: string): Promise<any> {
+    let { data: userPermissions, error: userPermissionsError } =
+      await this.client
+        .from("user_permissions")
+        .select("*")
+        .eq("user_id", userId);
+
+    if (userPermissionsError) {
+      throw createError({
+        statusCode: userPermissionsError.code,
+        statusMessage: userPermissionsError?.message,
+      });
+    }
+
+    const permissionIds = userPermissions.map(
+      (perm: any) => perm.permission_id
+    );
+
+    let { data: permissions, error: permissionsError } = await this.client
+      .from("permissions")
+      .select("*")
+      .in("id", permissionIds);
+
+    if (permissionsError) {
+      throw createError({
+        statusCode: permissionsError.code,
+        statusMessage: permissionsError?.message,
+      });
+    }
+
+    return permissions;
+  }
+  async updatePermissions(userId: string, permissions: any[]): Promise<any> {
+    // Fetch all available permissions
+    const availablePermissions = await this.getAvailablePermissions();
+
+    // Fetch existing user permissions
+    const { data: existingUserPermissions, error: fetchError } =
+      await this.client
+        .from("user_permissions")
+        .select("permission_id")
+        .eq("user_id", userId);
+
+    if (fetchError) {
+      throw createError({
+        statusCode: fetchError.code,
+        statusMessage: fetchError.message,
+      });
+    }
+
+    const existingPermissionIds = new Set(
+      existingUserPermissions.map((p: any) => p.permission_id)
+    );
+
+    let permissionsToAdd = [];
+    let permissionsToRemove = [];
+
+    for (const perm of permissions) {
+      for (const [action, value] of Object.entries(perm.action)) {
+        const availablePerm = availablePermissions.find(
+          (ap: any) => ap.resource === perm.resource && ap.action === action
+        );
+
+        if (!availablePerm) {
+          console.warn(`Permission not found: ${perm.resource} - ${action}`);
+          continue;
+        }
+
+        if (value && !existingPermissionIds.has(availablePerm.id)) {
+          permissionsToAdd.push({
+            user_id: userId,
+            permission_id: availablePerm.id,
+          });
+        } else if (!value && existingPermissionIds.has(availablePerm.id)) {
+          permissionsToRemove.push(availablePerm.id);
+        }
+      }
+    }
+
+    if (permissionsToRemove.length > 0) {
+      const { error: removeError } = await this.client
+        .from("user_permissions")
+        .delete()
+        .eq("user_id", userId)
+        .in("permission_id", permissionsToRemove);
+
+      if (removeError) {
+        throw createError({
+          statusCode: removeError.code,
+          statusMessage: removeError.message,
+        });
+      }
+    }
+
+    if (permissionsToAdd.length > 0) {
+      const { error: addError } = await this.client
+        .from("user_permissions")
+        .insert(permissionsToAdd);
+
+      if (addError) {
+        throw createError({
+          statusCode: addError.code,
+          statusMessage: addError.message,
+        });
+      }
+    }
+
+    return {
+      success: true,
+      added: permissionsToAdd.length,
+      removed: permissionsToRemove.length,
+    };
+  }
+  async getAvailablePermissions(): Promise<any> {
+    let { data: permissions, error: permissionsError } = await this.client
+      .from("permissions")
+      .select("id, name, resource, action");
+
+    if (permissionsError) {
+      throw createError({
+        statusCode: permissionsError.code,
+        statusMessage: permissionsError?.message,
+      });
+    }
+
+    return permissions;
+  }
+
+  //roles
+  async getRoles(): Promise<any[]> {
+    const { data, error } = await this.client
+      .from("roles")
+      .select("*")
+      .order("access_level", { ascending: true });
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching roles",
+      });
+    }
+
+    return data;
+  }
+  async getRolePermissions(roleId: number): Promise<any[]> {
+    const { data, error } = await this.client
+      .from("role_permissions")
+      .select("permissions(id, name, action, resource)")
+      .eq("role_id", roleId);
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching role permissions",
+      });
+    }
+
+    return data.map((item: any) => item.permissions);
+  }
+  async addRolePermission(roleId: number, permissionId: number): Promise<void> {
+    const { error } = await this.client
+      .from("role_permissions")
+      .insert({ role_id: roleId, permission_id: permissionId });
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error adding role permission",
+      });
+    }
+  }
+  async removeRolePermission(
+    roleId: number,
+    permissionId: number
+  ): Promise<void> {
+    const { error } = await this.client
+      .from("role_permissions")
+      .delete()
+      .eq("role_id", roleId)
+      .eq("permission_id", permissionId);
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error removing role permission",
+      });
+    }
+  }
+  async getUserPermissions(userId: string): Promise<string[]> {
+    const { data: roleData, error: roleError } = await this.client
+      .from("user_roles")
+      .select("role_id")
+      .eq("user_id", userId)
+      .single();
+
+    if (roleError) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching user role",
+      });
+    }
+
+    const roleId = roleData.role_id;
+
+    const { data: rolePermissions, error: permissionsError } = await this.client
+      .from("role_permissions")
+      .select("permissions(name)")
+      .eq("role_id", roleId);
+
+    if (permissionsError) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching role permissions",
+      });
+    }
+
+    const { data: userPermissions, error: userPermissionsError } =
+      await this.client
+        .from("user_permissions")
+        .select("permissions(name)")
+        .eq("user_id", userId);
+
+    if (userPermissionsError) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching user permissions",
+      });
+    }
+
+    const allPermissions = [
+      ...rolePermissions.map((rp: any) => rp.permissions.name),
+      ...userPermissions.map((up: any) => up.permissions.name),
+    ];
+
+    return [...new Set(allPermissions)];
+  }
+  async getUserRole(userId: string): Promise<any> {
+    const { data, error } = await this.client
+      .from("user_roles")
+      .select("roles(id, name, access_level)")
+      .eq("user_id", userId)
+      .single();
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error fetching user role",
+      });
+    }
+
+    return data.roles;
+  }
+
+  //newsletter
+  async addNewsletterSubscriber(email: string): Promise<any> {
+    try {
+      const { data, error } = await this.client
+        .from("newsletter_subscribers")
+        .upsert({ email })
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === "23505") {
+          throw createError({
+            statusCode: 409,
+            statusMessage: "Email already subscribed",
+          });
+        }
+        throw createError({
+          statusCode: 400,
+          statusMessage: error.message,
+        });
+      }
+
+      return { success: true, data };
+    } catch (error: any) {
+      if (error.statusCode && error.statusMessage) {
+        throw error;
+      }
+
+      throw createError({
+        statusCode: 500,
+        statusMessage: "An unexpected error occurred",
+      });
+    }
+  }
+
+  async deleteNewsletterSubscriber(email: string): Promise<any> {
+    const { data, error } = await this.client
+      .from("newsletter_subscribers")
+      .delete()
+      .eq("email", email);
+
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: error.message,
+      });
+    }
+
+    return data;
+  }
+
+  async getNewsletterSubscribers(): Promise<any> {
+    const { data, error } = await this.client
+      .from("newsletter_subscribers")
+      .select("id, email, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error)
+      throw createError({ statusCode: 400, statusMessage: error.message });
+    return { success: true, data };
   }
 }
