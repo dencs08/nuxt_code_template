@@ -142,14 +142,21 @@ export class SupabaseAuthService implements IAuthenticationService {
     try {
       const { data: user } = (await this.client
         .from("users")
-        .select("*, user_roles!inner(role)")
+        .select("*, user_roles!inner(role_id)")
         .eq("id", userId)
         .single()) as { data: UserAuthPublicSession | null };
 
       if (user) {
-        user.role = user.user_roles.role;
+        let roleName = (await this.client
+          .from("roles")
+          .select("name")
+          .eq("id", user.user_roles.role_id)
+          .single()) as any;
+        user.role = roleName.data.name;
         delete user.user_roles;
       }
+
+      console.log(user);
 
       return user;
     } catch (error) {
