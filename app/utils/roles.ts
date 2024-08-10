@@ -1,5 +1,5 @@
 import { ref, readonly } from "vue";
-//TODO create a config file for roles and permissions
+//TODO (permissions are now managed in the database, perhaps we should change how we handle roles to be the same as the permissions (roles table and then in the user_roles assing correct id)), then role would have assigned permissions and we could check if user has permission to access the endpoint + possibility to override the role permisssion for each user.
 //TODO change every piece of code which uses role name to use role value, role labels or names should only be used to display frontend
 export type Role = {
   label: string;
@@ -9,11 +9,12 @@ export type Role = {
 
 export const validRoles: Role[] = [
   { label: "Guest", value: "guest", level: 0 },
-  { label: "Subscriber", value: "subscriber", level: 1 },
-  { label: "User", value: "user", level: 2 },
-  { label: "Admin", value: "admin", level: 3 },
-  { label: "SuperAdmin", value: "superadmin", level: 4 },
-  // add other roles here
+  { label: "EndUser", value: "enduser", level: 5 },
+  { label: "Subscriber", value: "subscriber", level: 10 },
+  { label: "Editor", value: "editor", level: 25 },
+  { label: "Manager", value: "manager", level: 50 },
+  { label: "Admin", value: "admin", level: 75 },
+  { label: "SuperAdmin", value: "superadmin", level: 100 },
 ];
 
 export function useRoles() {
@@ -27,14 +28,16 @@ export function useRoles() {
 
   const getRoleSeverity = (roleValue: string) => {
     switch (roleValue) {
+      case "enduser":
+        return "";
       case "guest":
-        return "info";
+        return "contrast";
       case "subscriber":
         return "info";
-      case "user":
+      case "manager":
         return "success";
       case "admin":
-        return "warning";
+        return "warn";
       case "superadmin":
         return "danger";
       default:
