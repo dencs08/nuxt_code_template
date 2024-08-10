@@ -20,6 +20,12 @@ export async function getUserSession(event: any) {
     });
   }
 
+  // Fetch the user's role if it's not already included
+  if (!userSession.role) {
+    const userData = await client.getUser(userSession.id);
+    userSession.role = userData.role;
+  }
+
   return userSession;
 }
 
@@ -42,7 +48,7 @@ export async function checkUserRole(event: any, role: string) {
   ) {
     throw createError({
       statusCode: 403,
-      statusMessage: `Unauthorized access`,
+      statusMessage: "Unauthorized access",
     });
   }
 }
