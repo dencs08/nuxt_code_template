@@ -27,6 +27,18 @@ export const useUsersStore = defineStore({
         this.loading = false;
       }
     },
+    async fetchUser(userId) {
+      this.loading = true;
+
+      try {
+        const data = await $fetch(`/api/users/${userId}`, { method: "GET" });
+        return data.response;
+      } catch (error) {
+        // throw new CustomError(error.message, error);
+      } finally {
+        this.loading = false;
+      }
+    },
     async addUser(req) {
       this.loading = true;
       try {
