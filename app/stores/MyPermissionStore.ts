@@ -29,7 +29,6 @@ export const useMyPermissionStore = defineStore({
     },
     setPermissions(permissions: string[]) {
       this.permissions = permissions;
-      console.log("Permissions set", permissions);
     },
     clearPermissions() {
       this.permissions = [];
