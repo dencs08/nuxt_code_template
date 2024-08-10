@@ -6,7 +6,7 @@ export interface UserAuthPublicSession {
   phone: string;
   photo: string;
   role?: string;
-  user_roles?: { role: string };
+  user_roles?: { role_id: number; roles: { name: string } };
   provider?: string;
   metadata?: any;
 }
