@@ -11,6 +11,13 @@ export interface UserAuthPublicSession {
   metadata?: any;
 }
 
+export type Role = {
+  id?: number;
+  value: string;
+  name: string;
+  access_level: number;
+};
+
 export type Severity = "success" | "info" | "warn" | "error";
 
 export type SessionScope = "global" | "local" | "others";
