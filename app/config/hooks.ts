@@ -17,11 +17,11 @@ export default {
 
         // Apply global settings as a base
         if (globalAuth) page.meta.auth = true;
-        if (globalAccess) page.meta.access = globalAccess;
+        if (globalAccess !== undefined) page.meta.access = globalAccess;
 
         // Automatically determine and possibly override access based on the path
         const accessLevel = determineAccessLevelFromPath(page.path);
-        if (accessLevel) {
+        if (accessLevel !== undefined) {
           page.meta.access = accessLevel;
         }
 
@@ -29,7 +29,7 @@ export default {
         const settings = routeMatch.settings;
         if (settings) {
           if (settings.auth !== undefined) page.meta.auth = settings.auth;
-          if (settings.access) page.meta.access = settings.access;
+          if (settings.access !== undefined) page.meta.access = settings.access;
         }
       }
     });
@@ -44,20 +44,18 @@ export default {
   },
 };
 
-function determineAccessLevelFromPath(path: string): string | undefined {
+function determineAccessLevelFromPath(path: string): number | undefined {
   const pathSegments = path.split("/").filter(Boolean);
   const reversedSegments = pathSegments.reverse();
-  let matchedRole = undefined;
 
   for (const segment of reversedSegments) {
     const roleMatch = validRoles.find(
       (role) => segment.toLowerCase() === role.value
     );
     if (roleMatch) {
-      matchedRole = roleMatch.value;
-      break;
+      return roleMatch.access_level;
     }
   }
 
-  return matchedRole;
+  return undefined;
 }

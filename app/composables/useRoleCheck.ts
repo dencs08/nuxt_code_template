@@ -1,50 +1,34 @@
-import { type Role, validRoles } from "@/utils/roles";
+import { validRoles } from "@/utils/roles";
+import type { Role } from "@/utils/types";
 import mainConfig from "@/config/common/main";
 
 export function useRoleCheck(
-  defaultRoleCheck = mainConfig.GLOBAL_ROUTE_ACCESS
+  defaultAccessLevel: number = mainConfig.GLOBAL_ROUTE_ACCESS
 ) {
-  const { roles } = useRoles();
   const userStore = useUserStore();
 
-  // console.log("role", userStore.userRole);
-  // const role = userStore.userRole || defaultRoleCheck;
-
-  const userRole = computed(() =>
-    roles.value.find((r) => r.value === userStore.userRole)
-  );
-
-  const checkAccess = (requiredRoleValue: Role["value"]): boolean => {
-    const userRoleLevel = validRoles.find(
-      (r) => r.value === (userStore.userRole || defaultRoleCheck)
-    )?.level;
-    const requiredRole = validRoles.find((r) => r.value === requiredRoleValue);
-    return requiredRole && userRoleLevel >= requiredRole.level;
+  const checkAccess = (requiredAccessLevel: number): boolean => {
+    const userAccessLevel = getUserAccessLevel();
+    return userAccessLevel >= requiredAccessLevel;
   };
 
-  const hasAccess = (roleValue: Role["value"] = defaultRoleCheck): boolean => {
-    return checkAccess(roleValue);
+  const hasAccess = (accessLevel: number = defaultAccessLevel): boolean => {
+    return checkAccess(accessLevel);
   };
 
-  const accessByRole = (
-    minimalAccessRoleValue: Role["value"]
-  ): Record<Role["value"], boolean> => {
-    const accessMap: Record<Role["value"], boolean> = {} as Record<
-      Role["value"],
-      boolean
-    >;
-    validRoles.forEach((role) => {
-      const minimalAccessRoleLevel = validRoles.find(
-        (r) => r.value === minimalAccessRoleValue
-      )?.level;
-      accessMap[role.value] = role.level >= minimalAccessRoleLevel;
-    });
-    return accessMap;
+  const getUserAccessLevel = (): number => {
+    const userRole = userStore.userRole;
+    return getAccessLevelByRole(userRole);
   };
 
   return {
     hasAccess,
     checkAccess,
-    accessByRole,
+    getUserAccessLevel,
   };
+}
+
+export function getAccessLevelByRole(roleValue: string): number {
+  const role = validRoles.find((r) => r.value === roleValue);
+  return role ? role.access_level : 0;
 }
