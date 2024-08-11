@@ -23,7 +23,7 @@ export class PrismaClient implements BackendClient {
   }
 
   //auth
-  //TODO: Add a way to retrieve a user from current session (laravel passport)
+  //TODO: Add a way to retrieve a user from current session SIDEBASE/LARAVEL
   async getCurrentUser(userId?: string): Promise<any> {
     if (!userId) {
       throw new Error("User ID is required for PrismaClient");
@@ -44,4 +44,16 @@ export class PrismaClient implements BackendClient {
   async deleteMe(): Promise<void> {}
   async updateMe(data: any): Promise<any> {}
   async putMe(data: any): Promise<any> {}
+  async updateMeEmail(body: any): Promise<any> {}
+  async updateMePhoto(userId: any, photoUrl: any): Promise<any> {}
+  async getMePermissions(): Promise<any> {}
+
+  //storage
+  async uploadFile() {}
+  async deleteFile() {}
+
+  //permissions
+  async getPermissions(userId: string): Promise<any> {}
+  async getAvailablePermissions(): Promise<any> {}
+  async updatePermissions(userId: string, permissions: any): Promise<any> {}
 }
