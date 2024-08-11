@@ -14,4 +14,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: "An error occurred while fetching the users",
     });
   }
-}, "guest");
+}, 10);

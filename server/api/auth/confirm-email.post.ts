@@ -14,4 +14,4 @@ export default defineWrappedResponseHandler(async (event) => {
       response: err.message,
     };
   }
-}, "guest");
+}, 0);

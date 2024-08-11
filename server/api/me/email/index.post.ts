@@ -19,4 +19,4 @@ export default defineWrappedResponseHandler(async (event) => {
         "An error occurred during the deletion process " + err.message,
     });
   }
-}, "guest");
+}, 0);

@@ -44,4 +44,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: "An unexpected error occurred",
     });
   }
-}, "guest");
+}, 0);

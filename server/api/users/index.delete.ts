@@ -14,4 +14,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: err.message,
     });
   }
-}, "superadmin");
+}, 100);

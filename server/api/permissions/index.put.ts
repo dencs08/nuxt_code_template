@@ -37,4 +37,4 @@ export default defineWrappedResponseHandler(async (event) => {
       message: error.message,
     });
   }
-}, "admin");
+}, 75);

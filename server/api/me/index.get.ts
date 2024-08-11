@@ -3,11 +3,10 @@ import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
 export default defineWrappedResponseHandler(async (event) => {
   const client = await getBackendClient(event);
-  const userSession = await client.getCurrentUser();
-
-  await checkUserRole(event, "user");
 
   try {
+    await checkUserRole(event, 10);
+    const userSession = await client.getCurrentUser();
     return { response: "Account fetched", account: userSession };
   } catch (err: any) {
     throw createError({
@@ -16,4 +15,4 @@ export default defineWrappedResponseHandler(async (event) => {
         "An error occurred during the fetching process " + err.message,
     });
   }
-}, "guest");
+}, 0);
