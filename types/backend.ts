@@ -45,6 +45,7 @@ export interface BackendClient {
   removeRolePermission(roleId: number, permissionId: number): Promise<any>;
   getUserPermissions(userId: string): Promise<any>;
   getUserRole(userId: string): Promise<any>;
+  updateRole(roleId: number, accessLevel: number): Promise<void>;
 
   //newsletter
   addNewsletterSubscriber(email: string): Promise<any>;
