@@ -1,3 +1,4 @@
+import { checkUserRole } from "~~/server/utils/auth-check";
 import type { BackendClient } from "../types/backend";
 import { validRoles } from "@/utils/roles";
 
@@ -63,10 +64,11 @@ export class SupabaseClient implements BackendClient {
     }
 
     if (error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: error.message,
-      });
+      // throw createError({
+      //   statusCode: 500,
+      //   statusMessage: error.message,
+      // });
+      throw error;
     }
 
     return user;
@@ -228,7 +230,7 @@ export class SupabaseClient implements BackendClient {
 
   //utils
   async assignRole(event: any, body: { id: string; role: string }) {
-    await checkUserRole(event, "admin");
+    await checkUserRole(event, 75);
 
     const userRole = await getUserRole(event);
     if (!validRoles.map((role) => role.value).includes(body.role)) {
@@ -734,10 +736,11 @@ export class SupabaseClient implements BackendClient {
       .single();
 
     if (roleError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error fetching user role",
-      });
+      // throw createError({
+      //   statusCode: 500,
+      //   statusMessage: "Error fetching user role",
+      // });
+      throw roleError;
     }
 
     const roleId = roleData.role_id;
@@ -748,10 +751,11 @@ export class SupabaseClient implements BackendClient {
       .eq("role_id", roleId);
 
     if (permissionsError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error fetching role permissions",
-      });
+      // throw createError({
+      //   statusCode: 500,
+      //   statusMessage: "Error fetching role permissions",
+      // });
+      throw permissionsError;
     }
 
     const { data: userPermissions, error: userPermissionsError } =
@@ -761,10 +765,11 @@ export class SupabaseClient implements BackendClient {
         .eq("user_id", userId);
 
     if (userPermissionsError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error fetching user permissions",
-      });
+      // throw createError({
+      //   statusCode: 500,
+      //   statusMessage: "Error fetching user permissions",
+      // });
+      throw userPermissionsError;
     }
 
     const allPermissions = [
@@ -789,6 +794,20 @@ export class SupabaseClient implements BackendClient {
     }
 
     return data.roles;
+  }
+  async updateRole(roleId: number, accessLevel: number): Promise<any> {
+    const { data, error } = await this.client
+      .from("roles")
+      .update({ access_level: accessLevel })
+      .eq("id", roleId);
+
+    if (error) {
+      throw createError({
+        statusCode: error.code,
+        statusMessage: error.message,
+      });
+    }
+    return { success: true };
   }
 
   //newsletter
