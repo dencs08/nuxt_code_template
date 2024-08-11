@@ -161,6 +161,13 @@ export const routes = [
     settings: { auth: true },
   },
   {
+    name: "dashboard-admin-roles",
+    newName: "dash-admin-roles",
+    path: "/dashboard/admin/roles",
+    file: "@/pages/dashboard/admin/roles/index.vue",
+    settings: { auth: true },
+  },
+  {
     name: "dashboard-account",
     newName: "dash-account",
     path: "/dashboard/account",
