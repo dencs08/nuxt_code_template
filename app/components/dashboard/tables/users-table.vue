@@ -125,7 +125,7 @@
     <Column style="width: 5%; min-width: 1rem" bodyStyle="text-align:center;">
       <template #body="slotProps">
         <div class="flex flex-row gap-1">
-          <div>
+          <div v-if="isSuperAdmin">
             <Button
               icon="pi pi-cog"
               rounded
@@ -159,7 +159,8 @@ const { getRoleSeverity } = useRoles();
 const { hasAccess } = useRoleCheck();
 const localePath = useLocalePath();
 
-const isAdmin = hasAccess("admin");
+const isAdmin = hasAccess(75);
+const isSuperAdmin = hasAccess(100);
 const usersStore = useUsersStore();
 
 const dt = ref();

@@ -113,7 +113,7 @@ const { addToast } = useToastService();
 
 const localDialogVisible = ref(props.isDialogVisible);
 const isCheckboxDisabled = ref(true);
-const isAdmin = hasAccess("admin");
+const isAdmin = hasAccess(75);
 
 const permissionStore = usePermissionStore();
 
