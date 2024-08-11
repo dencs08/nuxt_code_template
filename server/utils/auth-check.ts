@@ -30,25 +30,15 @@ export async function getUserSession(event: any) {
 }
 
 // Usage
-// checkUserRole(event, 'admin');
-export async function checkUserRole(event: any, role: string) {
+// checkUserRole(event, 10);
+export async function checkUserRole(event: any, requiredAccessLevel: number) {
   const user = await getUserSession(event);
+  const userAccessLevel = getAccessLevelByRole(user.role);
 
-  const userRoleLevel = validRoles.find(
-    (validRole) => validRole.value === user.role
-  )?.level;
-  const requiredRoleLevel = validRoles.find(
-    (validRole) => validRole.value === role
-  )?.level;
-
-  if (
-    !Number.isInteger(userRoleLevel) ||
-    !Number.isInteger(requiredRoleLevel) ||
-    userRoleLevel! < requiredRoleLevel!
-  ) {
+  if (userAccessLevel < requiredAccessLevel) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Unauthorized access",
+      statusMessage: `Unauthorized access`,
     });
   }
 }
@@ -58,4 +48,9 @@ export async function checkUserRole(event: any, role: string) {
 export async function getUserRole(event: any) {
   const user = await getUserSession(event);
   return user.role;
+}
+
+export function getAccessLevelByRole(roleValue: string): number {
+  const role = validRoles.find((r) => r.value === roleValue);
+  return role ? role.access_level : 0;
 }
