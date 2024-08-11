@@ -122,7 +122,7 @@ export const useUsersStore = defineStore({
       this.loading = true;
       try {
         this.updateLocalUsers(index, req);
-        const { data } = await $fetch("/api/role", {
+        const { data } = await $fetch(`/api/users/role/${req.id}`, {
           method: "POST",
           body: {
             id: req.id,
