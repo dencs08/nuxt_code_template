@@ -46,6 +46,11 @@ export const dashboardMenu = [
         icon: "pi pi-users",
         route: "dash-admin-users",
       },
+      {
+        label: "Roles",
+        icon: "pi pi-key",
+        route: "dashboard-admin-roles",
+      },
     ],
   },
   // ... other dashboard menu items
