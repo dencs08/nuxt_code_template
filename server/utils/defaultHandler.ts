@@ -1,14 +1,14 @@
 import type { EventHandler, EventHandlerRequest, H3Event } from "h3";
 import { getBackendClient } from "../../lib/backend";
+import { checkUserRole } from "./auth-check";
 
 type ExtendedEventHandler<T extends EventHandlerRequest, D> = (
   event: H3Event<T>,
   userSession: any
 ) => Promise<D>;
-//TODO add a way of controling the what user role is needed in global config for each endpoint api
 export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   handler: ExtendedEventHandler<T, D>,
-  minRole?: string
+  minRole?: number
 ): EventHandler<T, D> =>
   defineEventHandler<T>(async (event) => {
     try {
