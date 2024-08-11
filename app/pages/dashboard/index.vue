@@ -6,6 +6,6 @@ definePageMeta({
   layout: "dashboard",
 });
 
-// const localePath = useLocalePath();
-// navigateTo(localePath({ name: "dash-home" }));
+const localePath = useLocalePath();
+navigateTo(localePath({ name: "dash-home" }));
 </script>
