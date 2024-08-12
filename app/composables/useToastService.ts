@@ -1,5 +1,5 @@
 import { useToast } from "primevue/usetoast";
-import { type Severity } from "../utils/types";
+import { type Severity } from "@/utils/types";
 
 export function useToastService() {
     const toast = useToast();

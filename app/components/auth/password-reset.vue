@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { emailSchema } from "~/utils/schemas";
+import { emailSchema } from "@/utils/schemas";
 import { type EmailForm } from "@/utils/types/email";
 
 const localePath = useLocalePath();

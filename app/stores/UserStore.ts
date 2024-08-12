@@ -1,5 +1,5 @@
 const { CustomError } = useCustomError();
-import type { UserAuthPublicSession as User } from "../utils/types";
+import type { UserAuthPublicSession as User } from "@/utils/types";
 
 export const useUserStore = defineStore({
   id: "userStore",

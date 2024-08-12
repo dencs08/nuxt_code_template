@@ -1,5 +1,5 @@
 const { CustomError } = useCustomError();
-import type { Permission, GroupedPermission } from "../utils/types/permissions";
+import type { Permission, GroupedPermission } from "@/utils/types/permissions";
 
 export const usePermissionStore = defineStore({
   id: "permissionStore",
