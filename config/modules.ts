@@ -14,7 +14,7 @@ export default [
   "@formkit/nuxt",
   "@pinia/nuxt",
   "@vueuse/nuxt",
-  "@prisma/nuxt",
+  "@prisma/nuxt", //uncomment when using database other than supabase,
   // "nuxtjs/apollo", //uncomment when using wordpress backend with graphql
 
   //auth

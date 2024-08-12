@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import kswitchConfig from "~/config/common/kswitch";
+import kswitchConfig from "~~/config/common/kswitch";
 const kswitch = ref(false);
 const checkKSwitch = async () => {
   try {

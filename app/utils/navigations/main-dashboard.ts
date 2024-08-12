@@ -1,7 +1,7 @@
 import type { RoutesNamesList } from "@typed-router/__routes";
 import { validRoles } from "../roles";
-import { routes } from "@/config/common/routes";
-import { dashboardMenu } from "@/config/common/menus";
+import { routes } from "~~/config/common/routes";
+import { dashboardMenu } from "~~/config/common/menus";
 const { hasAccess: originalHasAccess } = useRoleCheck();
 const localePath = useLocalePath();
 

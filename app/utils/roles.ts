@@ -1,4 +1,3 @@
-import { getBackendClient } from "~~/lib/backend";
 let cachedRoles: any[] | null = null;
 
 export const validRoles: Role[] = [

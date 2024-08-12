@@ -1,32 +1,32 @@
 // Core
-import runtimeConfig from "./app/config/runtime";
-import modules from "./app/config/modules";
-import components from "./app/config/components";
-import hooks from "./app/config/hooks";
+import runtimeConfig from "./config/runtime";
+import modules from "./config/modules";
+import components from "./config/components";
+import hooks from "./config/hooks";
 
 // Development
-import storybook from "./app/config/storybook";
-import linkChecker from "./app/config/linkChecker";
-import device from "./app/config/device";
+import storybook from "./config/storybook";
+import linkChecker from "./config/linkChecker";
+import device from "./config/device";
 
 // SEO
-import robots from "./app/config/robots";
-import ogImage from "./app/config/ogImage";
+import robots from "./config/robots";
+import ogImage from "./config/ogImage";
 
 // UI/UX
-import primevue from "./app/config/primevue";
-import fonts from "./app/config/fonts";
-import pwa from "./app/config/pwa";
+import primevue from "./config/primevue";
+import fonts from "./config/fonts";
+import pwa from "./config/pwa";
 
 // Other imports
-import supabase from "./app/config/supabase";
-import i18n from "./app/config/i18n";
-import content from "./app/config/content";
-import image from "./app/config/image";
-import webVitals from "./app/config/webVitals";
-import site from "./app/config/site";
-import routeRules from "./app/config/routeRules";
-import turnstile from "./app/config/turnstile";
+import supabase from "./config/supabase";
+import i18n from "./config/i18n";
+import content from "./config/content";
+import image from "./config/image";
+import webVitals from "./config/webVitals";
+import site from "./config/site";
+import routeRules from "./config/routeRules";
+import turnstile from "./config/turnstile";
 // import auth from "./app/config/auth";
 // import apollo from "./app/config/apollo"
 

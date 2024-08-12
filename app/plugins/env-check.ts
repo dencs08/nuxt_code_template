@@ -1,5 +1,5 @@
 // /plugins/env-check.js
-import mainConfig from "@/config/common/main";
+import mainConfig from "~~/config/common/main";
 
 export default defineNuxtPlugin(() => {
   const requiredEnvVars = [

@@ -1,5 +1,5 @@
 // composables/useBusiness.ts
-import publicConfig from "@/config/common/business";
+import publicConfig from "~~/config/common/business";
 
 export const useBusiness = () => {
   const name = ref(publicConfig.businessName);

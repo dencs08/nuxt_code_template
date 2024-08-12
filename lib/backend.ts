@@ -1,4 +1,4 @@
-import mainConfig from "~/config/common/main";
+import mainConfig from "~~/config/common/main";
 import type { BackendClient } from "../types/backend";
 import { SupabaseClient } from "./supabaseClient";
 import { PrismaClient } from "./prismaClient";

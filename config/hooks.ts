@@ -1,5 +1,5 @@
-import { routes } from "../config/common/routes";
-import { validRoles } from "../utils/roles";
+import { routes } from "./common/routes";
+import { validRoles } from "../app/utils/roles";
 import mainConfig from "./common/main";
 
 const globalAuth = mainConfig.GLOBAL_ROUTE_AUTH === "true";

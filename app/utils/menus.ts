@@ -1,7 +1,7 @@
 import { profileNavigation } from "./navigations/profileNavigation";
 import { settingsNavigation } from "./navigations/settingsNavigation";
 import { mainDashboardNavigation } from "./navigations/main-dashboard";
-import { navbar, social, legal } from "@/config/common/menus";
+import { navbar, social, legal } from "~~/config/common/menus";
 import type { RoutesNamesList } from "@typed-router/__routes";
 
 export function useNavigation() {

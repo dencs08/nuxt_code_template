@@ -1,4 +1,4 @@
-import redirects from "@/config/common/redirects";
+import redirects from "~~/config/common/redirects";
 
 export const useRedirections = () => {
   const passwordChangePage = () => redirects.onPasswordChange();
