@@ -49,7 +49,7 @@ export const dashboardMenu = [
       {
         label: "Roles",
         icon: "pi pi-key",
-        route: "dashboard-admin-roles",
+        route: "dash-admin-roles",
       },
     ],
   },
