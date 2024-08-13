@@ -13,6 +13,7 @@ export const useRolesStore = defineStore("roles", {
       state.roles.find((role) => role.id === id),
     getRoleByName: (state) => (name: string) =>
       state.roles.find((role) => role.name === name),
+    getRoles: (state) => state.roles,
   },
 
   actions: {
@@ -73,6 +74,9 @@ export const useRolesStore = defineStore("roles", {
         default:
           return null;
       }
+    },
+    async clearRoles() {
+      this.roles = [];
     },
     // async createRole(name: string, accessLevel: number) {
     //   this.loading = true;
