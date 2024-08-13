@@ -8,7 +8,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!userStore.user && authRequired != false) {
     await userStore.fetchUser();
   }
-  if (!rolesStore.roles.value) {
+
+  if (!rolesStore.roles.value && authRequired != false) {
     await rolesStore.fetchRoles();
   }
 
