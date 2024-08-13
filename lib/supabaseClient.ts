@@ -677,8 +677,8 @@ export class SupabaseClient implements BackendClient {
 
     if (error) {
       throw createError({
-        statusCode: 500,
-        statusMessage: "Error fetching roles",
+        statusCode: error.code,
+        statusMessage: error.message,
       });
     }
 
