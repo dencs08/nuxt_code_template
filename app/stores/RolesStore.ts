@@ -24,7 +24,7 @@ export const useRolesStore = defineStore("roles", {
         if (data) {
           //@ts-ignore //not sure why its not recognizing the response property on data...
           this.roles = data.response;
-          console.log("Roles fetched:", this.roles);
+          // console.log("Roles fetched:", this.roles);
         }
       } catch (error) {
         console.error("Error fetching roles:", error);

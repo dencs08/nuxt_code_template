@@ -156,7 +156,7 @@ export class SupabaseAuthService implements IAuthenticationService {
         delete user.user_roles;
       }
 
-      console.log(user);
+      // console.log(user);
 
       return user;
     } catch (error) {
