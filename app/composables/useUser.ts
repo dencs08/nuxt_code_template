@@ -1,4 +1,4 @@
-import { type UserAuthPublicSession } from "@/utils/types";
+import { type UserAuthPublicSession } from "~~/types/user";
 
 //TODO check if it still works after the refactor to own service wrapper
 export function useUser() {

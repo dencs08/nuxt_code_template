@@ -1,5 +1,5 @@
+import type { Role } from "~~/types/roles";
 import { validRoles } from "@/utils/roles";
-import type { Role } from "@/utils/types";
 import mainConfig from "~~/config/common/main";
 
 export function useRoleCheck(

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // TODO check if it works after adding zod schema and Form
-import { passwordConfirmSchema } from "@/utils/schemas";
-import { type PasswordConfirm } from "@/utils/types/passwordConfirm";
+import { passwordConfirmSchema } from "~~/utils/schemas";
+import { type PasswordConfirm } from "~~/types/passwordConfirm";
 
 const localePath = useLocalePath();
 const { updatePassword } = useAuthentication();

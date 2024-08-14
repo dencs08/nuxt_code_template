@@ -95,8 +95,8 @@
 </template>
 
 <script setup lang="ts">
-import { loginSchema } from "@/utils/schemas";
-import { type LoginForm } from "@/utils/types/login";
+import { loginSchema } from "~~/utils/schemas";
+import { type LoginForm } from "~~/types/login";
 
 const localePath = useLocalePath();
 const { signIn } = useAuthentication();

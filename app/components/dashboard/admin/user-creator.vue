@@ -88,8 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import { userSchema } from "@/utils/schemas";
-import { type UserForm } from "@/utils/types/user";
+import { userSchema } from "~~/utils/schemas";
+import { type UserForm } from "~~/types/user";
 
 const { handleSubmit } = useSubmit();
 const { roles } = useRoles();

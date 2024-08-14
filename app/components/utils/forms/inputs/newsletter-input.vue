@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { emailSchema } from "@/utils/schemas";
-import { type EmailForm } from "@/utils/types/email";
+import { emailSchema } from "~~/utils/schemas";
+import { type EmailForm } from "~~/types/email";
 
 const { addToast } = useToastService();
 

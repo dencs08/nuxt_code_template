@@ -1,6 +1,6 @@
 import { getBackendClient } from "~~/lib/backend";
 import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
-import { UserAuthPublicSession } from "@/utils/types";
+import { type UserAuthPublicSession } from "~~/types/user";
 
 export default defineWrappedResponseHandler(async (event) => {
   const client = await getBackendClient(event, true);

@@ -1,4 +1,4 @@
-import { type SessionScope } from "@/utils/types";
+import { type SessionScope } from "~~/types/common";
 
 export type GenericOAuthProvider = any;
 export type GenericOtpType = any;

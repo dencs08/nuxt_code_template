@@ -1,4 +1,8 @@
-// utils/types.ts
+import { z } from "zod";
+import { userSchema } from "~~/utils/schemas";
+
+export type UserForm = z.infer<typeof userSchema>;
+
 export interface UserAuthPublicSession {
   id: string;
   name: string;
@@ -10,14 +14,3 @@ export interface UserAuthPublicSession {
   provider?: string;
   metadata?: any;
 }
-
-export type Role = {
-  id?: number;
-  value: string;
-  name: string;
-  access_level: number;
-};
-
-export type Severity = "success" | "info" | "warn" | "error";
-
-export type SessionScope = "global" | "local" | "others";

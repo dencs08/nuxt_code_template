@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Role } from "@/utils/types";
+import type { Role } from "~~/types/roles";
 
 export const useRolesStore = defineStore("roles", {
   state: () => ({

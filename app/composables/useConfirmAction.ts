@@ -1,4 +1,4 @@
-import { type Severity } from "@/utils/types";
+import { type Severity } from "~~/types/common";
 
 export enum ConfirmationGroup {
   Changes = "changes",

@@ -1,3 +1,4 @@
+import type { Role } from "~~/types/roles";
 let cachedRoles: any[] | null = null;
 
 export const validRoles: Role[] = [
