@@ -30,7 +30,7 @@ const handleSubmit = async (email: EmailForm) => {
       body: email,
     });
 
-    if (response.response.success) {
+    if (response.success) {
       addToast(
         "success",
         "Success",
@@ -38,7 +38,7 @@ const handleSubmit = async (email: EmailForm) => {
       );
     }
   } catch (error: any) {
-    if (error.response?.status === 409) {
+    if (error?.status === 409) {
       addToast(
         "error",
         "Error",
