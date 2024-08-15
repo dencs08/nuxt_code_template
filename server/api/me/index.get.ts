@@ -5,7 +5,6 @@ export default defineWrappedResponseHandler(async (event) => {
   const client = await getBackendClient(event);
 
   try {
-    await checkUserRole(event, 10);
     const userSession = await client.getCurrentUser();
     return { response: "Account fetched", account: userSession };
   } catch (err: any) {
