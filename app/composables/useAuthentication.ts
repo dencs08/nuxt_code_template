@@ -1,9 +1,9 @@
-import { type SessionScope } from "~~/types/common";
+import { type SessionScope } from "../../types/common";
 import type {
   GenericOAuthProvider,
   GenericOtpType,
 } from "@/services/auth/AuthServiceInterface";
-import { type UserAuthPublicSession } from "~~/types/user";
+import { type UserAuthPublicSession } from "../../types/user";
 
 export function useAuthentication() {
   const nuxtApp = useNuxtApp();
@@ -100,17 +100,10 @@ export function useAuthentication() {
     await nuxtApp.runWithContext(async () => {
       user = await $authProvider.getUser();
     });
-    // console.log("getUser", user);
-
     return user;
   };
 
-  const getSession = async () => {
-    // await initializeAuthService();
-    // const response = await authService.getSession();
-    // handleRequestError(response);
-    // return response.data;
-  };
+  const getSession = async () => {};
 
   const verifyOtp = async (tokenHash: string, type: GenericOtpType) => {
     const result = await $authProvider.verifyOtp(tokenHash, type);

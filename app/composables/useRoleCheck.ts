@@ -1,6 +1,6 @@
-import type { Role } from "~~/types/roles";
+import type { Role } from "../../types/roles";
 import { validRoles } from "@/utils/roles";
-import mainConfig from "~~/config/common/main";
+import mainConfig from "../../config/common/main";
 
 export function useRoleCheck(
   defaultAccessLevel: number = mainConfig.GLOBAL_ROUTE_ACCESS

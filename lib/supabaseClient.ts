@@ -1,6 +1,7 @@
-import { checkUserRole } from "~~/server/utils/auth-check";
+import { checkUserRole } from "../server/utils/auth-check";
 import type { BackendClient } from "../types/backend";
 import { validRoles } from "@/utils/roles";
+import type { UserAuthPublicSession } from "../types/user";
 
 export class SupabaseClient implements BackendClient {
   constructor(private client: any) {}
@@ -230,9 +231,10 @@ export class SupabaseClient implements BackendClient {
 
   //utils
   async assignRole(event: any, body: { id: string; role: string }) {
-    await checkUserRole(event, 75);
+    // const userRole = await getUserRole(event);
+    const user = await this.getMe();
+    const userRole = user.role;
 
-    const userRole = await getUserRole(event);
     if (!validRoles.map((role) => role.value).includes(body.role)) {
       throw createError({
         statusCode: 500,
@@ -463,36 +465,43 @@ export class SupabaseClient implements BackendClient {
 
     return { success: true };
   }
-  async getMePermissions(): Promise<any> {
-    let { data: userPermissions, error: userPermissionsError } =
-      await this.client.from("user_permissions").select("*");
+  async getMePermissions(userId: string): Promise<any> {
+    try {
+      let { data: userPermissions, error: userPermissionsError } =
+        await this.client
+          .from("user_permissions")
+          .select("*")
+          .eq("user_id", userId);
 
-    if (userPermissionsError) {
-      throw createError({
-        statusCode: userPermissionsError.code,
-        statusMessage: userPermissionsError?.message,
-      });
+      if (userPermissionsError) {
+        throw createError({
+          statusCode: userPermissionsError.code,
+          statusMessage: userPermissionsError?.message,
+        });
+      }
+
+      const permissionIds = userPermissions.map(
+        (perm: any) => perm.permission_id
+      );
+
+      let { data: permissions, error: permissionsError } = await this.client
+        .from("permissions")
+        .select("name, resource, action")
+        .in("id", permissionIds);
+
+      if (permissionsError) {
+        throw createError({
+          statusCode: permissionsError.code,
+          statusMessage: permissionsError?.message,
+        });
+      }
+
+      return permissions || [];
+    } catch (error) {
+      console.error("Unexpected error in getMePermissions:", error);
+      throw error;
     }
-
-    const permissionIds = userPermissions.map(
-      (perm: any) => perm.permission_id
-    );
-
-    let { data: permissions, error: permissionsError } = await this.client
-      .from("permissions")
-      .select("name, resource, action")
-      .in("id", permissionIds);
-
-    if (permissionsError) {
-      throw createError({
-        statusCode: permissionsError.code,
-        statusMessage: permissionsError?.message,
-      });
-    }
-
-    return permissions;
   }
-
   //storage
   async uploadFile(
     bucketName: string,

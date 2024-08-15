@@ -1,4 +1,4 @@
-import { type UserAuthPublicSession } from "~~/types/user";
+import { type UserAuthPublicSession } from "../../types/user";
 
 import { ref, onMounted } from "vue";
 const useStateUser = () => {
