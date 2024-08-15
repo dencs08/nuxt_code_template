@@ -109,8 +109,8 @@ async function handleForm(data: LoginForm) {
   await handleSubmit(
     signIn,
     { email: data.email, password: data.password, options: { captchaToken } },
-    "Redirecting to your dashboard panel",
-    "/dashboard",
+    "Redirecting to your account...",
+    localePath("/main"),
     true
   );
   captchaToken.value.reset();
