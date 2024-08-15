@@ -8,14 +8,14 @@ type ExtendedEventHandler<T extends EventHandlerRequest, D> = (
 ) => Promise<D>;
 export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   handler: ExtendedEventHandler<T, D>,
-  minRole?: number
+  minAccessLevel?: number
 ): EventHandler<T, D> =>
   defineEventHandler<T>(async (event) => {
     try {
       const client = await getBackendClient(event);
       const userSession = await client.getCurrentUser();
-      if (minRole) {
-        await checkUserRole(event, minRole);
+      if (minAccessLevel) {
+        await checkUserRole(userSession, minAccessLevel);
       }
 
       const response = await handler(event, userSession);
