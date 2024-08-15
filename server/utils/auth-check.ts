@@ -31,8 +31,7 @@ export async function getUserSession(event: any) {
 
 // Usage
 // checkUserRole(event, 10);
-export async function checkUserRole(event: any, requiredAccessLevel: number) {
-  const user = await getUserSession(event);
+export async function checkUserRole(user: any, requiredAccessLevel: number) {
   const userAccessLevel = getAccessLevelByRole(user.role);
 
   if (userAccessLevel < requiredAccessLevel) {
