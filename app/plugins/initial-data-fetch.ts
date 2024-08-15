@@ -3,6 +3,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const userStore = useUserStore();
   const rolesStore = useRolesStore();
   const permissionStore = useMyPermissionStore();
+  const { fetchPermissions } = usePermissions();
 
   let initialFetchDone = false;
 
@@ -19,22 +20,19 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     }
   };
 
-  const fetchRolesAndPermissions = async () => {
-    if (userStore.user) {
-      try {
-        await rolesStore.fetchRoles();
-        console.log("Fetch roles", rolesStore.roles);
-        await permissionStore.fetchMyPermissions();
-        console.log("Fetch permissions", permissionStore.permissions);
-      } catch (error: any) {
-        console.error("Error fetching roles and permissions:", error);
-        throw new CustomError(error.message, error);
-      }
+  const fetchRoles = async () => {
+    try {
+      await rolesStore.fetchRoles();
+      console.log("Roles fetched", rolesStore.roles);
+    } catch (error: any) {
+      console.error("Error fetching roles:", error);
+      throw new CustomError(error.message, error);
     }
   };
 
   await fetchInitialData();
-  await fetchRolesAndPermissions();
+  await fetchRoles();
+  await fetchPermissions();
 
   watch(
     () => userStore.user,
@@ -43,7 +41,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         console.log("User changed, refetching data");
         initialFetchDone = false;
         await fetchInitialData();
-        await fetchRolesAndPermissions();
+        await fetchRoles();
+        await fetchPermissions();
       }
     },
     { deep: true }
@@ -53,7 +52,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const refetchAllData = async () => {
     initialFetchDone = false;
     await fetchInitialData();
-    await fetchRolesAndPermissions();
+    await fetchRoles();
+    await fetchPermissions();
   };
 
   return {
