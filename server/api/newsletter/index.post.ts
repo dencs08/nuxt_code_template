@@ -1,4 +1,3 @@
-import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 import { getBackendClient } from "../../../lib/backend";
 import { z } from "zod";
 
@@ -6,7 +5,7 @@ const subscriptionSchema = z.object({
   email: z.string().email(),
 });
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
 
@@ -44,4 +43,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: "An unexpected error occurred",
     });
   }
-}, 0);
+});
