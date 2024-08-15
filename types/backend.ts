@@ -17,7 +17,7 @@ export interface BackendClient {
   putMe(user: any, data: any): Promise<any>;
   updateMeEmail(user: any, body: any): Promise<any>;
   updateMePhoto(userId: any, photoUrl: any): Promise<any>;
-  getMePermissions(): Promise<any>;
+  getMePermissions(userId: string): Promise<any>;
 
   //utils
   assignRole(event: any, body: { id: string; role: string }): Promise<any>;
