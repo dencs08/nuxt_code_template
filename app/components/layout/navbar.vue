@@ -36,7 +36,17 @@
           {{ item.label }}
         </NuxtLink>
         <NuxtLink :to="localePath({ name: 'login' })">
-          <MyButton size="xs"> Login </MyButton>
+          <template v-if="isUserLoggedIn">
+            <Icon name="ic:outline-account-circle" class="h-6 w-6" />
+            <template v-if="hasDashboardReadPermission">
+              <NuxtLink :to="localePath('/dashboard')">
+                <Icon name="ic:outline-dashboard" class="h-6 w-6" />
+              </NuxtLink>
+            </template>
+          </template>
+          <template v-else>
+            <MyButton size="xs"> Login </MyButton>
+          </template>
         </NuxtLink>
       </div>
     </nav>
@@ -74,7 +84,17 @@
             />
             <div class="mt-3">
               <NuxtLink :to="localePath({ name: 'login' })">
-                <MyButton class="w-full" size="xs"> Login </MyButton>
+                <template v-if="isUserLoggedIn">
+                  <Icon name="ic:outline-account-circle" class="h-6 w-6" />
+                  <template v-if="hasDashboardReadPermission">
+                    <NuxtLink :to="localePath('/dashboard')">
+                      <Icon name="ic:outline-dashboard" class="h-6 w-6" />
+                    </NuxtLink>
+                  </template>
+                </template>
+                <template v-else>
+                  <MyButton class="w-full" size="xs"> Login </MyButton>
+                </template>
               </NuxtLink>
             </div>
             <div class="w-full flex justify-center items-center">
@@ -93,6 +113,9 @@ const localePath = useLocalePath();
 const { navbarMenu } = useNavigation();
 const { scrollToElement } = useSmoothScroll();
 
+const userStore = useUserStore();
+const user = userStore.getUser;
+
 const sidebarOpen = ref(false);
 const lastScrollPosition = ref(0);
 const showHeader = ref(true);
@@ -104,6 +127,12 @@ watch(y, (newScrollPosition) => {
     lastScrollPosition.value = newScrollPosition;
   }
 });
+const { hasPermission } = usePermissions();
+
+const isUserLoggedIn = computed(() => !!user);
+const hasDashboardReadPermission = computed(() =>
+  hasPermission("dashboard", "read")
+);
 </script>
 
 <style scoped></style>
