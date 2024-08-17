@@ -6,7 +6,7 @@ const userSchema = z
     name: z.string().min(3).max(25),
     password: z.string().min(6),
     password_confirm: z.string().min(6),
-    role: z.string(),
+    role_id: z.number(),
   })
   .superRefine(({ password_confirm, password }, ctx) => {
     if (password_confirm !== password) {
