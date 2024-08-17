@@ -2,17 +2,10 @@ import { getBackendClient } from "~~/lib/backend";
 import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 import { type UserAuthPublicSession } from "~~/types/user";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event, true);
+export default defineWrappedResponseHandler(async (event, userSession) => {
+  const server = await getBackendClient(event, true);
   let body = await readBody(event);
 
-  try {
-    const user = await client.createUser(body, event);
-    return user;
-  } catch (err: any) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: err,
-    });
-  }
+  const user = await server.createUser(body, event, userSession);
+  return user;
 }, 75);
