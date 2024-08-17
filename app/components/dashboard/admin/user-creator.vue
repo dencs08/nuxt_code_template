@@ -9,7 +9,6 @@
         @click="visible = true"
       />
     </div>
-
     <Dialog
       v-model:visible="visible"
       maximizable
@@ -38,16 +37,14 @@
               name="email"
               validation="required|email"
               placeholder="Email"
-            >
-            </FormKit>
+            />
             <FormKit
               class="w-full"
               type="primeInputText"
               name="name"
               validation="required|length:3"
               placeholder="Name"
-            >
-            </FormKit>
+            />
             <FormKit
               class="w-full"
               type="primePassword"
@@ -56,8 +53,7 @@
               toggleMask
               :feedback="true"
               placeholder="Password"
-            >
-            </FormKit>
+            />
             <FormKit
               class="w-full"
               type="primePassword"
@@ -65,19 +61,17 @@
               validation="required|confirm"
               toggleMask
               placeholder="Repeat password"
-            >
-            </FormKit>
+            />
             <FormKit
               class="w-full"
               type="primeSelect"
               :options="rolesOptions"
-              optionValue="value"
-              optionLabel="label"
-              name="role"
+              optionValue="id"
+              optionLabel="name"
+              name="role_id"
               placeholder="Select user role"
               validation="required"
-            >
-            </FormKit>
+            />
             <!-- <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000"
                                 @upload="onUpload" chooseLabel="Avatar" /> -->
           </div>
@@ -89,22 +83,28 @@
 
 <script setup lang="ts">
 import { userSchema } from "~~/utils/schemas";
-import { type UserForm } from "~~/types/user";
+import type { UserForm } from "~~/types/user";
 
 const { handleSubmit } = useSubmit();
-const { roles } = useRoles();
 const usersStore = useUsersStore();
+const rolesStore = useRolesStore();
+const { roles } = storeToRefs(rolesStore);
 const visible = ref(false);
 
 const rolesOptions = computed(() =>
-  roles.value.map((role) => ({ label: role.label, value: role.value }))
+  roles.value.map((role) => ({ name: role.name, id: role.id }))
 );
 
 const submitForm = async (data: UserForm) => {
+  console.log(data);
+
   const response = await handleSubmit(
     usersStore.addUser,
     data,
     "User successfully added"
   );
+  if (response) {
+    visible.value = false;
+  }
 };
 </script>
