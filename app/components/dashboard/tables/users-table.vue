@@ -155,13 +155,15 @@ const filters = ref({
 });
 
 const { handleSubmit } = useSubmit();
-const { getRoleSeverity } = useRoles();
+const { getRoleSeverity } = useRolesStore();
 const { hasAccess } = useRoleCheck();
 const localePath = useLocalePath();
 
 const isAdmin = hasAccess(75);
 const isSuperAdmin = hasAccess(100);
 const usersStore = useUsersStore();
+const rolesStore = useRolesStore();
+const { roles } = storeToRefs(rolesStore);
 
 const dt = ref();
 const editingRows = ref([]);
