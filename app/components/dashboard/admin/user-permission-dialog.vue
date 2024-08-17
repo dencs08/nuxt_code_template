@@ -108,7 +108,7 @@ const props = defineProps({
 const emit = defineEmits(["update:isDialogVisible", "savePermissions"]);
 
 const { hasAccess } = useRoleCheck();
-const { getRoleSeverity } = useRoles();
+const { getRoleSeverity } = useRolesStore();
 const { addToast } = useToastService();
 
 const localDialogVisible = ref(props.isDialogVisible);
