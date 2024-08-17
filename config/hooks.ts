@@ -1,5 +1,5 @@
 import { routes } from "./common/routes";
-import { validRoles } from "../app/utils/roles";
+import { roles } from "../config/common/roles";
 import mainConfig from "./common/main";
 
 const globalAuth = mainConfig.GLOBAL_ROUTE_AUTH === "true";
@@ -49,9 +49,7 @@ function determineAccessLevelFromPath(path: string): number | undefined {
   const reversedSegments = pathSegments.reverse();
 
   for (const segment of reversedSegments) {
-    const roleMatch = validRoles.find(
-      (role) => segment.toLowerCase() === role.value
-    );
+    const roleMatch = roles.find((role) => segment.toLowerCase() === role.name);
     if (roleMatch) {
       return roleMatch.access_level;
     }
