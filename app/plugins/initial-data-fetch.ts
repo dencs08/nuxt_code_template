@@ -2,7 +2,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { CustomError } = useCustomError();
   const userStore = useUserStore();
   const rolesStore = useRolesStore();
-  const permissionStore = useMyPermissionStore();
   const { fetchPermissions } = usePermissions();
 
   let initialFetchDone = false;
