@@ -1,4 +1,3 @@
-import { validRoles } from "@/utils/roles";
 import { getBackendClient } from "../../lib/backend";
 
 export async function getUserSession(event: any) {
@@ -31,8 +30,12 @@ export async function getUserSession(event: any) {
 
 // Usage
 // checkUserRole(event, 10);
-export async function checkUserRole(user: any, requiredAccessLevel: number) {
-  const userAccessLevel = getAccessLevelByRole(user.role);
+export async function checkUserRole(
+  user: any,
+  requiredAccessLevel: number,
+  roles: any
+) {
+  const userAccessLevel = getAccessLevelByRole(user.role, roles);
 
   if (userAccessLevel < requiredAccessLevel) {
     throw createError({
@@ -49,7 +52,7 @@ export async function getUserRole(event: any) {
   return user.role;
 }
 
-export function getAccessLevelByRole(roleValue: string): number {
-  const role = validRoles.find((r) => r.value === roleValue);
+export function getAccessLevelByRole(roleValue: string, roles: any): number {
+  const role = roles.find((r: any) => r.name === roleValue);
   return role ? role.access_level : 0;
 }
