@@ -1,5 +1,4 @@
 import type { Role } from "../../types/roles";
-import { validRoles } from "@/utils/roles";
 import mainConfig from "../../config/common/main";
 
 export function useRoleCheck(
@@ -29,6 +28,8 @@ export function useRoleCheck(
 }
 
 export function getAccessLevelByRole(roleValue: string): number {
-  const role = validRoles.find((r) => r.value === roleValue);
+  const rolesStore = useRolesStore();
+  const { roles } = storeToRefs(rolesStore);
+  const role = roles.value.find((r) => r.name === roleValue);
   return role ? role.access_level : 0;
 }
