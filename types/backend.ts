@@ -4,7 +4,7 @@ export interface BackendClient {
   getUser(userId: string): Promise<any>;
   getAuthUsers(): Promise<any[]>;
   deleteUser(userId: string): Promise<void>;
-  createUser(data: any, event: any): Promise<any>;
+  createUser(data: any, event: any, userSession: any): Promise<any>;
   updateUser(data: any): Promise<any>;
 
   //auth
@@ -20,7 +20,7 @@ export interface BackendClient {
   getMePermissions(userId: string): Promise<any>;
 
   //utils
-  assignRole(event: any, body: { id: string; role: string }): Promise<any>;
+  assignRole(userId: any, roleId: string, userSession: any): Promise<any>;
   confirmEmail(event: any): Promise<any>;
 
   //storage
@@ -46,6 +46,7 @@ export interface BackendClient {
   getUserPermissions(userId: string): Promise<any>;
   getUserRole(userId: string): Promise<any>;
   updateRole(roleId: number, accessLevel: number): Promise<void>;
+  getRoleById(roleId: number): Promise<any>;
 
   //newsletter
   addNewsletterSubscriber(email: string): Promise<any>;
