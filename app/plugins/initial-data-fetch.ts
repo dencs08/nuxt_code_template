@@ -5,9 +5,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { fetchPermissions } = usePermissions();
 
   let initialFetchDone = false;
+  let isRefetching = false;
 
   const fetchInitialData = async () => {
-    if (!initialFetchDone) {
+    if (!initialFetchDone && !isRefetching) {
+      isRefetching = true;
       try {
         await userStore.fetchUser();
         console.log("Initial user fetch", userStore.user);
@@ -15,6 +17,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       } catch (error: any) {
         console.error("Error fetching initial user data:", error);
         throw new CustomError(error.message, error);
+      } finally {
+        isRefetching = false;
       }
     }
   };
@@ -33,21 +37,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   await fetchRoles();
   await fetchPermissions();
 
-  watch(
-    () => userStore.user,
-    async (newUser, oldUser) => {
-      if (newUser !== oldUser) {
-        console.log("User changed, refetching data");
-        initialFetchDone = false;
-        await fetchInitialData();
-        await fetchRoles();
-        await fetchPermissions();
-      }
-    },
-    { deep: true }
-  );
+  nuxtApp.hooks.hook("page:start", async () => {
+    if (!userStore.user && !isRefetching) {
+      await fetchInitialData();
+    }
+  });
 
-  // Add a method to manually trigger data fetch (useful for logout scenarios)
   const refetchAllData = async () => {
     initialFetchDone = false;
     await fetchInitialData();
