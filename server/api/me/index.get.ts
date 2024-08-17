@@ -1,11 +1,7 @@
-import { getBackendClient } from "../../../lib/backend";
 import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
-
+export default defineWrappedResponseHandler(async (event, userSession) => {
   try {
-    const userSession = await client.getCurrentUser();
     return { response: "Account fetched", account: userSession };
   } catch (err: any) {
     throw createError({
