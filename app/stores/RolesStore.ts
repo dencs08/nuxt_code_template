@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
-import type { Role } from "~~/types/roles";
+import type { Role } from "../../types/roles";
+import { roles } from "../../config/common/roles";
 
 export const useRolesStore = defineStore("roles", {
   state: () => ({
-    roles: [] as Role[],
+    roles: roles as Role[],
+    selectedRole: null as Role | null,
     loading: false,
     error: null as string | null,
   }),
@@ -77,6 +79,9 @@ export const useRolesStore = defineStore("roles", {
     },
     async clearRoles() {
       this.roles = [];
+    },
+    selectRole(role: Role) {
+      this.selectedRole = role;
     },
     // async createRole(name: string, accessLevel: number) {
     //   this.loading = true;
