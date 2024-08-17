@@ -1,6 +1,4 @@
-import { checkUserRole } from "../server/utils/auth-check";
 import type { BackendClient } from "../types/backend";
-import { validRoles } from "@/utils/roles";
 import type { UserAuthPublicSession } from "../types/user";
 
 export class SupabaseClient implements BackendClient {
@@ -83,7 +81,18 @@ export class SupabaseClient implements BackendClient {
 
     return authData;
   }
-  async createUser(body: any, event: any): Promise<any> {
+  async createUser(
+    body: {
+      name: string;
+      email: string;
+      password: string;
+      role_id: string;
+      photo?: string;
+    },
+    event: any,
+    userSession: any
+  ): Promise<UserAuthPublicSession> {
+    console.log("Creating user with email:", body.email);
     const { data, error } = await this.client.auth.admin.createUser({
       email: body.email,
       password: body.password,
@@ -95,31 +104,28 @@ export class SupabaseClient implements BackendClient {
     });
 
     if (error) {
+      console.error("Error creating user:", error);
       throw createError({
-        statusCode: 500,
-        statusMessage: error,
-        message: error,
+        statusCode: error.code,
+        statusMessage: error.message,
+        message: error.message,
       });
     }
 
-    body = { id: data.user.id, role: body.role };
+    console.log("User created with ID:", data.user.id);
 
     try {
-      await this.assignRole(event, body);
+      console.log("Assigning role to user:", data.user.id);
+      await this.assignRole(data.user.id, body.role_id, userSession);
+      console.log("Role assigned successfully to user:", data.user.id);
     } catch (err) {
-      const { error: removeError } = await this.client.auth.admin.deleteUser(
+      console.error("Error assigning role to user:", err);
+      console.log(
+        "Deleting user due to role assignment failure:",
         data.user.id
       );
-      const { data: deletedUser, error: deleteError } = await this.client
-        .from("users")
-        .delete()
-        .eq("id", data.user.id);
-
-      throw createError({
-        statusCode: 500,
-        statusMessage: deleteError,
-        message: deleteError,
-      });
+      await this.deleteUser(data.user.id);
+      throw err;
     }
 
     const user: UserAuthPublicSession = {
@@ -128,12 +134,14 @@ export class SupabaseClient implements BackendClient {
       email: body.email,
       phone: "",
       photo: body.photo,
-      role: body.role,
+      role: body.role_id,
       provider: data.user.app_metadata.provider,
     };
 
+    console.log("User creation and role assignment successful:", user);
     return user;
   }
+
   async updateUser(user: any): Promise<any> {
     const { data, error } = await this.client
       .from("users")
@@ -230,62 +238,57 @@ export class SupabaseClient implements BackendClient {
   }
 
   //utils
-  async assignRole(event: any, body: { id: string; role: string }) {
-    // const userRole = await getUserRole(event);
-    const user = await this.getMe();
-    const userRole = user.role;
+  async assignRole(userId: string, roleId: string, userSession: any) {
+    const userRole = await this.getUserRole(userSession.id);
 
-    if (!validRoles.map((role) => role.value).includes(body.role)) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Invalid or missing data",
-      });
-    }
-
+    // Check if the role exists
     const { data: roleData, error: roleError } = await this.client
       .from("roles")
-      .select("id")
-      .eq("name", body.role)
+      .select("id, name, access_level")
+      .eq("id", roleId)
       .single();
 
     if (roleError || !roleData) {
       throw createError({
         statusCode: 500,
-        statusMessage: "Error retrieving role data",
+        statusMessage: "Error retrieving role data or invalid role_id",
       });
     }
 
-    const roleId = roleData.id;
-
+    // Get the current user's role
     const { data: currentUserData, error: currentUserError } = await this.client
       .from("user_roles")
       .select("role_id")
-      .eq("user_id", body.id)
+      .eq("user_id", userId)
       .single();
 
-    if (currentUserError) {
+    if (currentUserError && currentUserError.code !== "PGRST116") {
       throw createError({
         statusCode: currentUserError.code,
         statusMessage: currentUserError.message,
       });
     }
 
-    const currentRoleName = await this.getRoleName(currentUserData?.role_id);
+    const currentRoleId = currentUserData?.role_id;
+    const currentRole = currentRoleId
+      ? await this.getRoleById(currentRoleId)
+      : null;
 
+    // Implement role-based access control
     if (
-      userRole === "admin" &&
-      (currentRoleName === "admin" || currentRoleName === "superadmin")
+      userRole.name === "admin" &&
+      (currentRole?.name === "admin" || currentRole?.name === "superadmin")
     ) {
       throw createError({
-        statusCode: 500,
+        statusCode: 403,
         statusMessage:
           "Admins cannot change the role of other admins or superadmins",
       });
     }
 
-    if (userRole !== "superadmin" && body.role === "superadmin") {
+    if (userRole.name !== "superadmin" && roleData.name === "superadmin") {
       throw createError({
-        statusCode: 500,
+        statusCode: 403,
         statusMessage: "Only superadmins can assign the superadmin role",
       });
     }
@@ -294,10 +297,10 @@ export class SupabaseClient implements BackendClient {
       const { data, error } = await this.client
         .from("user_roles")
         .upsert({
-          user_id: body.id,
+          user_id: userId,
           role_id: roleId,
         })
-        .eq("user_id", body.id)
+        .eq("user_id", userId)
         .select();
 
       if (error) {
@@ -306,6 +309,7 @@ export class SupabaseClient implements BackendClient {
           statusMessage: error.message,
         });
       }
+
       return { response: "User role updated" };
     } catch (err: any) {
       throw createError({
@@ -817,6 +821,22 @@ export class SupabaseClient implements BackendClient {
       });
     }
     return { success: true };
+  }
+  async getRoleById(roleId: number): Promise<any> {
+    const { data, error } = await this.client
+      .from("roles")
+      .select("*")
+      .eq("id", roleId)
+      .single();
+
+    if (error) {
+      throw createError({
+        statusCode: error.code,
+        statusMessage: error.message,
+      });
+    }
+
+    return data;
   }
 
   //newsletter
