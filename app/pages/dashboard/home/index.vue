@@ -84,6 +84,7 @@
         </Card>
       </div>
     </div>
+    <TestComponent />
   </div>
 </template>
 <script setup lang="ts">

@@ -1,41 +1,48 @@
-<script setup>
-const usersStore = useUsersStore();
-const { handleSubmit } = useSubmit();
-
-const updateUser = async (data) => {
-  await handleSubmit(usersStore.updateUser, { data }, "User updated");
-};
-
-const fetchUserSession = async () => {
-  // await handleSubmit(userStore.fetchUser, {}, "User fetched");
-};
-
-const fetchUsers = async () => {
-  await handleSubmit(usersStore.fetchUsers, {}, "Users fetched");
-};
-</script>
-
 <template>
-  <div class="flex gap-4">
-    <FormWrapper
-      :handleSubmit="updateUser"
-      :submit-attrs="{ inputClass: 'btn-primary' }"
-      submit-label="Update user"
-    >
-    </FormWrapper>
-
-    <FormWrapper
-      :handleSubmit="fetchUserSession"
-      :submit-attrs="{ inputClass: 'btn-primary' }"
-      submit-label="fetch user"
-    >
-    </FormWrapper>
-
-    <FormWrapper
-      :handleSubmit="fetchUsers"
-      :submit-attrs="{ inputClass: 'btn-primary' }"
-      submit-label="fetch users"
-    >
-    </FormWrapper>
+  <div>
+    <Button @click="standardConfirm" label="Standard Confirm" />
+    <Button @click="passwordConfirm" label="Password Confirm" />
   </div>
 </template>
+
+<script setup lang="ts">
+import PasswordActionConfirm from "../utils/forms/password-action-confirm.vue";
+
+const { addToast } = useToastService();
+
+const { show } = useGlobalDialog();
+
+const standardConfirm = () => {
+  show({
+    message: "Are you sure you want to proceed?",
+    header: "Confirmation",
+    icon: "pi pi-exclamation-triangle",
+    accept: () => {
+      addToast("info", "Confirmed", "You have accepted");
+    },
+    reject: () => {
+      addToast("error", "Rejected", "You have rejected");
+    },
+  });
+};
+
+const passwordConfirm = () => {
+  show({
+    message:
+      "No longer want to use our service? You can delete your account here. This action is irreversible. All information related to this account will be deleted permanently.",
+    header: "Are you sure you want to delete your account?",
+    label: "Type your password to delete your account",
+    icon: "pi pi-lock",
+    acceptLabel: "Delete account",
+    rejectLabel: "Cancel",
+    severity: "danger",
+    component: markRaw(PasswordActionConfirm),
+    accept: (password: string) => {
+      addToast("info", "Confirmed", "Password confirmed");
+    },
+    reject: () => {
+      addToast("error", "Rejected", "Password confirmation cancelled");
+    },
+  });
+};
+</script>
