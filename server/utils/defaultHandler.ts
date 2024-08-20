@@ -5,7 +5,7 @@ import { checkUserRole } from "./auth-check";
 const cache: { [key: string]: { data: any; expiry: number } } = {};
 
 const ROLES_CACHE_KEY = "all_roles";
-const CACHE_TTL = 60000; //milliseconds
+const CACHE_TTL = 3600000; //milliseconds
 
 type ExtendedEventHandler<T extends EventHandlerRequest, D> = (
   event: H3Event<T>,
