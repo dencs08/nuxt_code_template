@@ -32,7 +32,7 @@
           <Button
             size="small"
             v-tooltip.top="'Save changes'"
-            @click="confirmSaveChanges"
+            @click=""
             icon="pi pi-save"
             class="!p-2"
             :disabled="!changesMade"
@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { FilterMatchMode } from "primevue/api";
+import { FilterMatchMode } from "@primevue/core/api";
 
 const { hasAccess } = useRoleCheck(75);
 
@@ -185,7 +185,7 @@ const onRowEditSave = (event: any) => {
   emit("row-edit-save", event);
 };
 
-const { confirmAction } = useConfirmation();
+// const { confirmAction } = useConfirmation();
 // const confirmDeleteUsers = (event) => {
 //     confirmAction(async () => {
 //         const selectedIds = selected.value.map(user => user.id);
@@ -195,21 +195,21 @@ const { confirmAction } = useConfirmation();
 //         { message: 'Delete this record(s)?', target: event.currentTarget, severity: 'danger', showToastOnAccept: false, showToastOnReject: false });
 // };
 
-const confirmSaveChanges = () => {
-  confirmAction(
-    async () => {
-      emit("save-changes", { changes: changes.value });
-    },
-    {
-      message: JSON.stringify(changes.value),
-      header: "Do you want to save these changes?",
-      severity: "info",
-      showToastOnAccept: true,
-      showToastOnReject: false,
-    },
-    ConfirmationGroup.Changes
-  );
-};
+// const confirmSaveChanges = () => {
+//   confirmAction(
+//     async () => {
+//       emit("save-changes", { changes: changes.value });
+//     },
+//     {
+//       message: JSON.stringify(changes.value),
+//       header: "Do you want to save these changes?",
+//       severity: "info",
+//       showToastOnAccept: true,
+//       showToastOnReject: false,
+//     },
+//     ConfirmationGroup.Changes
+//   );
+// };
 
 const exportCSV = () => {
   dt.value.exportCSV();

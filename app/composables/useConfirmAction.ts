@@ -1,96 +1,90 @@
-import { type Severity } from "~~/types/common";
+import { ref, markRaw } from "vue";
+import { useConfirm } from "primevue/useconfirm";
+import type { ConfirmationOptions } from "primevue/confirmationoptions";
 
-export enum ConfirmationGroup {
-  Changes = "changes",
-  PasswordConfirm = "password",
-  Popup = "popup",
-  // Add other groups as needed. Remember to also create new Confirm component in the GlobalComponents component
-}
+// Define a type that can be any function
+type AnyFunction = (...args: any[]) => any;
 
-interface ConfirmationOptions {
+interface CustomConfirmConfig {
   message: string;
-  header: string;
+  header?: string;
+  label?: string;
   icon?: string;
-  acceptClass?: string;
-  iconClass?: string;
-  target?: HTMLElement;
-  severity?: Severity;
-  showToastOnAccept?: boolean;
-  showToastOnReject?: boolean;
+  acceptLabel?: string;
+  rejectLabel?: string;
+  severity?: string;
+  component?: any;
+  target?: any;
+  showMessage?: boolean;
+  accept?: AnyFunction;
+  reject?: AnyFunction;
+  onError?: (errorMessage: string) => void;
 }
 
-// Default options
-const defaultOptions: ConfirmationOptions = {
-  message: "Are you sure?",
-  header: "Confirmation Required",
-  icon: "pi pi-exclamation-triangle",
-  showToastOnAccept: true,
-  showToastOnReject: true,
-};
+type ConfirmConfig = CustomConfirmConfig & Partial<ConfirmationOptions>;
 
-function getSeverityOptions(
-  severity: Severity = "info"
-): Partial<ConfirmationOptions> {
-  switch (severity) {
-    case "warn":
-      return {
-        icon: "pi pi-exclamation-circle",
-        acceptClass:
-          "!bg-yellow-500 hover:!bg-yellow-600 !border-yellow-500 dark:!border-yellow-500",
-        iconClass: "text-yellow-700 dark:text-yellow-500",
-      };
-    case "error":
-      return {
-        icon: "pi pi-times-circle",
-        acceptClass:
-          "!bg-red-500 hover:!bg-red-600 !border-red-500 dark:!border-red-500",
-        iconClass: "text-red-600 dark:text-red-500",
-      };
-    case "success":
-      return {
-        icon: "pi pi-check-circle",
-        acceptClass:
-          "!bg-green-500 hover:!bg-green-600 !border-green-500 dark:!border-green-500",
-        iconClass: "text-green-700 dark:text-green-500",
-      };
-    case "info":
-    default:
-      return {
-        icon: "pi pi-info-circle",
-        acceptClass:
-          "!bg-blue-500 hover:!bg-blue-600 !border-blue-500 dark:!border-blue-500",
-        iconClass: "text-blue-700 dark:text-blue-500",
-      };
-  }
-}
+const isVisible = ref(false);
+const config = ref<CustomConfirmConfig>({} as CustomConfirmConfig);
 
-export function useConfirmation() {
+export function useConfirmAction() {
   const confirm = useConfirm();
-  const { addToast } = useToastService();
 
-  const confirmAction = (
-    action: () => void,
-    options: Partial<ConfirmationOptions> = {},
-    group: ConfirmationGroup = ConfirmationGroup.Popup
-  ) => {
-    const severityOptions = getSeverityOptions(options.severity);
-    const finalOptions = { ...defaultOptions, ...severityOptions, ...options };
-    confirm.require({
-      ...finalOptions,
-      group,
-      accept: () => {
-        action();
-        if (finalOptions.showToastOnAccept) {
-          addToast("success", "Success", "Successfully completed action", 3000);
-        }
-      },
-      reject: () => {
-        if (finalOptions.showToastOnReject) {
-          addToast("warn", "Cancelled", "Action cancelled", 3000);
-        }
-      },
-    });
+  const showDialog = (newConfig: CustomConfirmConfig) => {
+    config.value = { showMessage: true, ...newConfig };
+    isVisible.value = true;
   };
 
-  return { confirmAction };
+  const hideDialog = () => {
+    isVisible.value = false;
+    config.value = {} as CustomConfirmConfig;
+  };
+
+  const handleConfirm: AnyFunction = (...args: any[]) => {
+    if (config.value.accept) {
+      config.value.accept(...args);
+    }
+    hideDialog();
+  };
+
+  const handleReject: AnyFunction = (...args: any[]) => {
+    if (config.value.reject) {
+      config.value.reject(...args);
+    }
+    hideDialog();
+  };
+
+  const confirmAction = (newConfig: ConfirmConfig) => {
+    if (newConfig.target) {
+      confirm.require({
+        target: newConfig.target,
+        message: newConfig.message,
+        icon: newConfig.icon,
+        rejectProps: {
+          label: newConfig.rejectLabel || "Cancel",
+          severity: "secondary",
+          outlined: true,
+        },
+        acceptProps: {
+          label: newConfig.acceptLabel || "Delete",
+          severity: newConfig.severity || "contrast",
+        },
+        accept: newConfig.accept as AnyFunction,
+        reject: newConfig.reject as AnyFunction,
+        group: newConfig.group || "popup",
+        ...newConfig,
+      });
+    } else {
+      showDialog(newConfig);
+    }
+  };
+
+  return {
+    isVisible,
+    config,
+    confirmAction,
+    hideDialog,
+    showDialog,
+    handleConfirm,
+    handleReject,
+  };
 }

@@ -196,7 +196,6 @@ const { changeUserPassword, verifyPassword, terminateSession } =
 const { updateUserAccount, updateUserEmail } = await useUser();
 const { handleSubmit } = useSubmit();
 const { addToast } = useToastService();
-const { confirmAction } = useConfirmation();
 const { deleteUserAccount } = useUser();
 const { emailRequestChangePage } = useRedirections();
 const userStore = useUserStore();
@@ -268,10 +267,10 @@ const onTerminateSession = async (data: FormData) => {
     addToast("error", "Session termination failed", error.message);
   }
 };
-const { show } = useGlobalDialog();
+const { confirmAction } = useConfirmAction();
 
 const confirmDeleteAccount = () => {
-  show({
+  confirmAction({
     message:
       "No longer want to use our service? You can delete your account here. This action is irreversible. All information related to this account will be deleted permanently.",
     header: "Are you sure you want to delete your account?",

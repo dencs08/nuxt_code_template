@@ -1,4 +1,3 @@
-<!-- components/ConfirmActionDialog.vue -->
 <template>
   <Dialog
     :visible="visible"
@@ -35,7 +34,10 @@
               </div>
             </div>
             <div>
-              <p :class="config?.component ? 'mb-2.5' : 'm-0'">
+              <p
+                :class="config?.component ? 'mb-2.5' : 'm-0'"
+                v-if="config.showMessage"
+              >
                 {{ config?.message || "Are you sure you want to proceed?" }}
               </p>
               <component
@@ -45,6 +47,7 @@
                 @verified="handleVerified"
                 @error="handleError"
                 ref="customComponentRef"
+                :config="config"
               />
             </div>
           </div>

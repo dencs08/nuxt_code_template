@@ -7,7 +7,7 @@
       @reject="handleReject"
     />
     <ConfirmPopup group="popup"></ConfirmPopup>
-    <ConfirmDialog></ConfirmDialog>
+    <ConfirmDialog group="dialog"></ConfirmDialog>
 
     <ExtendedConfirmDialog
       group="changes"
@@ -47,72 +47,8 @@
         </div>
       </template>
     </ExtendedConfirmDialog>
-
-    <ExtendedConfirmDialog
-      group="password"
-      :pt="{ root: { class: 'xs:w-[35rem]' } }"
-    >
-      <template #body="{ message }">
-        <div class="text-sm">
-          {{ message.message }}
-        </div>
-        <div class="w-full mt-4">
-          <p class="text-xs mb-1">Type your password to confirm the action:</p>
-          <Password
-            v-model="password"
-            toggleMask
-            :feedback="false"
-            placeholder="Password"
-          />
-        </div>
-      </template>
-
-      <template #footer="{ message, acceptCallback, rejectCallback }">
-        <div
-          class="flex items-center justify-end gap-2 p-4 border-t bg-surface-50/40 dark:bg-surface-900/35 border-surface-100 dark:border-surface-600"
-        >
-          <Button
-            label="Confirm"
-            @click="checkPassword(acceptCallback, rejectCallback)"
-            :class="message.acceptClass"
-          ></Button>
-          <Button
-            label="Cancel"
-            outlined
-            severity="secondary"
-            @click="rejectCallback"
-          ></Button>
-        </div>
-      </template>
-    </ExtendedConfirmDialog>
   </div>
 </template>
 <script setup lang="ts">
-const { isVisible, config, handleConfirm, handleReject } = useGlobalDialog();
-
-const { verifyPassword } = useAuthentication();
-const { addToast } = useToastService();
-const { CustomError } = useCustomError();
-
-const password = ref();
-const checkPassword = async (
-  acceptCallback: Function,
-  rejectCallback: Function
-) => {
-  try {
-    if (!password.value)
-      throw new CustomError("Password is required", "PASSWORD_REQUIRED");
-    await verifyPassword(password.value);
-    addToast(
-      "success",
-      "Account deletion confirmed",
-      "Your account will now be permanentaly deleted, you will be logged out automatically.",
-      30000
-    );
-    acceptCallback();
-  } catch (error: any) {
-    addToast("error", "Account deletion failed", error.message);
-  }
-};
+const { isVisible, config, handleConfirm, handleReject } = useConfirmAction();
 </script>
-<style lang="scss"></style>

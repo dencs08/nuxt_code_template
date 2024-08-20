@@ -149,6 +149,7 @@
 </template>
 
 <script setup>
+import DisplayUserChanges from "@/components/dashboard/display-user-changes.vue";
 import { FilterMatchMode } from "@primevue/core/api";
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -157,6 +158,7 @@ const filters = ref({
 const { handleSubmit } = useSubmit();
 const { getRoleSeverity } = useRolesStore();
 const { hasAccess } = useRoleCheck();
+const { confirmAction } = useConfirmAction();
 const localePath = useLocalePath();
 
 const isAdmin = hasAccess(75);
@@ -242,38 +244,36 @@ const changes = computed(() => {
     .filter((user) => user.changes.length > 0);
 });
 
-const { confirmAction } = useConfirmation();
 const confirmDeleteUsers = (event) => {
-  confirmAction(
-    async () => {
+  confirmAction({
+    target: event.currentTarget,
+    message: "Are you sure you want to delete?",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Delete",
+    rejectLabel: "Cancel",
+    severity: "danger",
+    accept: async () => {
       const selectedIds = selected.value.map((user) => user.id);
       await handleSubmit(usersStore.deleteUsers, selectedIds, "Users deleted");
       selected.value = [];
     },
-    {
-      message: "Delete this record(s)?",
-      target: event.currentTarget,
-      severity: "danger",
-      showToastOnAccept: false,
-      showToastOnReject: false,
-    }
-  );
+    reject: () => {},
+  });
 };
 
 const confirmSaveChanges = () => {
-  confirmAction(
-    async () => {
+  confirmAction({
+    message: changes,
+    header: "Do you want to save these changes?",
+    severity: "info",
+    showToastOnAccept: true,
+    showToastOnReject: false,
+    showMessage: false,
+    component: markRaw(DisplayUserChanges),
+    accept: async () => {
       await updateUsers();
     },
-    {
-      message: changes,
-      header: "Do you want to save these changes?",
-      severity: "info",
-      showToastOnAccept: true,
-      showToastOnReject: false,
-    },
-    "changes"
-  );
+  });
 };
 
 const formatDate = (dateString) => {
