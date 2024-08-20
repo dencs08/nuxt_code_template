@@ -6,30 +6,16 @@ export class SupabaseClient implements BackendClient {
 
   //users
   async getUsers(): Promise<any[]> {
-    let users = [];
     let { data, error } = await this.client.from("users").select(`
-      *,
-      user_roles (
+        *,
+        user_roles!inner (
           role_id,
           roles (
-              name
+            name,
+            access_level
           )
-    )`);
-
-    if (!data || data.length === 0)
-      throw createError({ statusCode: 404, statusMessage: "No users found" });
-
-    users = await Promise.all(
-      data.map(async (user: any) => {
-        const roleName = await this.getRoleName(user.user_roles?.role_id);
-        const newUser = {
-          ...user,
-          role: roleName || "No role assigned",
-        };
-        delete newUser.user_roles;
-        return newUser;
-      })
-    );
+        )
+      `);
 
     if (error) {
       throw createError({
@@ -37,6 +23,32 @@ export class SupabaseClient implements BackendClient {
         statusMessage: "An error occurred while fetching the users",
       });
     }
+
+    if (!data || data.length === 0) {
+      throw createError({ statusCode: 404, statusMessage: "No users found" });
+    }
+
+    const users = data.map((user: any) => {
+      const roleName = user.user_roles?.roles?.name || "No role assigned";
+      const roleData = user.user_roles
+        ? {
+            role_id: user.user_roles.role_id,
+            name: user.user_roles.roles.name,
+            access_level: user.user_roles.roles.access_level,
+          }
+        : {
+            role_id: null,
+            name: "No role assigned",
+            access_level: null,
+          };
+
+      delete user.user_roles;
+      return {
+        ...user,
+        role: roleName,
+        role_data: roleData,
+      };
+    });
 
     return users;
   }
