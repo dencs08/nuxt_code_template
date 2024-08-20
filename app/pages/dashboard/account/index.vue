@@ -185,6 +185,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import PasswordActionConfirm from "@/components/utils/forms/password-action-confirm.vue";
+
 definePageMeta({
   layout: "dashboard",
 });
@@ -266,21 +268,34 @@ const onTerminateSession = async (data: FormData) => {
     addToast("error", "Session termination failed", error.message);
   }
 };
+const { show } = useGlobalDialog();
 
 const confirmDeleteAccount = () => {
-  confirmAction(
-    async () => {
+  show({
+    message:
+      "No longer want to use our service? You can delete your account here. This action is irreversible. All information related to this account will be deleted permanently.",
+    header: "Are you sure you want to delete your account?",
+    label: "Type your password to delete your account",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Delete Account",
+    rejectLabel: "Cancel",
+    severity: "danger",
+    component: markRaw(PasswordActionConfirm),
+    accept: async () => {
       await deleteUserAccount();
+      addToast(
+        "success",
+        "Account deleted",
+        "Account has been deleted, you will be logged out automatically."
+      );
     },
-    {
-      header: "Do you want to delete your account?",
-      message:
-        "No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently. ",
-      severity: "error",
-      showToastOnAccept: false,
+    reject: () => {
+      addToast("warn", "Cancelled", "Action cancelled");
     },
-    ConfirmationGroup.PasswordConfirm
-  );
+    onError: (errorMessage: string) => {
+      addToast("warn", "Error", errorMessage);
+    },
+  });
 };
 </script>
 <style lang=""></style>
