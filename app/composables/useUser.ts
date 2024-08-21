@@ -6,7 +6,7 @@ export function useUser() {
   const userAuthSession = userStore.getUser;
 
   const { CustomError } = useCustomError();
-  const { updateEmail } = useAuthentication();
+  const { updateEmail, signOut } = useAuthentication();
   const { addToast } = useToastService();
   const { checkProvider } = useProvider();
 
@@ -62,6 +62,8 @@ export function useUser() {
       if (error) {
         throw new CustomError("Error deleting the account", error);
       }
+      signOut();
+      userStore.clearUser();
     } catch (error) {
       // console.error(error);
       throw new CustomError("Failed to delete the account", error);
