@@ -285,7 +285,7 @@ const confirmDeleteAccount = () => {
       addToast(
         "success",
         "Account deleted",
-        "Account has been deleted, you will be logged out automatically."
+        "Account has been deleted, refresh the page to complete the action."
       );
     },
     reject: () => {
