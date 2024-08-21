@@ -6,8 +6,8 @@ import type {
 import { type UserAuthPublicSession } from "../../types/user";
 
 export function useAuthentication() {
-  const nuxtApp = useNuxtApp();
   const { $authProvider } = useNuxtApp();
+  const userStore = useUserStore();
 
   if (!$authProvider) {
     throw new Error("Auth provider not found");
@@ -52,6 +52,7 @@ export function useAuthentication() {
 
   const signOut = async () => {
     const response = await $authProvider.signOut();
+    userStore.clearUser();
     handleRequestError(response);
   };
 
