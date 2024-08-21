@@ -410,16 +410,6 @@ export class SupabaseClient implements BackendClient {
     return userSession;
   }
   async deleteMe(userSession: any): Promise<any> {
-    const { data, error } = await this.client.auth.admin.deleteUser(
-      userSession!.id
-    );
-    if (error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error deleting authentication data",
-      });
-    }
-
     const { error: deleteError } = await this.client
       .from("users")
       .delete()
@@ -428,6 +418,16 @@ export class SupabaseClient implements BackendClient {
       throw createError({
         statusCode: 500,
         statusMessage: "Error deleting user data: " + deleteError.message,
+      });
+    }
+
+    const { data, error } = await this.client.auth.admin.deleteUser(
+      userSession!.id
+    );
+    if (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Error deleting authentication data",
       });
     }
 
