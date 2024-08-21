@@ -1,9 +1,8 @@
 import { getBackendClient } from "../../../lib/backend";
 import { defineWrappedResponseHandler } from "../../utils/defaultHandler";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
-  const userSession = await client.getCurrentUser();
+export default defineWrappedResponseHandler(async (event, userSession) => {
+  const client = await getBackendClient(event, true);
 
   try {
     const response = await client.deleteMe(userSession);
