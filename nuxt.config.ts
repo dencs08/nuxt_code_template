@@ -34,7 +34,12 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
-
+  tailwindcss: {
+    config: {
+      plugins: [require("tailwindcss-primeui")],
+      content: ["./app/assets/primevue/**/*.{js,vue,ts}"],
+    },
+  },
   // srcDir: ".",
 
   // dir: {
@@ -97,7 +102,6 @@ export default defineNuxtConfig({
   fonts,
   pwa,
   webVitals,
-
   // ssr: false, //uncomment for client-side generation (disables server-side rendering)
   // nitro: {
   //   prerender: {
