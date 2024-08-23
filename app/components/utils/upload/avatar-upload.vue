@@ -8,6 +8,9 @@
     @file-selected="handleFileSelected"
     :upsert="true"
     :maxFileSize="maxFileSize"
+    :pt="{
+      root: { class: 'flex !justify-start' },
+    }"
   />
 </template>
 
