@@ -1,8 +1,7 @@
-@import "./my_utilities.css";
 @import "primeicons/primeicons.css";
-@import "./formkit-primevue.scss";
+@import "./my-utilities.css";
+@import "./formkit-primevue.css";
 @import "./primevue.css";
-/* @import "./formKit-PrimeVue-overrides.css"; */
 
 /* @layer tailwind-base, primevue, tailwind-utilities;
 
