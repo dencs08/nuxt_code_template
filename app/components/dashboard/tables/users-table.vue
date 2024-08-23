@@ -44,7 +44,7 @@
           />
         </div>
         <div
-          class="flex justify-between gap-3"
+          class="flex justify-between gap-1.5"
           :class="!isAdmin ? 'w-full' : ''"
         >
           <IconField class="w-full font-normal">
@@ -53,6 +53,7 @@
               v-model="filters['global'].value"
               placeholder="Search"
               class="w-full"
+              size="small"
             />
           </IconField>
           <div class="grid place-content-center">
