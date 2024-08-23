@@ -3,9 +3,7 @@ export function useInputEditor() {
 
   const primeInputNames = [...primeInputWithOptionNames, 'AutoComplete', 'Checkbox', 'ColorPicker', 'DatePicker', 'Editor', 'InputMask', 'InputNumber', 'InputOtp', 'InputText', 'Knob', 'Password', 'Rating', 'Slider', 'Textarea', 'ToggleButton', 'ToggleSwitch'].sort()
 
-  function generateSchemaItemId(): string {
-    return `id-${Math.random().toString(36).substring(2, 15)}`
-  }
+  const primeOutputNames = ['OutputBoolean', 'OutputDate', 'OutputDuration', 'OutputLink', 'OutputList', 'OutputNumber', 'OutputReference', 'OutputText']
 
   function editorDataToSchema(data: any): any {
     if (!data)
@@ -31,15 +29,39 @@ export function useInputEditor() {
 
     const defaultObject = { readonly: readonlyValue, disabled: disabledValue, preserve: preserveValue }
 
+    // outer class
+    let outerClass: string | undefined = ''
+    if (data.outerClass)
+      outerClass = `${outerClass} ${data.outerClass}`.trim()
+
+    // wrapper class
+    let wrapperClass: string | undefined = ''
+    if (data.wrapperClass)
+      wrapperClass = `${wrapperClass} ${data.wrapperClass}`.trim()
+
+    // inner class
+    let innerClass: string | undefined = ''
+    if (data.innerClass)
+      innerClass = `${innerClass} ${data.innerClass}`.trim()
+
     const undefinedObject = { prime: undefined, schemaResultFormKey: undefined, _dollar_formkit: undefined, slots: undefined, selectButton: undefined }
 
     const useOptions = primeInputWithOptionNames.map(s => `prime${s}`).includes(formkitInput)
 
     let result = {}
     if (useOptions)
-      result = { ...data, $formkit: formkitInput, ...tempData, ...undefinedObject, ...defaultObject, optionLabel: 'label', optionValue: 'value' }
+      result = { ...data, $formkit: formkitInput, ...tempData, ...undefinedObject, ...defaultObject, outerClass, wrapperClass, innerClass, optionLabel: 'label', optionValue: 'value' }
     else
-      result = { ...data, $formkit: formkitInput, ...tempData, ...undefinedObject, ...defaultObject, options: undefined }
+      result = { ...data, $formkit: formkitInput, ...tempData, ...undefinedObject, ...defaultObject, outerClass, wrapperClass, innerClass, options: undefined }
+
+    // cleanup empty values
+    for (const key in result) {
+      const value = result[key]
+      if ((typeof value === 'string' || value instanceof String)) {
+        if (value.trim().length === 0)
+          result[key] = undefined
+      }
+    }
 
     return result
   }
@@ -84,5 +106,5 @@ export function useInputEditor() {
     return { ...schema, _dollar_formkit: formkitInput }
   }
 
-  return { primeInputNames, generateSchemaItemId, editorDataToSchema, editorDataToJson, editorDataToCode: editorDataToObject, schemaToEditorData }
+  return { primeInputNames, primeOutputNames, editorDataToSchema, editorDataToJson, editorDataToCode: editorDataToObject, schemaToEditorData }
 }

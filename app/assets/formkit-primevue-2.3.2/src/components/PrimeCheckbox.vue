@@ -3,7 +3,7 @@ import type { PropType } from 'vue'
 import type { FormKitFrameworkContext } from '@formkit/core'
 
 import type { CheckboxProps } from 'primevue/checkbox'
-import { useFormKitInput } from '../composables'
+import { useFormKitInput, useFormKitSection } from '../composables'
 
 export interface FormKitPrimeCheckboxProps {
   binary?: CheckboxProps['binary']
@@ -14,9 +14,6 @@ export interface FormKitPrimeCheckboxProps {
   unstyled?: CheckboxProps['unstyled']
   indeterminate?: CheckboxProps['indeterminate']
   variant?: CheckboxProps['variant']
-  labelLeft?: string
-  labelRight?: string
-  wrapperClass?: string
 }
 
 const props = defineProps({
@@ -26,16 +23,22 @@ const props = defineProps({
   },
 })
 
-const { styleClass, wrapperClass, handleInput, handleBlur } = useFormKitInput(props.context)
+const { hasPrefix, hasSuffix, generateId } = useFormKitSection(props.context)
+
+const { styleClass, handleInput, handleBlur } = useFormKitInput(props.context)
+
+const generatedId = generateId()
 </script>
 
 <template>
-  <div :class="wrapperClass">
-    <span v-if="context.labelLeft" class="formkit-prime-left">{{ context.labelLeft }}</span>
+  <div class="p-formkit">
+    <label v-if="hasPrefix" :for="generatedId" class="formkit-prefix">
+      {{ context?.prefix }}
+    </label>
     <Checkbox
       v-model="context._value"
       v-bind="context?.attrs"
-      :input-id="context.id"
+      :input-id="generatedId"
       :disabled="!!context?.disabled"
       :readonly="context?.attrs.readonly ?? false"
       :input-style="context?.attrs.style"
@@ -54,6 +57,8 @@ const { styleClass, wrapperClass, handleInput, handleBlur } = useFormKitInput(pr
       @change="handleInput"
       @blur="handleBlur"
     />
-    <span v-if="context.labelRight" class="formkit-prime-right">{{ context.labelRight }}</span>
+    <label v-if="hasSuffix" :for="generatedId" class="formkit-suffix">
+      {{ context?.suffix }}
+    </label>
   </div>
 </template>
