@@ -1,18 +1,18 @@
 // formkit.config.ts
 import type { DefaultConfigOptions } from "@formkit/vue";
 import { createAutoAnimatePlugin } from "@formkit/addons";
-
-// import { primeInputs } from "@sfxcode/formkit-primevue";
-import { primeInputs } from "@/assets/formkit-primevue-2.3.2/src";
-
 import { en, pl, de } from "@formkit/i18n";
+
+import { primeInputs, primeOutputs } from "@sfxcode/formkit-primevue";
+// import { addPrimeAsteriskPlugin } from "@sfxcode/formkit-primevue/plugins";
 
 import { generateClasses } from "@formkit/themes";
 import { genesisIcons } from "@formkit/icons";
 import myTailwindTheme from "./custom_tailwindcss/formKit";
 
 const config: DefaultConfigOptions = {
-  plugins: [createAutoAnimatePlugin()],
+  locales: { de, pl, en },
+  locale: "en", //later changed in app.vue onMounted to the user's locale
 
   icons: {
     ...genesisIcons,
@@ -23,9 +23,9 @@ const config: DefaultConfigOptions = {
 
   inputs: {
     ...primeInputs,
-    // ...appInputs,
+    ...primeOutputs,
   },
-  locales: { de, pl, en },
+  plugins: [createAutoAnimatePlugin()],
 };
 
 export default config;
