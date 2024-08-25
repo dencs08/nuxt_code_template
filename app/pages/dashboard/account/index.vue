@@ -96,7 +96,6 @@
             >
               <div class="space-y-3 mb-4">
                 <FormKit
-                  class="w-full"
                   type="primePassword"
                   name="currentpassword"
                   validation="required"
@@ -105,7 +104,6 @@
                   placeholder="Current password"
                 />
                 <FormKit
-                  class="w-full"
                   type="primePassword"
                   name="password"
                   validation="required"
@@ -115,7 +113,6 @@
                 >
                 </FormKit>
                 <FormKit
-                  class="w-full"
                   type="primePassword"
                   name="password_confirm"
                   validation="required|confirm"
@@ -146,7 +143,6 @@
             >
               <div class="space-y-3 mb-4">
                 <FormKit
-                  class="w-full"
                   type="primePassword"
                   name="currentpassword"
                   validation="required"
