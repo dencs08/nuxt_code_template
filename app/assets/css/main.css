@@ -20,7 +20,6 @@ body {
     padding: 0;
 }
 
-
 body {
     @apply h-full font-body font-normal;
 }
@@ -58,5 +57,19 @@ img {
 ul {
     @apply list-decimal;
     @apply list-inside;
+}
+
+html.dark body,
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark p,
+html.dark span,
+html.dark li,
+html.dark a {
+    @apply text-surface-0
 }
 
