@@ -34,12 +34,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
-  tailwindcss: {
-    config: {
-      plugins: [require("tailwindcss-primeui")],
-      content: ["./app/assets/primevue/**/*.{js,vue,ts}"],
-    },
-  },
+
   // srcDir: ".",
 
   // dir: {
