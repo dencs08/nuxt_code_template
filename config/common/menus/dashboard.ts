@@ -7,7 +7,7 @@ export const dashboardMenu = [
   },
   {
     label: "Marketing",
-    icon: "pi pi-percentage",
+    icon: "pi pi-megaphone",
     route: "dash-admin-marketing",
     // badge: 5,
   },
