@@ -50,7 +50,6 @@ module.exports = {
     },
   },
   plugins: [
-    require("tailwindcss-primeui"),
     function ({ addComponents }: { addComponents: Function }) {
       addComponents({
         ".container": {
