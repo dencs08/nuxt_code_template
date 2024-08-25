@@ -1,9 +1,9 @@
 @import "primeicons/primeicons.css";
 @import "./my-utilities.css";
 @import "./formkit-primevue.css";
-@import "./primevue.css";
+/* @import "./primevue.css"; */
 
-/* @layer tailwind-base, primevue, tailwind-utilities;
+@layer tailwind-base, primevue, tailwind-utilities;
 
 @layer tailwind-base {
   @tailwind base;
@@ -12,7 +12,7 @@
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
-} */
+}
 
 html,
 body {
