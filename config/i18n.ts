@@ -1,7 +1,7 @@
 // config/i18n.ts
 
 export default {
-  vueI18n: "../../i18n.config.ts",
+  vueI18n: "../i18n.config.ts",
   strategy: "prefix_except_default",
   detectBrowserLanguage: {
     useCookie: true,
@@ -13,17 +13,17 @@ export default {
     {
       code: "pl",
       file: "pl.json",
-      iso: "pl-PL",
+      language: "pl-PL",
     },
     {
       code: "en",
       file: "en.json",
-      iso: "en-US",
+      language: "en-US",
     },
     {
       code: "de",
       file: "de.json",
-      iso: "de-DE",
+      language: "de-DE",
     },
   ],
   lazy: true,
