@@ -16,72 +16,40 @@
     </Head>
 
     <Body
-      class="bg-gray-50 text-surface-900 dark:bg-surface-900 dark:text-surface-50"
+      class="bg-white text-surface-900 dark:bg-surface-900 dark:text-surface-50"
     >
       <div>
         <DashboardSidebar />
         <div class="lg:pl-56">
-          <main class="pt-20 min-h-screen">
-            <div class="px-4 sm:px-6 lg:px-8 pb-8">
-              <Breadcrumbs class="hidden sm:block mb-3" />
-              <div v-auto-animate>
-                <Menubar
-                  v-if="showMenubar"
-                  :model="currentSubNavigation"
-                  class="mb-6"
-                  :pt="{
-                    root: [
-                      'relative',
-                      'flex',
-                      'items-center',
-                      'p-1',
-                      'rounded-md',
-                      'bg-surface-0/80 dark:bg-surface-800/30',
-                      'border border-surface-100/50 dark:border-surface-700/50',
-                    ],
-                    menu: ({ props }) => [
-                      'sm:flex',
-                      'items-center',
-                      'flex-wrap',
-                      'flex-col sm:flex-row',
-                      {
-                        hidden: !props?.mobileActive,
-                        flex: props?.mobileActive,
-                      },
-                      'absolute sm:relative',
-                      'top-full left-0',
-                      'sm:top-auto sm:left-auto',
-                      'w-full sm:w-auto',
-                      'm-0',
-                      'py-1 sm:py-0 sm:p-0',
-                      'list-none',
-                      'shadow-md sm:shadow-none',
-                      'border-0',
-                      'bg-surface-0 dark:bg-surface-900 sm:bg-transparent dark:sm:bg-transparent',
-                      'outline-none',
-                    ],
-                    content: ({ props }) => [
-                      { 'rounded-md': props.root },
-                      'transition-all',
-                      'duration-200',
-                    ],
-                    submenu: ({ props }) => [
-                      'w-full sm:w-48',
-                      'py-0',
-                      'm-0',
-                      'list-none',
-                      'shadow-none sm:shadow-md',
-                      'border-0',
-                      'rounded-md',
-                      'static sm:absolute',
-                      'z-10',
-                      { 'sm:absolute sm:left-full sm:top-0': props.level > 1 },
-                      'bg-surface-0 dark:bg-surface-900 dark:sm:bg-surface-800',
-                    ],
-                  }"
-                />
+          <main class="min-h-screen">
+            <div class="pb-8">
+              <Breadcrumbs class="hidden lg:block py-5 border-b" />
+              <Transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="opacity-0 -translate-y-1"
+                enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition ease-in duration-150"
+                leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 -translate-y-1"
+              >
+                <div v-if="showMenubar">
+                  <Menubar
+                    :model="currentSubNavigation"
+                    class="py-2"
+                    :pt="{
+                      root: [
+                        'p-1',
+                        'rounded-none',
+                        'bg-transparent dark:bg-surface-transparent',
+                        'border-b border-t-0 border-x-0 border-surface-100/50 dark:border-surface-700/50',
+                      ],
+                    }"
+                  />
+                </div>
+              </Transition>
+              <div class="px-4 sm:px-6 lg:px-4 mt-5">
+                <slot></slot>
               </div>
-              <slot></slot>
             </div>
           </main>
         </div>
