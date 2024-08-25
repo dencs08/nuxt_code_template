@@ -122,6 +122,29 @@
   margin-left: 1rem;
 }
 
+.p-formkit {
+  display: flex;
+  align-items: center;
+}
+
+.formkit-form button[type="submit"] {
+  @apply before:w-0 before:h-0 before:opacity-0 before:transition-all before:duration-150;
+}
+
+.formkit-form[data-loading="true"] button[type="submit"] {
+  @apply before:w-4 before:h-4 before:mr-2 before:opacity-100 before:border before:border-r-transparent before:rounded-3xl before:border-white before:animate-spin pointer-events-none select-none opacity-75;
+}
+
+
+.p-formkit .p-dropdown,
+.p-formkit .p-inputnumber,
+.p-formkit .p-formkit-icon,
+.p-formkit .p-inputtext,
+.p-formkit .p-iconfield,
+.p-password input{
+  width: 100%;
+}
+
 .p-password {
   display: block !important;
 }
@@ -132,29 +155,4 @@
 
 .p-dropdown-panel {
   z-index: 9999 !important;
-}
-
-.p-formkit {
-  display: flex;
-  align-items: center;
-}
-
-.p-formkit .p-dropdown {
-  @apply w-full;
-}
-
-.p-formkit .p-inputnumber {
-  @apply w-full;
-}
-
-.formkit-outer[data-disabled="true"] input.p-component {
-  @apply pointer-events-none select-none bg-gray-200 text-gray-400/75;
-}
-
-.formkit-form button[type="submit"] {
-  @apply before:w-0 before:h-0 before:opacity-0 before:transition-all before:duration-150;
-}
-
-.formkit-form[data-loading="true"] button[type="submit"] {
-  @apply before:w-4 before:h-4 before:mr-2 before:opacity-100 before:border before:border-r-transparent before:rounded-3xl before:border-white before:animate-spin pointer-events-none select-none opacity-75;
 }
