@@ -1,75 +1,20 @@
 <template>
   <div>
-    <!-- Navbar -->
     <div
-      class="fixed w-screen top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-surface-100 dark:border-surface-800 bg-white dark:bg-surface-950/50 backdrop-blur px-4 shadow sm:gap-x-6 sm:px-6 lg:px-8"
+      class="lg:hidden px-6 py-2 mb-2 flex gap-2 items-center justify-between border-b border-surface-100 dark:border-surface-800"
     >
-      <button
-        type="button"
-        class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-        @click="sidebarOpen = true"
-      >
-        <span class="sr-only">Open sidebar</span>
-        <Icon name="ic:round-menu" class="h-6 w-auto" />
-      </button>
-
-      <!-- Separator -->
-      <div class="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
-
-      <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 items-center">
-        <nuxt-link :to="localePath({ name: 'index' })">
-          <Logo
-            type="symbol"
-            :color="isDark ? 'white' : 'black'"
-            height="25px"
-            width="25px"
-          />
-        </nuxt-link>
-
-        <form
-          class="relative flex flex-1 lg:pl-28 lg:ml-10 w-full items-center"
+      <div class="flex gap-2 items-center">
+        <button
+          type="button"
+          class="text-gray-700 lg:hidden"
+          @click="sidebarOpen = true"
         >
-          <IconField class="w-full">
-            <InputIcon class="pi pi-search" />
-            <InputText
-              v-model="value1"
-              placeholder="Search"
-              class="!border-0 !shadow-none w-full"
-            />
-          </IconField>
-        </form>
-
-        <div class="flex items-center gap-x-4 lg:gap-x-6">
-          <OverlayBadge value="1">
-            <i
-              class="pi pi-bell hover:text-primary-500 relative cursor-pointer transition-colors text-md"
-            />
-          </OverlayBadge>
-          <ColorModeSelector />
-          <!-- Profile dropdown -->
-          <button
-            type="button"
-            icon="pi pi-user"
-            rounded
-            text
-            @click="toggleUserMenu"
-            aria-haspopup="true"
-            aria-controls="overlay_menu"
-            class="group bg-gray-50 text-gray-900 rounded-full grid place-content-center p-1.5 dark:bg-gray-800 dark:text-light-0 hover:bg-white/0 hover:dark:bg-white/0 transition-colors"
-          >
-            <Icon
-              name="ic:baseline-person"
-              class="transform group-hover:text-primary-500 transition-transform"
-            />
-          </button>
-          <Menu
-            ref="userMenu"
-            id="overlay_menu"
-            :model="userNavigation"
-            :popup="true"
-          />
-        </div>
+          <span class="sr-only">Open sidebar</span>
+          <Icon name="ic:round-menu" class="h-6 w-auto" />
+        </button>
+        <Breadcrumbs class="lg:hidden" />
       </div>
+      <!-- <ColorModeSelector /> -->
     </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
@@ -101,10 +46,35 @@
             <PanelMenuDropdown :navigation="dashboardNavigation" />
           </div>
           <div class="mt-auto">
-            <hr
-              class="mb-3 mx-3 border-t-1 border-surface-200 dark:border-surface-700/35"
-            />
-            <PanelMenuDropdown :navigation="dashboardSettings" />
+            <div class="mt-auto">
+              <Divider class="mb-2.5" />
+              <div class="flex items-center gap-x-4 lg:gap-x-6 mb-2">
+                <!-- Profile dropdown -->
+                <Button
+                  text
+                  @click="toggleUserMenu"
+                  aria-haspopup="true"
+                  aria-controls="overlay_menu"
+                  class="flex flex-row w-full gap-2 justify-between items-center"
+                >
+                  <div class="flex flex-row gap-2">
+                    <ProfileAvatar
+                      size="small"
+                      class="rounded-full w-6 shadow-none"
+                    />
+                    <span class="font-medium">{{ firstName }}</span>
+                    <Badge value="2"></Badge>
+                  </div>
+                  <Icon name="ic:baseline-more-vert" class="h-5 w-auto"></Icon>
+                </Button>
+                <Menu
+                  ref="userMenu"
+                  id="overlay_menu"
+                  :model="userNavigation"
+                  :popup="true"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -112,16 +82,63 @@
 
     <!-- Static sidebar for desktop -->
     <div
-      class="hidden fixed top-16 lg:z-50 lg:flex lg:w-56 lg:flex-col h-full bg-white shadow-[4px_0_5px_-5px_rgba(0,0,0,0.3)] dark:bg-surface-950/50 border-r border-surface-100 dark:border-surface-800"
+      class="hidden fixed lg:z-50 lg:flex lg:w-56 lg:flex-col h-full bg-white dark:bg-surface-950/50 border-r border-surface-100 dark:border-surface-800"
     >
-      <div class="flex grow flex-col gap-y-5 overflow-y-auto px-3 pb-4 pt-4">
-        <nav class="flex flex-1 flex-col">
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto px-3 pb-2 pt-4">
+        <nuxt-link :to="localePath({ name: 'index' })">
+          <Logo
+            type="symbol"
+            :color="isDark ? 'white' : 'black'"
+            height="25px"
+            width="25px"
+          />
+        </nuxt-link>
+        <nav class="flex flex-1 flex-col w-auto overflow-hidden">
+          <IconField class="overflow-hidden flex mb-2 shadow-sm">
+            <InputIcon class="pi pi-search" />
+            <InputText
+              v-model="searchValue"
+              placeholder="Search"
+              size="small"
+              class="flex-1 w-full"
+            />
+            <InputIcon
+              class="border border-surface rounded bg-emphasis text-muted-color text-xs"
+            >
+              {{ $device.isWindows ? "Ctrl+k" : "⌘+k" }}
+            </InputIcon>
+          </IconField>
           <PanelMenuDropdown :navigation="dashboardNavigation" />
 
-          <!--Settings-->
-          <div class="mt-auto mb-14">
-            <!-- <Divider class="" /> -->
-            <PanelMenuDropdown :navigation="dashboardSettings" />
+          <!--Profile-->
+          <div class="mt-auto">
+            <Menu
+              ref="userMenu"
+              id="overlay_menu"
+              :model="userNavigation"
+              :popup="true"
+            />
+            <Divider class="mb-2.5" />
+            <div class="flex items-center gap-x-4 lg:gap-x-6">
+              <!-- Profile dropdown -->
+              <Button
+                text
+                @click="toggleUserMenu"
+                aria-haspopup="true"
+                aria-controls="overlay_menu"
+                class="flex flex-row w-full gap-2 justify-between items-center"
+              >
+                <div class="flex flex-row gap-2">
+                  <ProfileAvatar
+                    size="small"
+                    class="rounded-full w-6 shadow-none"
+                  />
+                  <span class="font-medium">{{ firstName }}</span>
+                  <Badge value="2"></Badge>
+                </div>
+                <Icon name="ic:baseline-more-vert" class="h-5 w-auto"></Icon>
+              </Button>
+            </div>
           </div>
         </nav>
       </div>
@@ -160,6 +177,13 @@ const userNavigation = computed(() => [
         icon: "pi pi-user",
         command: () => {
           navigateTo(localePath({ name: "dash-account" }));
+        },
+      },
+      {
+        label: "Settings",
+        icon: "pi pi-cog",
+        command: () => {
+          navigateTo(localePath("/dashboard/settings"));
         },
       },
       {
