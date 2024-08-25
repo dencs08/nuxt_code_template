@@ -10,6 +10,7 @@
 </template>
 <script setup lang="ts">
 import kswitchConfig from "~~/config/common/kswitch";
+import { type FormKit } from "~~/types/common";
 const kswitch = ref(false);
 const checkKSwitch = async () => {
   try {
@@ -29,8 +30,13 @@ const checkKSwitch = async () => {
     }
   } catch (error) {}
 };
+
+const { locale } = useI18n();
+const formKit = inject<FormKit>(Symbol.for("FormKitConfig")) || { locale: "" };
+
 onMounted(() => {
   checkKSwitch();
+  formKit.locale = locale.value;
 });
 </script>
 <style>
