@@ -1,54 +1,90 @@
 <template>
-    <Select :modelValue="selectedLocale" @update:modelValue="changeLocale($event)" :options="availableLocales"
-        optionLabel="iso" optionValue="code">
-    </Select>
-    <!-- <div v-auto-animate class="absolute w-screen h-screen top-0 left-0 pointer-events-none">
-            <div v-if="isLoading" class=" bg-gray-900/60 overflow-hidden">
-                <div class="flex flex-col items-center justify-center w-screen h-screen text-center space-y-5">
-                    <Icon name="svg-spinners:ring-resize" class="w-16 h-16 text-white" />
-                    <p class="text-3xl text-white font-bold font-header">Translating in process, please wait</p>
-                </div>
-            </div>
-        </div> -->
+  <Select
+    v-model="selectedLocale"
+    @update:modelValue="changeLocale"
+    :options="availableLocales"
+    option-label="label"
+    option-value="code"
+  >
+    <template #value="slotProps">
+      <div v-if="slotProps" class="flex items-center">
+        <Icon
+          :name="`flag:${getFlagCode(slotProps.value)}-4x3`"
+          class="mr-2 h-6 w-auto"
+        />
+        <div>{{ slotProps.value.label }}</div>
+      </div>
+      <span v-else>
+        {{ slotProps.placeholder }}
+      </span>
+    </template>
+    <template #option="slotProps">
+      <div class="flex items-center">
+        <Icon
+          :name="`flag:${getFlagCode(slotProps.option.code)}-4x3`"
+          class="mr-2 h-6 w-auto"
+        />
+        <div>{{ slotProps.option.label }}</div>
+      </div>
+    </template>
+  </Select>
 </template>
 
 <script setup lang="ts">
-interface FormKit {
-    locale: string;
-}
+import { ref, computed, onMounted, onBeforeUnmount, inject } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { type FormKit } from "~~/types/common";
 
 const router = useRouter();
-const { locales, setLocale, getLocaleCookie } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
-
-const formKit = inject<FormKit>(Symbol.for('FormKitConfig'))
+const { locales, locale, setLocale } = useI18n();
+const switchLocalePath = useSwitchLocalePath() || (() => "/");
+const formKit = inject<FormKit>(Symbol.for("FormKitConfig")) || { locale: "" };
 const isLoading = ref(false);
+const selectedLocale = ref(locale.value || "");
 
-let selectedLocale: Ref<string> = ref('');
-const selectedFormKitLocale: Ref<string> = ref('')
+const languageToFlag: { [key: string]: string } = {
+  en: "us",
+  de: "de",
+  pl: "pl",
+};
 
-onMounted(async () => {
-    selectedLocale.value = await getLocaleCookie();
-    selectedFormKitLocale.value = selectedLocale.value;
-    formKit.locale = selectedFormKitLocale.value;
-});
+const getFlagCode = (languageCode: string): string => {
+  return (
+    languageToFlag[languageCode.toLowerCase()] || languageCode.toLowerCase()
+  );
+};
 
 onBeforeUnmount(() => {
-    document.body.style.overflow = '';
+  document.body.style.overflow = "";
 });
 
 const availableLocales = computed(() => {
-    return (locales.value).filter(i => i.code)
-})
+  return locales.value
+    .filter((i) => i.code)
+    .map((locale) => ({
+      code: locale.code,
+      label: locale.name || locale.language || locale.code,
+    }));
+});
 
-const changeLocale = (newLocale: string) => {
+const changeLocale = async (newLocale: string) => {
+  try {
     isLoading.value = true;
-    document.body.style.overflow = 'hidden'; // Block scrolling
-    setLocale(newLocale);
-    router.push(switchLocalePath(newLocale));
+    document.body.style.overflow = "hidden"; // Block scrolling
+    await setLocale(newLocale);
+    await router.push(switchLocalePath(newLocale));
     selectedLocale.value = newLocale;
     formKit.locale = newLocale;
+  } catch (error) {
+    console.error("Error changing locale:", error);
+  } finally {
     isLoading.value = false;
-    document.body.style.overflow = '';
-}
+    document.body.style.overflow = "";
+  }
+};
+
+console.log("test FormKit config:", formKit);
+console.log("test Selected locale:", selectedLocale.value);
+console.log("test Available locales:", availableLocales.value);
 </script>
