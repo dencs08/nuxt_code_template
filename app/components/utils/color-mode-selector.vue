@@ -2,28 +2,34 @@
   <div>
     <button
       v-if="type === 'button'"
-      @click="toggle()"
+      @click="darkModeStore.toggleDarkMode()"
       class="grid place-content-center"
     >
       <Icon
         v-auto-animate
-        :name="isDark ? 'ic:outline-dark-mode' : 'ic:outline-light-mode'"
+        :name="
+          darkModeStore.isDarkMode
+            ? 'ic:outline-dark-mode'
+            : 'ic:outline-light-mode'
+        "
         class="text-lg"
       />
     </button>
-    <ToggleSwitch v-else-if="type === 'switch'" v-model="isDark" />
+    <ToggleSwitch
+      v-else-if="type === 'switch'"
+      :model-value="darkModeStore.isDarkMode"
+      @update:model-value="darkModeStore.toggleDarkMode()"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-const isDark = useDark();
-const test = ref();
-const toggle = useToggle(isDark);
-
 const props = defineProps({
   type: {
     type: String,
     default: "button",
   },
 });
+
+const darkModeStore = useDarkModeStore();
 </script>

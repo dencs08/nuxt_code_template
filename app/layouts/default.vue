@@ -1,20 +1,21 @@
 <script setup lang="ts">
-const route = useRoute()
-const { t } = useI18n()
+const route = useRoute();
+const { t } = useI18n();
 const i18nHead = useLocaleHead({
   addDirAttribute: true,
-  identifierAttribute: 'id',
+  identifierAttribute: "id",
   addSeoAttributes: {
-    canonicalQueries: ['']
+    canonicalQueries: [""],
   },
-})
+});
 
 const title = computed(() => {
-  const titleKey = typeof route.meta.title === 'string' || typeof route.meta.title === 'number'
-    ? route.meta.title
-    : 'TBD';
-  return t('layouts.default.title', { title: t(titleKey) })
-})
+  const titleKey =
+    typeof route.meta.title === "string" || typeof route.meta.title === "number"
+      ? route.meta.title
+      : "TBD";
+  return t("layouts.default.title", { title: t(titleKey) });
+});
 
 useHead({
   htmlAttrs: {
@@ -22,18 +23,11 @@ useHead({
   },
   title: title,
   link: [...(i18nHead.value.link || [])],
-  meta: [...(i18nHead.value.meta || [])]
-})
-
-const isDark = useDark()
-
-onMounted(() => {
-  isDark.value = false;
+  meta: [...(i18nHead.value.meta || [])],
 });
 </script>
 
 <template>
-
   <Body class="bg-gray-50 text-gray-900">
     <Navbar />
     <main>

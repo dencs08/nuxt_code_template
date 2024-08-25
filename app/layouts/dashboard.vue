@@ -23,7 +23,9 @@
         <div class="lg:pl-56">
           <main class="min-h-screen">
             <div class="pb-8">
-              <Breadcrumbs class="hidden lg:block py-5 border-b" />
+              <Breadcrumbs
+                class="hidden lg:block py-5 border-b border-surface-100 dark:border-surface-800"
+              />
               <Transition
                 enter-active-class="transition ease-out duration-200"
                 enter-from-class="opacity-0 -translate-y-1"
@@ -36,6 +38,7 @@
                   <Menubar
                     :model="currentSubNavigation"
                     class="py-2"
+                    breakpoint="225px"
                     :pt="{
                       root: [
                         'p-1',

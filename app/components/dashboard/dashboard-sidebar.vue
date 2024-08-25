@@ -94,7 +94,7 @@
           />
         </nuxt-link>
         <nav class="flex flex-1 flex-col w-auto overflow-hidden">
-          <IconField class="overflow-hidden flex mb-2 shadow-sm">
+          <IconField class="overflow-hidden mb-2 shadow-sm">
             <InputIcon class="pi pi-search" />
             <InputText
               v-model="searchValue"
@@ -103,7 +103,7 @@
               class="flex-1 w-full"
             />
             <InputIcon
-              class="border border-surface rounded bg-emphasis text-muted-color text-xs"
+              class="border border-surface-100 dark:border-surface-600 p-0.5 -my-2.5 rounded bg-emphasis text-muted-color text-xs"
             >
               {{ $device.isWindows ? "Ctrl+k" : "⌘+k" }}
             </InputIcon>

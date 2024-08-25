@@ -26,12 +26,6 @@ useHead({
   link: [...(i18nHead.value.link || [])],
   meta: [...(i18nHead.value.meta || [])],
 });
-
-const isDark = useDark();
-
-onMounted(() => {
-  isDark.value = false;
-});
 </script>
 
 <template>

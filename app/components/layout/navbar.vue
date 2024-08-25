@@ -3,9 +3,10 @@
     class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white/60 backdrop-blur-md shadow"
     :class="{ '-translate-y-full': !showHeader }"
   >
+    <!-- Desktop -->
     <nav
       class="container mx-auto flex items-center justify-between py-5"
-      aria-label="Global"
+      aria-label="Global menu navigation"
     >
       <NuxtLink :to="localePath({ name: 'index' })">
         <Logo
@@ -49,8 +50,10 @@
           </template>
         </NuxtLink>
       </div>
+      <ColorModeSelector />
     </nav>
 
+    <!-- Mobile -->
     <Drawer v-model:visible="sidebarOpen">
       <template #container="{ closeCallback }">
         <div class="flex flex-col h-full">
