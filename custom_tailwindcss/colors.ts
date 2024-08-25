@@ -19,7 +19,8 @@ function rgbToHex(r: number, g: number, b: number) {
 }
 
 export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
-  const variants: Record<string, string> = {};
+  const tailwindVariants: Record<string, string> = {};
+  const primeVueVariants: Record<string, Record<string, string>> = {};
   let cssContent = ":root {\n";
 
   let initialBlackFactor = 0.1;
@@ -30,8 +31,9 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
 
   colorDefinitions.forEach(({ colorName, mainHex }) => {
     const baseRgb = hexToRgb(mainHex);
+    primeVueVariants[`my.${colorName}`] = {};
+
     for (let i = 0; i <= 950; i += 50) {
-      if (i % 100 !== 0 && i !== 50 && i !== 950) continue;
       let r, g, b;
       if (i <= 500) {
         let whiteFactor = 1 - (0.05 + 0.95 * (i / 500));
@@ -49,7 +51,14 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
         b = Math.round(baseRgb[2] * (1 - blackFactor));
       }
       const hexColor = rgbToHex(r, g, b);
-      variants[`${colorName}-${i}`] = hexColor;
+
+      // For Tailwind (preserving original naming)
+      tailwindVariants[`${colorName}-${i}`] = hexColor;
+
+      // For PrimeVue
+      primeVueVariants[`my.${colorName}`][i] = hexColor;
+
+      // For CSS variables
       cssContent += `  --p-${colorName}-${i}: ${hexColor};\n`;
     }
   });
@@ -57,13 +66,60 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
   cssContent += "}\n";
 
   // Write the CSS content to a file
-  const filePath = path.resolve(
+  const cssFilePath = path.resolve(
     __dirname,
     "../app/assets/css/generated-colors.css"
   );
-  fs.writeFileSync(filePath, cssContent);
+  fs.writeFileSync(cssFilePath, cssContent);
+  console.log(`CSS file generated at: ${cssFilePath}`);
 
-  console.log(`CSS file generated at: ${filePath}`);
+  // Generate color definitions file for PrimeVue
+  const colorDefinitionsContent = `export const generatedColors = ${JSON.stringify(primeVueVariants, null, 2)};`;
+  const colorDefinitionsFilePath = path.resolve(
+    __dirname,
+    "../app/assets/primevue/generated-colors.js"
+  );
+  fs.writeFileSync(colorDefinitionsFilePath, colorDefinitionsContent);
+  console.log(
+    `Color definitions file generated at: ${colorDefinitionsFilePath}`
+  );
 
-  return variants;
+  return tailwindVariants; // Return the Tailwind variants for use in Tailwind config
+}
+
+// Function to update app-theme.js
+export function updateAppTheme() {
+  const appThemeFilePath = path.resolve(
+    __dirname,
+    "../app/assets/primvue/app-theme.js"
+  );
+  let appThemeContent = fs.readFileSync(appThemeFilePath, "utf8");
+
+  // Add import statement if it doesn't exist
+  if (!appThemeContent.includes("import { generatedColors }")) {
+    appThemeContent = `import { generatedColors } from './generated-colors.js';\n${appThemeContent}`;
+  }
+
+  // Update primitive object
+  const primitiveRegex = /primitive:\s*{[^}]*}/;
+  const newPrimitiveContent = `primitive: {
+    ...Noir.primitive,
+    ...generatedColors
+  }`;
+
+  if (primitiveRegex.test(appThemeContent)) {
+    appThemeContent = appThemeContent.replace(
+      primitiveRegex,
+      newPrimitiveContent
+    );
+  } else {
+    // If primitive section doesn't exist, add it after the definePreset line
+    appThemeContent = appThemeContent.replace(
+      /(const\s+AppTheme\s*=\s*definePreset\([^)]+\),\s*{)/,
+      `$1\n  ${newPrimitiveContent},`
+    );
+  }
+
+  fs.writeFileSync(appThemeFilePath, appThemeContent);
+  console.log(`App theme file updated at: ${appThemeFilePath}`);
 }
