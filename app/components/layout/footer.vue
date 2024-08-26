@@ -1,6 +1,6 @@
 <template>
   <footer aria-labelledby="footer-heading">
-    <hr class="w-full text-black" />
+    <Divider />
     <div class="container mx-auto pt-5 md:pt-10">
       <div class="flex flex-row justify-between items-center">
         <div class="h-auto w-24">
@@ -8,7 +8,7 @@
         </div>
         <I18nDropdown />
       </div>
-      <hr class="w-full text-black my-10" />
+      <Divider class="my-10" />
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
         <div class="grid gap-8 xl:col-span-2">
           <div
@@ -43,8 +43,9 @@
           <NewsletterInput />
         </div>
       </div>
+      <Divider class="my-4 lg:my-6" />
       <div
-        class="my-4 border-t border-gray-900/10 pt-5 sm:pt-10 sm:my-10 text-center md:flex md:items-center md:justify-between lg:my-10"
+        class="text-center md:flex md:items-center md:justify-between pb-4 lg:pb-6"
       >
         <div class="text-xs leading-5 text-gray-500">
           &copy; {{ currentYear }} Wszelkie prawa zastrzeżone.
