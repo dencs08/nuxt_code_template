@@ -81,6 +81,13 @@ onMounted(() => {
   if (glitchedHeader.value && glitchWindow.value) {
     const clone = glitchedHeader.value.cloneNode(true);
     glitchWindow.value.appendChild(clone);
+
+    if (
+      process.env.NODE_ENV === "development" ||
+      process.env.NODE_ENV === "dev"
+    ) {
+      console.log(props.error);
+    }
   }
 });
 </script>
