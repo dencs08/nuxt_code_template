@@ -1,6 +1,6 @@
 <template>
   <header
-    class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white/60 backdrop-blur-md shadow"
+    class="z-[99] fixed w-full transition-transform duration-300 ease-in-out bg-white/60 dark:bg-surface-900/60 backdrop-blur-md shadow"
     :class="{ '-translate-y-full': !showHeader }"
   >
     <!-- Desktop -->
@@ -8,15 +8,17 @@
       class="container mx-auto flex items-center justify-between py-5"
       aria-label="Global menu navigation"
     >
-      <NuxtLink :to="localePath({ name: 'index' })">
-        <Logo
-          type="symbol"
-          :color="isDark ? 'white' : 'black'"
-          height="25px"
-          width="25px"
-          @click="sidebarOpen = false"
-        />
-      </NuxtLink>
+      <ClientOnly>
+        <NuxtLink :to="localePath({ name: 'index' })">
+          <Logo
+            type="symbol"
+            :color="isDarkMode ? 'white' : 'black'"
+            height="25px"
+            width="25px"
+            @click="sidebarOpen = false"
+          />
+        </NuxtLink>
+      </ClientOnly>
       <div class="flex lg:hidden">
         <button
           type="button"
@@ -38,10 +40,16 @@
         </NuxtLink>
         <NuxtLink :to="localePath({ name: 'login' })">
           <template v-if="isUserLoggedIn">
-            <Icon name="ic:outline-account-circle" class="h-6 w-6" />
+            <Icon
+              name="ic:baseline-account-circle"
+              class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition"
+            />
             <template v-if="hasDashboardReadPermission">
               <NuxtLink :to="localePath('/dashboard')">
-                <Icon name="ic:outline-dashboard" class="h-6 w-6" />
+                <Icon
+                  name="ic:baseline-space-dashboard"
+                  class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition ml-2"
+                />
               </NuxtLink>
             </template>
           </template>
@@ -50,7 +58,7 @@
           </template>
         </NuxtLink>
       </div>
-      <ColorModeSelector />
+      <!-- <ColorModeSelector /> -->
     </nav>
 
     <!-- Mobile -->
@@ -62,7 +70,7 @@
               <nuxt-link :to="localePath({ name: 'index' })">
                 <Logo
                   type="symbol"
-                  :color="isDark ? 'white' : 'black'"
+                  :color="isDarkMode ? 'white' : 'black'"
                   height="25px"
                   width="25px"
                   @click="sidebarOpen = false"
@@ -111,7 +119,7 @@
 </template>
 
 <script setup>
-const isDark = useDark();
+const { isDarkMode } = useDarkMode();
 const localePath = useLocalePath();
 const { navbarMenu } = useNavigation();
 const { scrollToElement } = useSmoothScroll();
@@ -125,11 +133,12 @@ const showHeader = ref(true);
 
 const { y } = useWindowScroll();
 watch(y, (newScrollPosition) => {
-  if (window.matchMedia("(min-width: 1025px)").matches) {
+  if (import.meta.client && window.matchMedia("(min-width: 1025px)").matches) {
     showHeader.value = newScrollPosition <= lastScrollPosition.value;
     lastScrollPosition.value = newScrollPosition;
   }
 });
+
 const { hasPermission } = usePermissions();
 
 const isUserLoggedIn = computed(() => !!user);
@@ -137,7 +146,3 @@ const hasDashboardReadPermission = computed(() =>
   hasPermission("dashboard", "read")
 );
 </script>
-
-<style scoped></style>
-
-<style></style>

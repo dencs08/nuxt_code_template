@@ -26,7 +26,7 @@
               <nuxt-link :to="localePath({ name: 'index' })">
                 <Logo
                   type="symbol"
-                  :color="isDark ? 'white' : 'black'"
+                  :color="isDarkMode ? 'white' : 'black'"
                   height="25px"
                   width="25px"
                 />
@@ -88,7 +88,7 @@
         <nuxt-link :to="localePath({ name: 'index' })">
           <Logo
             type="symbol"
-            :color="isDark ? 'white' : 'black'"
+            :color="isDarkMode ? 'white' : 'black'"
             height="25px"
             width="25px"
           />
@@ -158,7 +158,7 @@ const { signOut } = useAuthentication();
 const localePath = useLocalePath();
 const userStore = useUserStore();
 const firstName = userStore.firstName;
-const isDark = useDark();
+const { isDarkMode } = useDarkMode();
 
 const sidebarOpen = ref(false);
 const searchValue = ref("");
