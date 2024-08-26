@@ -83,8 +83,4 @@ const changeLocale = async (newLocale: string) => {
     document.body.style.overflow = "";
   }
 };
-
-console.log("test FormKit config:", formKit);
-console.log("test Selected locale:", selectedLocale.value);
-console.log("test Available locales:", availableLocales.value);
 </script>
