@@ -5,9 +5,13 @@
     <title>App is loading...</title>
     <style>
       body {
-        background-color: #fff;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
       }
-
+      body.dark {
+        color: #fff;
+      }
       #center {
         position: absolute;
         top: 50%;
@@ -19,11 +23,9 @@
         font-family: "Lato", sans-serif;
         font-weight: 600;
         font-size: 16px;
-        color: #111;
         text-align: center;
         -webkit-font-smoothing: antialiased;
       }
-
       .loader {
         width: 80px;
         height: 80px;
@@ -32,52 +34,49 @@
         margin-top: 60px;
         margin-bottom: 70px;
       }
-
       .loader .dot {
         position: absolute;
         top: 0;
         left: 0;
         width: 80px;
         height: 80px;
-
         animation: 1.7s dotrotate cubic-bezier(0.775, 0.005, 0.31, 1) infinite;
       }
-
       .loader .dot:nth-child(1) {
         animation-delay: 0.2s;
       }
-
       .loader .dot:nth-child(2) {
         animation-delay: 0.35s;
       }
-
       .loader .dot:nth-child(3) {
         animation-delay: 0.45s;
       }
-
       .loader .dot:nth-child(4) {
         animation-delay: 0.55s;
       }
-
       .loader .dot:after,
       .loader .dot .first {
         content: "";
         position: absolute;
         width: 8px;
         height: 8px;
-        background: #111;
         border-radius: 50%;
         left: 50%;
         margin-left: -4px;
       }
-
       .loader .dot .first {
-        background: #111;
         margin-top: -4px;
         animation: 1.7s dotscale cubic-bezier(0.775, 0.005, 0.31, 1) infinite;
         animation-delay: 0.2s;
       }
-
+      body:not(.dark) .loader .dot:after,
+      body:not(.dark) .loader .dot .first {
+        background: #111111;
+      }
+      body.dark .loader .dot:after,
+      body.dark .loader .dot .first {
+        background: #ffffff;
+      }
       @keyframes dotrotate {
         from {
           transform: rotate(0deg);
@@ -86,7 +85,6 @@
           transform: rotate(360deg);
         }
       }
-
       @keyframes dotscale {
         0%,
         10% {
@@ -111,12 +109,10 @@
       }
     </style>
   </head>
-  <body>
+  <body class="bg-surface-0 dark:bg-surface-900">
     <div
       class="h-screen w-screen flex flex-col justify-center items-center gap-4"
     >
-      <!-- <Logo type="logotype" color="black" height="50px" width="150px" /> -->
-      <!-- <h1 class="text-2xl font-bold">The app is loading please wait...</h1> -->
       <div>
         <div id="center">
           <div class="loader">
@@ -130,5 +126,23 @@
         </div>
       </div>
     </div>
+
+    <script>
+      (function () {
+        var isDashboardRoute =
+          window.location.pathname.startsWith("/dashboard");
+        var darkModeSettings = JSON.parse(
+          localStorage.getItem("darkModeSettings") ||
+            '{"default":false,"main":false,"dashboard":false}'
+        );
+        var isDarkMode = isDashboardRoute
+          ? darkModeSettings.dashboard
+          : darkModeSettings.default;
+
+        if (isDarkMode) {
+          document.body.classList.add("dark");
+        }
+      })();
+    </script>
   </body>
 </html>
