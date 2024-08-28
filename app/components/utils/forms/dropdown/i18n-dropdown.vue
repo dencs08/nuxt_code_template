@@ -31,12 +31,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { usePrimeVue } from "primevue/config";
 import { type FormKit } from "~~/types/common";
 
 const router = useRouter();
+const primeVue = usePrimeVue();
 const { locales, locale, setLocale } = useI18n();
 const switchLocalePath = useSwitchLocalePath() || (() => "/");
 const formKit = inject<FormKit>(Symbol.for("FormKitConfig")) || { locale: "" };
@@ -68,6 +69,86 @@ const availableLocales = computed(() => {
     }));
 });
 
+let primeVueLocaleFiles = {} as Record<string, () => Promise<any>>;
+
+onMounted(async () => {
+  primeVueLocaleFiles = import.meta.glob(
+    "../../../../../node_modules/primelocale/*.json"
+  );
+  // console.log(
+  //   "Available PrimeVue locale files:",
+  //   Object.keys(primeVueLocaleFiles)
+  // );
+});
+
+watchEffect(() => updatePrimeVueConfigWithLocaleTag(selectedLocale.value));
+
+async function updatePrimeVueConfigWithLocaleTag(localeTag: string) {
+  // console.log(
+  //   "updatePrimeVueConfigWithLocaleTag called with localeTag:",
+  //   localeTag
+  // );
+
+  if (!localeTag) {
+    // console.log("No localeTag provided, exiting function.");
+    return;
+  }
+
+  const localeRe = new RegExp(`\\b${localeTag}\\.json$`, "i");
+  const langRe = new RegExp(`\\b${localeTag.split("-")[0]}\\.json$`, "i");
+
+  let localeFileName =
+    Object.keys(primeVueLocaleFiles).find((locale) => localeRe.test(locale)) ||
+    Object.keys(primeVueLocaleFiles).find((locale) => langRe.test(locale));
+
+  if (localeFileName) {
+    console.log("localeFileName found:", localeFileName);
+    try {
+      const localeModule = await primeVueLocaleFiles[localeFileName]();
+      // console.log(
+      //   "Raw loaded locale module:",
+      //   JSON.stringify(localeModule, null, 2)
+      // );
+
+      let localeData: Record<string, any>;
+
+      if (localeModule[localeTag]) {
+        // If the locale data is nested under the locale tag
+        localeData = localeModule[localeTag];
+      } else if (Object.keys(localeModule).length === 1) {
+        // If the locale data is nested under a single key (e.g., 'de' or 'pl')
+        localeData = localeModule[Object.keys(localeModule)[0]];
+      } else {
+        // If the locale data is directly in the module
+        localeData = localeModule;
+      }
+
+      // console.log(
+      //   "Extracted locale data:",
+      //   JSON.stringify(localeData, null, 2)
+      // );
+
+      if (localeData && typeof localeData === "object") {
+        // Merge the new locale data with the existing config
+        primeVue.config.locale = {
+          ...primeVue.config.locale,
+          ...localeData,
+        };
+        // console.log(
+        //   "Updated primeVue.config.locale:",
+        //   JSON.stringify(primeVue.config.locale, null, 2)
+        // );
+      } else {
+        // console.error("Invalid locale data structure:", localeData);
+      }
+    } catch (error) {
+      // console.error("Error loading locale file:", error);
+    }
+  } else {
+    // console.log("No matching locale file found for localeTag:", localeTag);
+  }
+}
+
 const changeLocale = async (newLocale: string) => {
   try {
     isLoading.value = true;
@@ -76,6 +157,7 @@ const changeLocale = async (newLocale: string) => {
     await router.push(switchLocalePath(newLocale));
     selectedLocale.value = newLocale;
     formKit.locale = newLocale;
+    await updatePrimeVueConfigWithLocaleTag(newLocale);
   } catch (error) {
     console.error("Error changing locale:", error);
   } finally {
