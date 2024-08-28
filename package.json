@@ -66,6 +66,7 @@
     "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.1",
     "pinia": "^2.1.7",
+    "primelocale": "^1.0.3",
     "primevue": "^4.0.4",
     "puppeteer": "^22.12.1",
     "quill": "^2.0.2",

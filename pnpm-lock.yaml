@@ -74,6 +74,9 @@ importers:
       pinia:
         specifier: ^2.1.7
         version: 2.2.2(vue@3.4.38)
+      primelocale:
+        specifier: ^1.0.3
+        version: 1.0.3
       primevue:
         specifier: ^4.0.4
         version: 4.0.5(vue@3.4.38)
@@ -5751,6 +5754,10 @@ packages:
 
   primeicons@7.0.0:
     resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
+
+  primelocale@1.0.3:
+    resolution: {integrity: sha512-a0VuhQLgUge4IJG2RKpMJSDYHuYIAd2kcqQy/quyx8UyM1/m7Uvt9hFKoFL0QAbZZyHIVHobVmGWAOJN8d7COQ==}
+    engines: {node: '>=12.0.0', npm: '>=6.0.0'}
 
   primevue@4.0.4:
     resolution: {integrity: sha512-1moEddbczJ1+yEyfeYQk3xOQB64iCjjM//f+HSXs6YrKVVC0QjPFx9XPNXrr2JjHlp+6D7EpPZtsmcrfA9jWkA==}
@@ -14541,6 +14548,8 @@ snapshots:
       parse-ms: 4.0.0
 
   primeicons@7.0.0: {}
+
+  primelocale@1.0.3: {}
 
   primevue@4.0.4(vue@3.4.38):
     dependencies:
