@@ -10,34 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import { type FormKit } from "~~/types/common";
-import kswitchConfig from "~~/config/common/kswitch";
+import { initializeApp } from "@/utils/initializeApp";
 
 const kswitch = ref(false);
-const checkKSwitch = async () => {
-  try {
-    const kswitchUrl = kswitchConfig.KSWITCH_URL;
 
-    const response = await fetch(kswitchUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-
-    if (data.k) {
-      kswitch.value = true;
-    }
-  } catch (error) {}
-};
-
-const { locale } = useI18n();
-const formKit = inject<FormKit>(Symbol.for("FormKitConfig")) || { locale: "" };
-onMounted(() => {
-  checkKSwitch();
-  formKit.locale = locale.value;
+onMounted(async () => {
+  const { isKSwitchActive } = await initializeApp();
+  kswitch.value = isKSwitchActive;
 });
 </script>
 
