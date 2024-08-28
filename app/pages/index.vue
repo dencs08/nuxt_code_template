@@ -45,9 +45,12 @@
       <AppInputText
         v-model="parentValue"
         id="test2"
-        placeholder="Placeholder"
+        :placeholder="t('strong')"
         float
       />
+      <DatePicker v-model="date" />
+      <Button severity="contrast">{{ t("accept") }}</Button>
+      <Button severity="danger">{{ t("reject") }}</Button>
     </section>
 
     <section class="container mx-auto space-y-12">
@@ -116,6 +119,7 @@ useHead({
     // { property: 'og:image', content: 'https://nuxt.com/social.jpg' },
   ],
 });
+const date = ref(new Date(2023, 10, 28));
 
 const { slideTop, slideLeft, slideRight, fade, slideBottom, pop } = useMotion();
 

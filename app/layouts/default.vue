@@ -29,7 +29,7 @@ useHead({
 
 <template>
   <Body
-    class="bg-gray-50 text-gray-900 dark:bg-surface-950 dark:text-surface-0"
+    class="bg-gray-50/50 text-gray-900 dark:bg-surface-950 dark:text-surface-0"
   >
     <Navbar />
     <main>
