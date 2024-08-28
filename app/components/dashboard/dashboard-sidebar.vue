@@ -94,13 +94,17 @@
           />
         </nuxt-link>
         <nav class="flex flex-1 flex-col w-auto overflow-hidden">
-          <IconField class="overflow-hidden mb-2 shadow-sm">
+          <IconField
+            class="overflow-hidden mb-2 shadow-sm"
+            @click="showCommandPalette"
+          >
             <InputIcon class="pi pi-search" />
             <InputText
               v-model="searchValue"
               placeholder="Search"
               size="small"
               class="flex-1 w-full"
+              readonly
             />
             <InputIcon
               class="border border-surface-100 dark:border-surface-600 p-0.5 -my-2.5 rounded bg-emphasis text-muted-color text-xs"
@@ -143,10 +147,12 @@
         </nav>
       </div>
     </div>
+    <CommandPalette v-model:visible="isCommandPaletteVisible" />
   </div>
 </template>
 
 <script setup>
+import CommandPalette from "@/components/utils/command-pallete.vue";
 const props = defineProps({
   navigation: Array,
   teams: Array,
@@ -163,9 +169,14 @@ const { isDarkMode } = useDarkMode();
 const sidebarOpen = ref(false);
 const searchValue = ref("");
 const userMenu = ref();
+const isCommandPaletteVisible = ref(false);
 
 const toggleUserMenu = (event) => {
   userMenu.value.toggle(event);
+};
+
+const showCommandPalette = () => {
+  isCommandPaletteVisible.value = true;
 };
 
 const userNavigation = computed(() => [
@@ -201,8 +212,19 @@ const userNavigation = computed(() => [
     ],
   },
 ]);
-</script>
 
-<style scoped>
-/* Add your styles here */
-</style>
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
+
+const handleKeydown = (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+    event.preventDefault();
+    showCommandPalette();
+  }
+};
+</script>
