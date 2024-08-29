@@ -8,6 +8,10 @@ export default {
   // Admin dashboard renders only on client-side
   "/dashboard": { ssr: false },
   "/dashboard/**": { ssr: false },
+  "/:locale/dashboard": { ssr: false },
+  "/:locale/dashboard/**": { ssr: false },
+  "/:lang/dashboard": { ssr: false },
+  "/:lang/dashboard/**": { ssr: false },
   // Product page generated on-demand, revalidates in background
   // '/products/**': { swr: 3600 },
   // // Blog post generated on-demand once until next deploy
