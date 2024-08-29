@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="lg:hidden px-6 py-2 mb-2 flex gap-2 items-center justify-between border-b border-surface-100 dark:border-surface-800"
+      class="lg:hidden px-6 py-2 mb-2 flex gap-2 items-center justify-between border-b border-surface-100 dark:border-surface-800 transition"
     >
       <div class="flex gap-2 items-center">
         <button
@@ -147,7 +147,10 @@
         </nav>
       </div>
     </div>
-    <CommandPalette v-model:visible="isCommandPaletteVisible" />
+    <CommandPalette
+      v-model:visible="isCommandPaletteVisible"
+      class="min-w-[50vw]"
+    />
   </div>
 </template>
 
