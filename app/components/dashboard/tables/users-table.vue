@@ -59,10 +59,12 @@
           <div class="grid place-content-center">
             <Button
               size="small"
-              icon="pi pi-external-link "
+              icon="pi pi-external-link"
               v-tooltip.left="'Export table to CSV'"
               @click="exportCSV($event)"
               aria-label="Export"
+              severity="contrast"
+              icon-class="dark:text-dark-800"
             />
           </div>
           <div class="grid place-content-center">
@@ -72,6 +74,7 @@
               @click="fetchUsers"
               icon="pi pi-refresh"
               aria-label="Refresh"
+              icon-class="dark:text-dark-800"
             />
           </div>
         </div>
