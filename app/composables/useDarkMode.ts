@@ -1,5 +1,3 @@
-// composables/useDarkMode.ts
-import { ref, computed, watch } from "vue";
 import { useState, useNuxtApp } from "nuxt/app";
 import { type Layout } from "~~/types/common";
 

@@ -7,6 +7,4 @@ export default defineNuxtRouteMiddleware((to) => {
     layout = "default";
   }
   updateCurrentLayout(layout as Layout);
-
-  console.log("Middleware - Current layout:", layout);
 });
