@@ -7,8 +7,8 @@ definePageMeta({
 });
 
 const localePath = useLocalePath();
-navigateTo(localePath({ name: "dash-home" }));
+navigateTo(localePath({ name: "dash-home" }), { replace: true });
 onBeforeMount(() => {
-  navigateTo(localePath({ name: "dash-home" }));
+  navigateTo(localePath({ name: "dash-home" }), { replace: true });
 });
 </script>
