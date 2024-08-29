@@ -40,19 +40,6 @@
       </h3>
     </section>
 
-    <section class="container mx-auto py-32">
-      <AppInputText v-model="parentValue" id="test" placeholder="Placeholder" />
-      <AppInputText
-        v-model="parentValue"
-        id="test2"
-        :placeholder="t('strong')"
-        float
-      />
-      <DatePicker v-model="date" />
-      <Button severity="contrast">{{ t("accept") }}</Button>
-      <Button severity="danger">{{ t("reject") }}</Button>
-    </section>
-
     <section class="container mx-auto space-y-12">
       <div>
         <h3>Test nuxt-img</h3>
