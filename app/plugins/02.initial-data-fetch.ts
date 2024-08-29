@@ -2,7 +2,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { CustomError } = useCustomError();
   const userStore = useUserStore();
   const rolesStore = useRolesStore();
-  const { fetchPermissions } = usePermissions();
 
   let initialFetchDone = false;
   let isRefetching = false;
@@ -21,6 +20,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         isRefetching = false;
       }
     }
+  };
+
+  const fetchPermissions = async () => {
+    const { fetchPermissions } = usePermissions();
+    await fetchPermissions();
   };
 
   const fetchRoles = async () => {
