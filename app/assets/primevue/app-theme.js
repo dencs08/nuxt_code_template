@@ -14,6 +14,7 @@ const Noir = definePreset(Aura, {
     ...generatedColors,
   },
   semantic: {
+    // transitionDuration: "0.05s",
     primary: {
       0: "{my.primary.0}",
       50: "{my.primary.50}",
