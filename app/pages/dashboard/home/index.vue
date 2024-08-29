@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ColorModeSelector />
     <div class="flex flex-col lg:flex-row gap-8">
       <div class="w-full lg:w-4/6 space-y-8">
         <div class="space-y-2">
