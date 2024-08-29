@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
+const localePath = useLocalePath();
 const { t } = useI18n();
 
 const i18nHead = useLocaleHead({
@@ -34,7 +35,7 @@ useHead({
   >
     <main>
       <nav>
-        <NuxtLink to="/dashboard">dashboard</NuxtLink>
+        <NuxtLink :to="localePath('/dashboard')">dashboard</NuxtLink>
         <ColorModeSelector />
       </nav>
       <slot />
