@@ -16,7 +16,7 @@
     </Head>
 
     <Body
-      class="bg-white text-surface-900 dark:bg-surface-900 dark:text-surface-50"
+      class="bg-white text-surface-900 dark:bg-surface-900 dark:text-surface-50 transition"
     >
       <div>
         <DashboardSidebar />
@@ -77,13 +77,6 @@ const title = computed(() =>
 const { dashboardSubNavigation, dashboardNavigation } = useNavigation();
 const { errorHandler } = useErrorHandler();
 errorHandler();
-
-// const userStore = useUserStore();
-// await userStore.fetchUser();
-// const userSession = userStore.getUser;
-// if (!userSession) {
-//   navigateTo(localePath({ name: "login" }));
-// }
 
 const currentSubNavigation = computed(() => {
   const searchNavItems = (items, path) => {
