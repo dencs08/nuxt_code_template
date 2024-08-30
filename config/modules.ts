@@ -5,6 +5,7 @@ export default [
   "@nuxt/devtools",
   "@nuxtjs/device",
   "nuxt-typed-router",
+  "@nuxt/test-utils/module",
   // "@nuxtjs/storybook", //right now breaks the app (enabling porbably forces ssr:false)
 
   //core (required for most template features)
