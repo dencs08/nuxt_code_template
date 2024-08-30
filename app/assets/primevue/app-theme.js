@@ -74,6 +74,25 @@ const Noir = definePreset(Aura, {
       },
     },
   },
+
+  components: {
+    card: {
+      colorScheme: {
+        light: {
+          root: {
+            background: "{surface.0}",
+            color: "{surface.700}",
+          },
+        },
+        dark: {
+          root: {
+            background: "{surface.950}",
+            color: "{surface.0}",
+          },
+        },
+      },
+    },
+  },
 });
 
 export default {
