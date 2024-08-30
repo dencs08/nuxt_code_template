@@ -103,6 +103,8 @@ export default defineNuxtConfig({
   //     routes: ["/"],
   //   },
   // },
+
+  extends: ["./app/auth"],
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     // layoutTransition: { name: 'layout', mode: 'out-in' }
