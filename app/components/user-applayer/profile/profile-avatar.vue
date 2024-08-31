@@ -32,7 +32,7 @@ const user = userStore.getUser;
 const photoSrc = ref(props.photo || user.photo);
 
 watch(
-  () => userStore.user.photo,
+  () => userStore.user?.photo,
   (newPhoto) => {
     photoSrc.value = newPhoto;
   }
