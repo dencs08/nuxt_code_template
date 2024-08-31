@@ -62,17 +62,13 @@
                       size="small"
                       class="rounded-full w-6 shadow-none"
                     />
-                    <span class="font-medium">{{ firstName }}</span>
+                    <span class="font-medium">{{
+                      user.name.split(" ")[0]
+                    }}</span>
                     <Badge value="2"></Badge>
                   </div>
                   <Icon name="ic:baseline-more-vert" class="h-5 w-auto"></Icon>
                 </Button>
-                <Menu
-                  ref="userMenu"
-                  id="overlay_menu"
-                  :model="userNavigation"
-                  :popup="true"
-                />
               </div>
             </div>
           </div>
@@ -117,11 +113,44 @@
           <!--Profile-->
           <div class="mt-auto">
             <Menu
+              :model="userNavigation"
               ref="userMenu"
               id="overlay_menu"
-              :model="userNavigation"
               :popup="true"
-            />
+              class="w-full md:w-56"
+              :pt="{
+                submenuLabel: ['m-0 pt-0 pb-1.5 px-1.5'],
+              }"
+            >
+              <template #submenulabel="{ item }">
+                <span class="text-xs text-muted-color p-0 m-0">{{
+                  item.label
+                }}</span>
+              </template>
+              <template #item="{ item, props }">
+                <a class="flex items-center mt-0 p-1" v-bind="props.action">
+                  <span
+                    :class="item.icon"
+                    class="text-surface-200 dark:text-surface-300/50"
+                  />
+                  <span
+                    class="text-surface-400 dark:text-surface-100/80 text-sm"
+                    >{{ item.label }}</span
+                  >
+                  <Badge
+                    v-if="item.badge"
+                    class="ml-auto"
+                    :value="item.badge"
+                  />
+                  <span
+                    v-if="item.shortcut"
+                    class="ml-auto border border-surface-200 dark:border-surface-500 bg-emphasis text-muted-color rounded text-xs p-0.5"
+                    >{{ item.shortcut }}</span
+                  >
+                </a>
+              </template>
+              <template #end> </template>
+            </Menu>
             <Divider class="mb-2.5" />
             <div class="flex items-center gap-x-4 lg:gap-x-6">
               <!-- Profile dropdown -->
@@ -137,7 +166,7 @@
                     size="small"
                     class="rounded-full w-6 shadow-none"
                   />
-                  <span class="font-medium">{{ firstName }}</span>
+                  <span class="font-medium">{{ user.name.split(" ")[0] }}</span>
                   <Badge value="2"></Badge>
                 </div>
                 <Icon name="ic:baseline-more-vert" class="h-5 w-auto"></Icon>
@@ -166,8 +195,9 @@ const { dashboardNavigation, dashboardSettings } = useNavigation();
 const { signOut } = useAuthentication();
 const localePath = useLocalePath();
 const userStore = useUserStore();
-const firstName = userStore.firstName;
+const user = userStore.getUser;
 const { isDarkMode } = useDarkMode();
+const device = useDevice();
 
 const sidebarOpen = ref(false);
 const searchValue = ref("");
@@ -184,14 +214,20 @@ const showCommandPalette = () => {
 
 const userNavigation = computed(() => [
   {
-    label: "Hi, " + firstName + "!",
+    label: "Hi, " + user.email,
     items: [
+      {
+        separator: true,
+      },
       {
         label: "Your profile",
         icon: "pi pi-user",
         command: () => {
           navigateTo(localePath({ name: "dash-account" }));
         },
+      },
+      {
+        separator: true,
       },
       {
         label: "Settings",
@@ -201,15 +237,29 @@ const userNavigation = computed(() => [
         },
       },
       {
+        label: "Command menu",
+        icon: "pi pi-search",
+        shortcut: device.isWindows ? "Ctrl+k" : "⌘+k",
+        command: () => {
+          showCommandPalette();
+        },
+      },
+      {
+        label: "Help",
+        icon: "pi pi-question-circle",
+        command: () => {
+          console.log("Help");
+        },
+      },
+      {
+        separator: true,
+      },
+      {
         label: "Sign out",
         icon: "pi pi-sign-out",
         command: async () => {
-          try {
-            await signOut();
-            navigateTo(localePath({ name: "login" }));
-          } catch (error) {
-            console.error(error);
-          }
+          await signOut();
+          navigateTo(localePath({ name: "login" }));
         },
       },
     ],
