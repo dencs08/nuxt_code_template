@@ -1,9 +1,9 @@
-import { type SessionScope } from "../../types/common";
+import { type SessionScope } from "../../../types/common";
 import type {
   GenericOAuthProvider,
   GenericOtpType,
-} from "@/services/auth/AuthServiceInterface";
-import { type UserAuthPublicSession } from "../../types/user";
+} from "../services/auth/AuthServiceInterface";
+import { type UserAuthPublicSession } from "../../../types/user";
 
 export function useAuthentication() {
   const { $authProvider } = useNuxtApp();

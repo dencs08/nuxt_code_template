@@ -1,6 +1,7 @@
-import { type UserAuthPublicSession } from "../../types/user";
+import { type UserAuthPublicSession } from "../../../types/user";
 
 //TODO check if it still works after the refactor to own service wrapper
+//TODO move this logic to the useAuthentication or useUserStore
 export function useUser() {
   const userStore = useUserStore();
   const userAuthSession = userStore.getUser;
@@ -63,7 +64,6 @@ export function useUser() {
         throw new CustomError("Error deleting the account", error);
       }
       signOut();
-      userStore.clearUser();
     } catch (error) {
       // console.error(error);
       throw new CustomError("Failed to delete the account", error);

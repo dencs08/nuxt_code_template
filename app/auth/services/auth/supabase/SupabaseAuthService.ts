@@ -2,6 +2,8 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { type IAuthenticationService } from "../AuthServiceInterface.js";
 import type { Provider as OAuthProvider } from "@supabase/supabase-js";
 import type { EmailOtpType } from "@supabase/supabase-js";
+import type { SessionScope } from "~~/types/common";
+import type { UserAuthPublicSession } from "~~/types/user";
 
 export class SupabaseAuthService implements IAuthenticationService {
   private client: SupabaseClient;

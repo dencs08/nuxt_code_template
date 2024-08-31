@@ -1,4 +1,4 @@
-import type { Permission } from "../../types/permissions";
+import type { Permission } from "../../../types/permissions";
 export const usePermissions = () => {
   const permissions = useState<Permission[]>("permissions", () => []);
   const loading = useState<boolean>("permissionsLoading", () => false);

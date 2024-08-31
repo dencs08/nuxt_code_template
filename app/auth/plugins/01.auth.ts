@@ -1,5 +1,5 @@
-import { SupabaseAuthService } from "../services/auth/supabase/SupabaseAuthService";
-import { SidebaseAuthService } from "../services/auth/sidebase/SidebaseAuthService";
+import { SupabaseAuthService } from "@/auth/services/auth/supabase/SupabaseAuthService";
+import { SidebaseAuthService } from "@/auth/services/auth/sidebase/SidebaseAuthService";
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
   let authProvider;
