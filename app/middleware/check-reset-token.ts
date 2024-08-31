@@ -1,4 +1,4 @@
-import type { GenericOtpType } from "@/services/auth/AuthServiceInterface";
+import type { GenericOtpType } from "@/auth/services/auth/AuthServiceInterface";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const nuxt = useNuxtApp();
