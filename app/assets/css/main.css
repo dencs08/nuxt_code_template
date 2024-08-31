@@ -73,3 +73,17 @@ html.dark a {
     @apply text-surface-0
 }
 
+.bg-emphasis{
+    @apply bg-primary-500/30;
+}
+.text-muted-color {
+    @apply text-surface-100/75;
+}
+
+html.dark .bg-emphasis {
+    @apply bg-surface-400/15;
+}
+
+html.dark .text-muted-color {
+    @apply text-surface-300/80;
+}
