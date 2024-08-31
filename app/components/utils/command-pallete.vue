@@ -1,64 +1,80 @@
 <template>
   <Dialog v-model:visible="isVisible" modal :dismissableMask="true">
     <template #container="{ closeCallback }">
-      <div class="rounded-2xl">
+      <div class="rounded-2xl flex flex-col" style="height: 400px">
         <div
           class="flex flex-row justify-between border-b border-surface-200/40 dark:border-surface-700/65 py-1 px-2.5"
+          v-focustrap
         >
-          <AutoComplete
-            icon="pi pi-search"
-            v-model="selectedCommand"
-            :suggestions="filteredCommands"
-            @complete="searchCommands"
-            placeholder="Search"
-            @item-select="executeCommand"
-            size="small"
-            autofocus
-            optionLabel="label"
-            inputClass="w-full border-0 bg-transparent text-sm m-0 p-0"
-          />
-          <button @click="closeCallback" class="p-0.5">
+          <IconField class="w-full flex flex-row items-center">
+            <InputIcon>
+              <i class="pi pi-search text-muted-color" />
+            </InputIcon>
+            <InputText
+              class="w-full border-0 bg-transparent text-sm m-0 p-0"
+              id="input"
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search"
+              autofocus
+              fluid
+            />
+          </IconField>
+
+          <button @click="closeCallback" class="p-0.5 text-muted-color">
             <Icon name="ic:outline-close"></Icon>
           </button>
         </div>
-        <div
-          class="divide-y divide-surface-200/40 dark:divide-surface-700/65 [&>*]:py-3"
-        >
-          <section
-            v-for="(section, index) in sections"
-            :key="index"
-            class="px-3"
+        <div class="flex-grow overflow-y-auto">
+          <div
+            v-if="filteredSections.length > 0"
+            class="divide-y divide-surface-200/40 dark:divide-surface-700/65 [&>*]:py-3"
           >
-            <h4 class="text-xs mb-2">{{ section.title }}</h4>
-            <div v-if="section.type === 'list'" class="">
-              <div
-                v-for="item in section.items"
-                :key="item.name"
-                @click="handleItemClick(item)"
-                class="flex justify-between items-center py-2 px-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-700 cursor-pointer"
-              >
-                <p
-                  class="text-sm font-heading font-medium text-surface-500 dark:text-surface-150 flex items-center gap-2"
+            <section
+              v-for="(section, index) in filteredSections"
+              :key="index"
+              class="px-3"
+            >
+              <h4 class="text-xs mb-2">{{ section.title }}</h4>
+              <div v-if="section.type === 'list'" class="">
+                <div
+                  v-for="item in section.items"
+                  :key="item.name"
+                  @click="handleItemClick(item)"
+                  class="flex justify-between items-center py-2 px-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-700 cursor-pointer"
                 >
+                  <p
+                    class="text-sm font-heading font-medium text-surface-500 dark:text-surface-150 flex items-center gap-2"
+                  >
+                    <span
+                      :class="item.icon"
+                      class="text-surface-400 dark:text-surface-250/50"
+                    ></span>
+                    {{ item.name }}
+                  </p>
+                  <component
+                    v-if="isComponentItem(item)"
+                    :is="item.component"
+                    v-bind="item.componentProps"
+                    @click.stop
+                  />
                   <span
-                    :class="item.icon"
-                    class="text-surface-400 dark:text-surface-250/50"
+                    v-else-if="isActionItem(item)"
+                    class="pi pi-chevron-right text-surface-400 dark:text-surface-250/50"
                   ></span>
-                  {{ item.name }}
-                </p>
-                <component
-                  v-if="isComponentItem(item)"
-                  :is="item.component"
-                  v-bind="item.componentProps"
-                  @click.stop
-                />
-                <span
-                  v-else-if="isActionItem(item)"
-                  class="pi pi-chevron-right text-surface-400 dark:text-surface-250/50"
-                ></span>
+                </div>
               </div>
+            </section>
+          </div>
+          <div
+            v-else
+            class="p-3 text-center text-muted-color flex flex-col items-center justify-center h-full"
+          >
+            <div>
+              <Icon name="ic:outline-search" class="h-7 w-auto"></Icon>
             </div>
-          </section>
+            <div>No results found</div>
+          </div>
         </div>
       </div>
     </template>
@@ -66,15 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import { useRouter } from "vue-router";
 import ColorModeSelector from "@/components/utils/color-mode-selector.vue";
 import LanguageSelector from "@/components/utils/forms/dropdown/i18n-dropdown.vue";
 
 const localePath = useLocalePath();
 const { signOut } = useAuthentication();
 
-// Define types for our items
 type ComponentItem = {
   name: string;
   icon: string;
@@ -106,8 +119,7 @@ const props = defineProps({
 const emit = defineEmits(["update:visible"]);
 const router = useRouter();
 const isVisible = ref(props.visible);
-const selectedCommand = ref(null);
-const filteredCommands = ref([]);
+const searchQuery = ref("");
 
 watch(
   () => props.visible,
@@ -173,37 +185,22 @@ const sections: Section[] = [
   },
 ];
 
-// Compute commands from sections
-const commands = computed(() =>
-  sections.flatMap((section) =>
-    section.items.filter(isActionItem).map((item) => ({
-      label: item.name,
-      value: item.name.toLowerCase().replace(/\s+/g, "-"),
-      icon: item.icon,
-      action: item.action,
-    }))
-  )
-);
-
-const searchCommands = (event: any) => {
-  const query = event.query.toLowerCase();
-  filteredCommands.value = commands.value.filter(
-    (command) =>
-      command.label.toLowerCase().includes(query) ||
-      command.value.includes(query)
-  );
-};
-
-const executeCommand = (event: any) => {
-  const command = commands.value.find((cmd) => cmd.label === event.value.label);
-  if (command) {
-    command.action();
-    isVisible.value = false;
-    selectedCommand.value = null;
+const filteredSections = computed(() => {
+  if (!searchQuery.value) {
+    return sections;
   }
-};
 
-// Type guard functions
+  const query = searchQuery.value.toLowerCase();
+  return sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) =>
+        item.name.toLowerCase().includes(query)
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
+});
+
 function isComponentItem(item: DialogItem): item is ComponentItem {
   return "component" in item && "componentProps" in item;
 }
@@ -212,12 +209,10 @@ function isActionItem(item: DialogItem): item is ActionItem {
   return "action" in item;
 }
 
-// Function to handle item clicks
 function handleItemClick(item: DialogItem) {
   if (isActionItem(item)) {
     item.action();
     isVisible.value = false;
   }
-  // For ComponentItems, we don't need to do anything as the component will handle its own click events
 }
 </script>
