@@ -68,7 +68,7 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
   // Write the CSS content to a file
   const cssFilePath = path.resolve(
     __dirname,
-    "../app/assets/css/generated-colors.css"
+    "../app/core/assets/css/generated-colors.css"
   );
   fs.writeFileSync(cssFilePath, cssContent);
   console.log(`CSS file generated at: ${cssFilePath}`);
@@ -77,7 +77,7 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
   const colorDefinitionsContent = `export const generatedColors = ${JSON.stringify(primeVueVariants, null, 2)};`;
   const colorDefinitionsFilePath = path.resolve(
     __dirname,
-    "../app/assets/primevue/generated-colors.js"
+    "../app/core/assets/primevue/generated-colors.js"
   );
   fs.writeFileSync(colorDefinitionsFilePath, colorDefinitionsContent);
   console.log(
@@ -91,7 +91,7 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
 export function updateAppTheme() {
   const appThemeFilePath = path.resolve(
     __dirname,
-    "../app/assets/primvue/app-theme.js"
+    "../app/core/assets/primevue/app-theme.js"
   );
   let appThemeContent = fs.readFileSync(appThemeFilePath, "utf8");
 
