@@ -10,7 +10,7 @@ export default [
 
   //core (required for most template features)
   "@nuxtjs/supabase",
-  "@nuxtjs/i18n",
+  // "@nuxtjs/i18n",
   "@nuxt/content",
   "@formkit/nuxt",
   "@pinia/nuxt",
