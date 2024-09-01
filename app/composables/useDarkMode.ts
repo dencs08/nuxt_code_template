@@ -11,7 +11,6 @@ export const useDarkMode = () => {
       dashboard: false,
     })
   );
-
   const currentLayout = useState<Layout>("currentLayout", () => "default");
   const isDarkMode = computed(
     () => darkModeSettings.value[currentLayout.value]
@@ -19,7 +18,6 @@ export const useDarkMode = () => {
 
   const updateCurrentLayout = (layout: Layout) => {
     currentLayout.value = layout;
-    updateHtmlClass();
   };
 
   const toggleDarkMode = () => {
@@ -61,7 +59,6 @@ export const useDarkMode = () => {
 
   if (import.meta.client && !nuxtApp.$darkModeInitialized) {
     loadFromLocalStorage();
-    updateHtmlClass();
     nuxtApp.$darkModeInitialized = true;
   }
 
