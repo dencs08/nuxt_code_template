@@ -97,7 +97,8 @@ export default defineNuxtConfig({
   fonts,
   pwa,
   webVitals,
-  // ssr: false, //uncomment for client-side generation (disables server-side rendering)
+
+  ssr: true,
   // nitro: {
   //   prerender: {
   //     routes: ["/"],
