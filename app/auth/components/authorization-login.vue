@@ -95,6 +95,13 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  redirectTo: {
+    type: String,
+    required: false,
+    default: "/main",
+  },
+});
 import { loginSchema } from "~~/utils/schemas";
 import { type LoginForm } from "~~/types/login";
 
@@ -110,7 +117,7 @@ async function handleForm(data: LoginForm) {
     signIn,
     { email: data.email, password: data.password, options: { captchaToken } },
     "Redirecting to your account...",
-    localePath("/main"),
+    localePath(props.redirectTo),
     true
   );
   captchaToken.value.reset();
