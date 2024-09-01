@@ -77,7 +77,7 @@ html.dark a {
     @apply bg-primary-500/30;
 }
 .text-muted-color {
-    @apply text-surface-100/75;
+    @apply text-surface-400/60;
 }
 
 html.dark .bg-emphasis {
