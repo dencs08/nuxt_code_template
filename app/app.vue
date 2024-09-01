@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { initializeApp } from "@/utils/initializeApp";
+import { initializeApp } from "@/core/utils/initializeApp";
 
 const kswitch = ref(false);
 
@@ -21,7 +21,7 @@ onMounted(async () => {
 </script>
 
 <style>
-@import "@/assets/css/main.css";
+@import "@/core/assets/css/main.css";
 
 .page-enter-active,
 .page-leave-active {
