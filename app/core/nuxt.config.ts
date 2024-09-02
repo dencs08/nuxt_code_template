@@ -10,6 +10,7 @@ import ogImage from "./config/ogImage";
 import primevue from "./config/primevue";
 import fonts from "./config/fonts";
 import pwa from "./config/pwa";
+import pinia from "./config/pinia";
 import apollo from "./config/apollo";
 
 export default defineNuxtConfig({

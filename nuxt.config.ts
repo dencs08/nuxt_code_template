@@ -27,6 +27,17 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+  //for some reason have to be here instead of in core config
+  pinia: {
+    storesDirs: [
+      "./app/auth/stores/**",
+      "./app/core/stores/**",
+      "./app/dashboard/stores/**",
+      "./app/enduser/stores/**",
+      "./app/auth/stores/**",
+    ],
+  },
+
   ssr: true,
   // nitro: {
   //   prerender: {
