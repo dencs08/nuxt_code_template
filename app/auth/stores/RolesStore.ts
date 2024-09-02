@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import type { Role } from "../../types/roles";
-import { roles } from "../../config/common/roles";
+import type { Role } from "../../../types/roles";
+import { roles } from "../../../config/common/roles";
 
 export const useRolesStore = defineStore("roles", {
   state: () => ({
