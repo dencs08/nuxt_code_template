@@ -1,6 +1,6 @@
 // server/api/upload.ts
 import { getBackendClient } from "../../../../../lib/backend";
-import { defineWrappedResponseHandler } from "../../../../../app/core/server/utils/defaultHandler";
+import { defineWrappedResponseHandler } from "../../../../../server/utils/defaultHandler";
 
 export default defineWrappedResponseHandler(async (event) => {
   const body = await readBody(event);

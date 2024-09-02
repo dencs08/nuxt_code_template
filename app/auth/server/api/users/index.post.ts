@@ -1,5 +1,5 @@
 import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "../../../../../app/core/server/utils/defaultHandler";
+import { defineWrappedResponseHandler } from "../../../../../server/utils/defaultHandler";
 import { type UserAuthPublicSession } from "~~/types/user";
 
 export default defineWrappedResponseHandler(async (event, userSession) => {
