@@ -34,7 +34,6 @@ h2 {
 
 h3 {
     font-size: clamp(2rem, 3.6vw, 10rem);
-    /* @apply text-primary; */
     @apply font-semibold font-heading;
 }
 
@@ -57,20 +56,6 @@ img {
 ul {
     @apply list-decimal;
     @apply list-inside;
-}
-
-html.dark body,
-html.dark h1,
-html.dark h2,
-html.dark h3,
-html.dark h4,
-html.dark h5,
-html.dark h6,
-html.dark p,
-html.dark span,
-html.dark li,
-html.dark a {
-    @apply text-surface-0
 }
 
 .bg-emphasis{
