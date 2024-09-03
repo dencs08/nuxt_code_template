@@ -51,7 +51,7 @@
       </div>
       <div>
         <h3>Text vert + hover</h3>
-        <div class="h-64 bg-gray-100 rounded-xl">
+        <div class="h-64 bg-gray-0 rounded-xl">
           <MarqueeBase
             :clone="true"
             :duration="5"
@@ -59,6 +59,7 @@
             :gradient-color="[250, 250, 250]"
             gradient-length="25%"
             :vertical="true"
+            :pause-on-hover="true"
           >
             <div v-for="el in helloArraySmall" class="my-3 pl-3">
               <div class="font-medium text-3xl">{{ el }}</div>
