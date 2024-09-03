@@ -159,9 +159,13 @@
                 @click="toggleUserMenu"
                 aria-haspopup="true"
                 aria-controls="overlay_menu"
-                class="flex flex-row w-full gap-2 justify-between items-center"
+                :pt="{
+                  root: [
+                    '!flex !flex-row w-full gap-2 !justify-between !items-center',
+                  ],
+                }"
               >
-                <div class="flex flex-row gap-2">
+                <div class="w-full flex flex-row gap-2">
                   <ProfileAvatar
                     size="small"
                     class="rounded-full w-6 shadow-none"
