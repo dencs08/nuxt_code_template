@@ -11,13 +11,17 @@
               <i class="pi pi-search text-muted-color" />
             </InputIcon>
             <InputText
-              class="w-full border-0 bg-transparent text-sm m-0 p-0"
+              class="w-full"
               id="input"
+              size="small"
               type="text"
               v-model="searchQuery"
               placeholder="Search"
               autofocus
               fluid
+              :pt="{
+                root: ['p-0 !border-0 !bg-transparent !shadow-none'],
+              }"
             />
           </IconField>
 
