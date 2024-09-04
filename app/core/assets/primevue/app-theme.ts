@@ -1,15 +1,16 @@
 import { definePreset } from "@primevue/themes";
 import Aura from "@primevue/themes/aura";
-import { generatedColors } from "./generated-colors.js";
+import { generatedColors } from "./generated-colors";
+import theme from "../../../../config/common/theme";
 const Noir = definePreset(Aura, {
   primitive: {
     borderRadius: {
-      none: "0",
-      xs: "2px",
-      sm: "4px",
-      md: "6px",
-      lg: "8px",
-      xl: "12px",
+      none: theme.borderRadius.none,
+      xs: theme.borderRadius.xs,
+      sm: theme.borderRadius.sm,
+      md: theme.borderRadius.md,
+      lg: theme.borderRadius.lg,
+      xl: theme.borderRadius.xl,
     },
     ...generatedColors,
   },
@@ -82,12 +83,14 @@ const Noir = definePreset(Aura, {
           root: {
             background: "{surface.0}",
             color: "{surface.700}",
+            borderRadius: "12px",
           },
         },
         dark: {
           root: {
             background: "{surface.950}",
             color: "{surface.0}",
+            borderRadius: "12px",
           },
         },
       },

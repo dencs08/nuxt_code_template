@@ -77,7 +77,7 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
   const colorDefinitionsContent = `export const generatedColors = ${JSON.stringify(primeVueVariants, null, 2)};`;
   const colorDefinitionsFilePath = path.resolve(
     __dirname,
-    "../app/core/assets/primevue/generated-colors.js"
+    "../app/core/assets/primevue/generated-colors.ts"
   );
   fs.writeFileSync(colorDefinitionsFilePath, colorDefinitionsContent);
   console.log(
@@ -91,13 +91,13 @@ export function generateColorVariants(colorDefinitions: ColorDefinition[]) {
 export function updateAppTheme() {
   const appThemeFilePath = path.resolve(
     __dirname,
-    "../app/core/assets/primevue/app-theme.js"
+    "../app/core/assets/primevue/app-theme.ts"
   );
   let appThemeContent = fs.readFileSync(appThemeFilePath, "utf8");
 
   // Add import statement if it doesn't exist
   if (!appThemeContent.includes("import { generatedColors }")) {
-    appThemeContent = `import { generatedColors } from './generated-colors.js';\n${appThemeContent}`;
+    appThemeContent = `import { generatedColors } from './generated-colors.ts';\n${appThemeContent}`;
   }
 
   // Update primitive object

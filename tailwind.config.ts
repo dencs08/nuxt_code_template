@@ -3,28 +3,24 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 import { generateColorVariants } from "./custom_tailwindcss/colors";
 import generateFontSizeVariants from "./custom_tailwindcss/fontSizes";
+import theme from "./config/common/theme";
 
-//!!!DEFINE COLORS, FONT SIZES, FONT FAMILY VARIANTS, BREAKPOINTS HERE:
-const colorDefinitions = [
-  { colorName: "primary", mainHex: "#00ACD4" }, //color also used in the primeVue components
-  { colorName: "secondary", mainHex: "#0FB182" },
-  { colorName: "accent", mainHex: "#FFEA31" },
-  { colorName: "surface", mainHex: "#225486" }, //color also used in the primeVue components best if based on primary or secondary
-  { colorName: "dark", mainHex: "#575757" },
-  { colorName: "light", mainHex: "#E5E5E5" },
-];
-const fontFamilyVariants = {
-  heading: ["Poppins", "Poppins", "sans-serif"],
-  body: ["Inter", "Inter", "sans-serif"],
-  accent: ["Bebas Neue", "Bebas Neue", "sans-serif"],
-};
+const colorDefinitions = Object.entries(theme.colors).map(
+  ([colorName, mainHex]) => ({
+    colorName,
+    mainHex,
+  })
+);
+
+const fontFamilyVariants = theme.fonts;
+const colorVariants = generateColorVariants(colorDefinitions);
+const fontSizeVariants = generateFontSizeVariants(
+  ...theme.fonts.proportions.map(Number)
+);
 const screenSizes = {
   xs: "350px",
   ...defaultTheme.screens,
 };
-
-const colorVariants = generateColorVariants(colorDefinitions);
-const fontSizeVariants = generateFontSizeVariants(1, 1.618); //scale the font with the golden ratio
 
 module.exports = {
   darkMode: "class",
@@ -47,34 +43,20 @@ module.exports = {
       colors: colorVariants,
       fontSize: fontSizeVariants,
       fontFamily: fontFamilyVariants,
+      borderRadius: theme.borderRadius,
     },
   },
   plugins: [
-    function ({ addComponents }: { addComponents: Function }) {
+    function ({ addComponents }: any) {
       addComponents({
         ".container": {
           maxWidth: "100%",
-          padding: "0 1rem 0 1rem",
-          "@screen sm": {
-            maxWidth: "100%",
-            padding: "0 2rem 0 2rem",
-          },
-          "@screen md": {
-            maxWidth: "100%",
-            padding: "0 3rem 0 3rem",
-          },
-          "@screen lg": {
-            maxWidth: "75vw",
-            padding: "0",
-          },
-          "@screen xl": {
-            maxWidth: "75vw",
-            padding: "0",
-          },
-          "@screen 2xl": {
-            maxWidth: "75vw",
-            padding: "0",
-          },
+          padding: "0 1rem",
+          "@screen sm": theme.container.sm,
+          "@screen md": theme.container.md,
+          "@screen lg": theme.container.lg,
+          "@screen xl": theme.container.xl,
+          "@screen 2xl": theme.container["2xl"],
         },
       });
     },
