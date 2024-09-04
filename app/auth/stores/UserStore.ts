@@ -51,5 +51,60 @@ export const useUserStore = defineStore({
       this.user = null;
       this.isAuthenticated = false;
     },
+    async updateUserAccount(profileData: Partial<User>) {
+      this.loading = true;
+      try {
+        const { error } = (await $fetch("/api/me", {
+          method: "PATCH",
+          body: profileData,
+        })) as { error?: any };
+        if (error) {
+          throw new CustomError("Error updating user data", error);
+        }
+
+        await this.fetchUser();
+        return { response: "Profile updated" };
+      } catch (e) {
+        throw new CustomError("An error occurred during the update process", e);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async updateUserEmail(email: string, emailRedirectTo?: string) {
+      const { updateEmail } = await useAuthentication();
+
+      this.loading = true;
+      try {
+        if (email && email !== this.user.email) {
+          await updateEmail(email, emailRedirectTo);
+        }
+        return { response: "Verification link sent" };
+      } catch (e) {
+        throw new CustomError("An error occurred during the update process", e);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async deleteUserAccount() {
+      const { signOut } = await useAuthentication();
+
+      this.loading = true;
+      try {
+        const { error } = (await $fetch("/api/me", {
+          method: "DELETE",
+        })) as { error?: any };
+        if (error) {
+          throw new CustomError("Error deleting the account", error);
+        }
+      } catch (error) {
+        // console.error(error);
+        throw new CustomError("Failed to delete the account", error);
+      } finally {
+        this.loading = false;
+        signOut();
+      }
+    },
   },
 });
