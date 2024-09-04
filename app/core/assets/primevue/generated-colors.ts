@@ -87,7 +87,7 @@ export const generatedColors = {
     "900": "#091522",
     "950": "#060e17"
   },
-  "my.dark": {
+  "my.light": {
     "0": "#f7f7f7",
     "50": "#e7e7e7",
     "100": "#d7d7d7",
@@ -109,7 +109,7 @@ export const generatedColors = {
     "900": "#161616",
     "950": "#0f0f0f"
   },
-  "my.light": {
+  "my.dark": {
     "0": "#fefefe",
     "50": "#fbfbfb",
     "100": "#f9f9f9",
