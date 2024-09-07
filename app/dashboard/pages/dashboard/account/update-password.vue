@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// TODO problem with this approach it is not validating the token on the server side because it was invalidated on the check-reset-token to authenticate the user - in the future probably we need to change this approach
-
 import type { RoutesNamesList } from "@typed-router/__routes";
 
 definePageMeta({
@@ -15,7 +13,9 @@ const { generalPage } = useRedirections();
 if (verifiedToken.value) {
   verifiedToken.value = null;
 } else {
-  navigateTo(localePath({ name: generalPage() as RoutesNamesList }));
+  navigateTo(localePath({ name: generalPage() as RoutesNamesList }), {
+    replace: true,
+  });
 }
 </script>
 
