@@ -13,36 +13,25 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: "default",
-  middleware: "check-reset-token",
+  middleware: "verify-access-token",
 });
 
 const { getUser } = useAuthentication();
 const user = await getUser();
 const localePath = useLocalePath();
 
-const { passwordChangePage } = useRedirections();
-
 watch(
   user,
   async () => {
     if (user) {
-      console.log(
-        "User found in watch, setting verification flag and redirecting to password change page"
-      );
-      try {
-        await $fetch("/api/me/password-update/set-verification-flag", {
-          method: "POST",
+      console.log("User found in watch");
+      setTimeout(() => {
+        console.log("Navigating to main page");
+        navigateTo(localePath("/main"), {
+          replace: true,
+          external: true,
         });
-
-        setTimeout(() => {
-          navigateTo(localePath(passwordChangePage()), {
-            replace: true,
-            external: true,
-          });
-        }, 2500);
-      } catch (error) {
-        console.error("Error setting verification flag:", error);
-      }
+      }, 2500);
     }
   },
   { immediate: true }
