@@ -1,83 +1,108 @@
 <template>
-  <BaseUpload
-    :bucketName="bucketName"
-    :path="filePath"
-    :fileForUpload="compressedFile"
-    @success="handleUploadSuccess"
-    @error="handleUploadError"
-    @file-selected="handleFileSelected"
-    :upsert="true"
+  <FileUpload
+    mode="basic"
+    :customUpload="true"
+    @uploader="handleUpload"
+    @select="handleFileSelected"
     :maxFileSize="maxFileSize"
+    accept="image/*"
+    :auto="true"
+    chooseLabel="Change Avatar"
     :pt="{
       root: { class: 'flex !justify-start' },
+      chooseButton: {
+        class: 'p-button p-component p-button-outlined',
+      },
     }"
   />
 </template>
 
 <script setup lang="ts">
 import imageCompression from "browser-image-compression";
+import type {
+  FileUploadSelectEvent,
+  FileUploadUploaderEvent,
+} from "primevue/fileupload";
 
 const { addToast } = useToastService();
 const userStore = useUserStore();
-let userSession = userStore.getUser;
-const compressedFile = ref(null);
-const fileName = "avatar";
-const bucketName = "user_avatars";
-const maxFileSize = 20000000; // 20MB before compression
-const filePath = `${userSession.id}/${fileName}`;
 
-const handleUploadSuccess = async (fileUrl: string) => {
+const maxFileSize = 5 * 1024 * 1024; // 5MB max file size
+
+const handleFileSelected = async (event: FileUploadSelectEvent) => {
+  console.log("File selected:", event.files);
+};
+
+const handleUpload = async (event: FileUploadUploaderEvent) => {
   try {
-    compressedFile.value = null;
+    const file = event.files[0];
 
-    const { data, error } = await useFetch("/api/me/photo", {
-      method: "POST",
-      body: { photoUrl: fileUrl },
-    });
+    // Compress the file
+    const compressedFile = await compressFile(file);
+    console.log("File compressed:", compressedFile.name);
 
-    if (error.value) throw error.value;
+    // Upload the compressed file
+    const fileUrl = await uploadFile(compressedFile);
 
-    const fileToDelete = `${userSession.id}/${userSession.photo.split("/").pop()}`;
-    await useFetch("/api/upload", {
-      method: "DELETE",
-      body: { bucketName, filePath: fileToDelete },
-    });
+    // Update user's photo
+    await updateUserPhoto(fileUrl);
 
-    await userStore.fetchUser();
-    userSession = userStore.getUser;
     addToast(
       "success",
-      "File uploaded",
-      "Your photo has been uploaded successfully"
+      "Avatar updated",
+      "Your photo has been uploaded and your profile has been updated successfully"
     );
   } catch (error) {
+    console.error("Error in handleUpload:", error);
     handleUploadError((error as Error).message);
   }
 };
 
-const handleUploadError = (errorMessage: string) => {
-  addToast("error", "File upload failed", errorMessage);
+const compressFile = async (file: File): Promise<File> => {
+  const options = {
+    maxSizeMB: maxFileSize / 1024 / 1024,
+    maxWidthOrHeight: 1080,
+    useWebWorker: true,
+    fileType: "image/jpeg",
+    maxIteration: 20,
+    initialQuality: 0.5,
+    alwaysKeepResolution: false,
+  };
+  return await imageCompression(file, options);
 };
 
-const handleFileSelected = async (files: any) => {
-  if (!files || files.length === 0) {
-    return;
-  }
-  try {
-    const file = files[0];
-    const options = {
-      maxSizeMB: maxFileSize / 1000000,
-      maxWidthOrHeight: 1080,
-      useWebWorker: true,
-      fileType: "image/jpeg",
-      maxIteration: 20,
-      initialQuality: 0.5,
-      alwaysKeepResolution: false,
+const uploadFile = async (file: File): Promise<string> => {
+  const fileReader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    fileReader.onload = async (e) => {
+      const result = e.target?.result;
+      if (typeof result === "string") {
+        const base64File = result.split(",")[1];
+        const { data, error } = await useFetch("/api/upload", {
+          method: "POST",
+          body: {
+            file: base64File,
+            contentType: file.type,
+          },
+        });
+
+        if (error.value) reject(error.value);
+        resolve(data.value.response.publicUrl);
+      } else {
+        reject(new Error("Failed to read file as string"));
+      }
     };
-    compressedFile.value = await imageCompression(file, options);
-  } catch (error) {
-    console.error("Error during image compression:", error);
-    handleUploadError("Failed to compress image");
-  }
+    fileReader.readAsDataURL(file);
+  });
+};
+
+const updateUserPhoto = async (fileUrl: string) => {
+  await userStore.fetchUser();
+};
+
+const handleUploadError = (errorMessage: string) => {
+  console.error("Upload error:", errorMessage);
+  addToast("error", "File upload failed", errorMessage);
 };
 </script>

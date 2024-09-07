@@ -80,7 +80,6 @@ const emit = defineEmits([
   "file-selected",
   "file-ready-for-upload",
 ]);
-
 watch(
   () => props.fileForUpload,
   (newFile) => {
@@ -117,7 +116,6 @@ const performUpload = async (file: File) => {
       const result = e.target?.result;
       if (typeof result === "string") {
         const base64File = result.split(",")[1];
-
         const { data, error } = await useFetch("/api/upload", {
           method: "POST",
           body: {
@@ -125,12 +123,18 @@ const performUpload = async (file: File) => {
             filePath,
             file: base64File,
             upsert: props.upsert,
-            contentType: file.type, // Add this line
+            contentType: file.type,
           },
         });
 
         if (error.value) throw error.value;
-        emit("success", data.value?.publicUrl);
+
+        // Ensure that data.value and data.value.publicUrl exist before emitting
+        if (data.value && data.value.response.publicUrl) {
+          emit("success", data.value.response.publicUrl);
+        } else {
+          throw new Error("Upload successful, but public URL is missing");
+        }
       } else {
         throw new Error("Failed to read file as string");
       }

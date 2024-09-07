@@ -8,7 +8,7 @@ export default defineWrappedResponseHandler(async (event) => {
   if (!bucketName || !filePath) {
     throw createError({
       statusCode: 400,
-      message: "Missing required parameters",
+      statusMessage: "Missing required parameters",
     });
   }
 
@@ -17,10 +17,13 @@ export default defineWrappedResponseHandler(async (event) => {
   try {
     const response = await client.deleteFile(bucketName, filePath);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw createError({
-      statusCode: 500,
-      message: (error as Error).message,
+      statusCode: error.code || 500,
+      statusMessage:
+        error.statusMessage ||
+        (error as Error).message ||
+        "Failed to delete file",
     });
   }
 }, 0);
