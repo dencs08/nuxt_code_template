@@ -1,7 +1,10 @@
 <template>
   <Dialog v-model:visible="isVisible" modal :dismissableMask="true">
     <template #container="{ closeCallback }">
-      <div class="rounded-2xl flex flex-col" style="height: 400px">
+      <div
+        class="rounded-2xl flex flex-col"
+        style="min-height: 400px; max-height: 80vh"
+      >
         <div
           class="flex flex-row justify-between border-b border-surface-200/40 dark:border-surface-700/65 py-1 px-2.5"
           v-focustrap
@@ -48,11 +51,11 @@
                   class="flex justify-between items-center py-2 px-1 rounded-md hover:bg-surface-100 dark:hover:bg-surface-700 cursor-pointer"
                 >
                   <p
-                    class="text-sm font-heading font-medium text-surface-500 dark:text-surface-150 flex items-center gap-2"
+                    class="text-sm font-heading font-medium text-surface-500/90 dark:text-surface-150 flex items-center gap-2"
                   >
                     <span
                       :class="item.icon"
-                      class="text-surface-400 dark:text-surface-250/50"
+                      class="text-surface-400/80 dark:text-surface-250/50"
                     ></span>
                     {{ item.name }}
                   </p>
@@ -64,7 +67,7 @@
                   />
                   <span
                     v-else-if="isActionItem(item)"
-                    class="pi pi-chevron-right text-surface-400 dark:text-surface-250/50"
+                    class="pi pi-chevron-right text-surface-400/75 text-sm dark:text-surface-250/50"
                   ></span>
                 </div>
               </div>
@@ -145,6 +148,11 @@ const sections: Section[] = [
         name: "Home",
         icon: "pi pi-home",
         action: () => navigateTo(localePath({ name: "dash-home" })),
+      },
+      {
+        name: "Profile",
+        icon: "pi pi-user",
+        action: () => navigateTo(localePath({ name: "dash-account" })),
       },
       {
         name: "Settings",
