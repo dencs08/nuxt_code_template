@@ -1,15 +1,33 @@
 <script setup lang="ts">
-// TODO check if it works after adding zod schema and Form
 import { passwordConfirmSchema } from "~~/utils/schemas";
 import { type PasswordConfirm } from "~~/types/passwordConfirm";
 
 const localePath = useLocalePath();
-const { updatePassword } = useAuthentication();
-const { handleSubmit } = useSubmit();
+const { addToast } = useToastService();
 
 async function handleForm(data: PasswordConfirm) {
-  await handleSubmit(updatePassword, data.password, "Password updated");
-  navigateTo(localePath({ name: "dash-home" }));
+  try {
+    const { error } = (await $fetch("/api/me/password-update", {
+      method: "POST",
+      body: data,
+    })) as { error?: any };
+    if (error) {
+      throw new CustomError("Error updating user data", error);
+    }
+
+    addToast(
+      "success",
+      "Password updated",
+      "You will be redirected to the dashboard in a few seconds..."
+    );
+    setTimeout(() => {
+      navigateTo(localePath({ name: "dash-home" }), { replace: true });
+    }, 2000);
+    return { response: "Password updated" };
+  } catch (e: any) {
+    addToast("error", "Error updating password", e.message);
+    throw new CustomError("An error occurred during the update process", e);
+  }
 }
 </script>
 
@@ -23,6 +41,7 @@ async function handleForm(data: PasswordConfirm) {
       <FormWrapper
         :zodSchema="passwordConfirmSchema"
         :handleSubmit="handleForm"
+        :reset-on-submit="true"
         :submitAttrs="{ inputClass: 'w-full btn-primary' }"
         submitLabel="Submit"
       >

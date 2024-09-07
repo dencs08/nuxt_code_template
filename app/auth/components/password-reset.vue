@@ -7,7 +7,11 @@ const { lostPassword } = useAuthentication();
 const { handleSubmit } = useSubmit();
 
 async function handleForm(data: EmailForm) {
-  await handleSubmit(lostPassword, { email: data.email }, "Reset link sent");
+  const response = await handleSubmit(
+    lostPassword,
+    { email: data.email },
+    "Reset link sent"
+  );
 }
 </script>
 

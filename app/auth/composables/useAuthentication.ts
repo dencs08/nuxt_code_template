@@ -59,6 +59,7 @@ export function useAuthentication() {
   const lostPassword = async ({ email }: { email: string }) => {
     const response = await $authProvider.resetPassword(email);
     handleRequestError(response);
+    return response;
   };
 
   const updateAuthProfile = async (attributes: any, options?: any) => {
