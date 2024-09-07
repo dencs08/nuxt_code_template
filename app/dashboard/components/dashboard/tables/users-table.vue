@@ -27,6 +27,12 @@
           <UserCreator />
           <Button
             size="small"
+            label="Invite"
+            severity="contrast"
+            @click="inviteUser"
+          />
+          <Button
+            size="small"
             label="Delete"
             severity="danger"
             @click="confirmDeleteUsers"
@@ -105,7 +111,7 @@
     >
       <template #body="{ data }">
         <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{
-          formatDate(data.created_at)
+          formatDate(data.created_at, { includeTime: true })
         }}</span>
       </template>
     </Column>
@@ -154,6 +160,7 @@
 
 <script setup>
 import DisplayUserChanges from "@/components/dashboard/display-user-changes.vue";
+import InviteUsers from "~~/app/dashboard/components/dashboard/invite-users.vue";
 import { FilterMatchMode } from "@primevue/core/api";
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -164,6 +171,7 @@ const { getRoleSeverity } = useRolesStore();
 const { hasAccess } = useRoleCheck();
 const { confirmAction } = useConfirmAction();
 const localePath = useLocalePath();
+const { formatDate } = useDate();
 
 const isAdmin = hasAccess(75);
 const isSuperAdmin = hasAccess(100);
@@ -176,6 +184,7 @@ const editingRows = ref([]);
 const selected = ref();
 const changesMade = ref(false);
 let originalUsers = ref([]);
+const { users } = storeToRefs(usersStore);
 
 const emit = defineEmits(["showPermissions"]);
 
@@ -185,6 +194,7 @@ const selectPermissions = (user) => {
 
 onMounted(() => {
   fetchUsers();
+  console.log(usersStore.users);
 });
 
 const onRowEditSave = async (event) => {
@@ -195,27 +205,51 @@ const onRowEditSave = async (event) => {
 
 const fetchUsers = async () => {
   await handleSubmit(usersStore.fetchUsers, {}, "Users fetched");
-  originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
+  originalUsers.value = JSON.parse(JSON.stringify(users.value));
   changesMade.value = false;
 };
+
+const changes = computed(() => {
+  return users.value
+    .map((user, index) => {
+      const originalUser = originalUsers.value[index];
+      const changedValues = Object.entries(user)
+        .filter(([key, value]) => {
+          if (key === "role" || key === "role_data") {
+            // Compare role and role_data separately
+            return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
+          }
+          return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
+        })
+        .map(([key, value]) => ({
+          key,
+          oldValue: originalUser[key],
+          newValue: value,
+        }))
+        .filter(Boolean);
+      return { userName: user.name, email: user.email, changes: changedValues };
+    })
+    .filter((user) => user.changes.length > 0);
+});
 
 const updateUsers = async () => {
   const changedUsers = changes.value;
   for (let i = 0; i < changedUsers.length; i++) {
     const { userName, email, changes: userChanges } = changedUsers[i];
-    const userIndex = usersStore.users.findIndex(
+    const userIndex = users.value.findIndex(
       (user) => user.name === userName && user.email === email
     );
     if (userIndex !== -1) {
-      const user = usersStore.users[userIndex];
+      const user = users.value[userIndex];
       let roleChanged = false;
       let otherChanged = false;
       for (let j = 0; j < userChanges.length; j++) {
         const { key, newValue } = userChanges[j];
-        user[key] = newValue;
-        if (key === "role") {
+        if (key === "role" || key === "role_data") {
+          user[key] = newValue;
           roleChanged = true;
         } else {
+          user[key] = newValue;
           otherChanged = true;
         }
       }
@@ -228,25 +262,8 @@ const updateUsers = async () => {
     }
   }
   changesMade.value = false;
-  originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
+  originalUsers.value = JSON.parse(JSON.stringify(users.value));
 };
-
-const changes = computed(() => {
-  return usersStore.users
-    .map((user, index) => {
-      const originalUser = originalUsers.value[index];
-      const changedValues = Object.entries(user)
-        .filter(([key, value]) => originalUser[key] !== value)
-        .map(([key, value]) => ({
-          key,
-          oldValue: originalUser[key],
-          newValue: value,
-        }))
-        .filter(Boolean);
-      return { userName: user.name, email: user.email, changes: changedValues };
-    })
-    .filter((user) => user.changes.length > 0);
-});
 
 const confirmDeleteUsers = (event) => {
   confirmAction({
@@ -280,16 +297,21 @@ const confirmSaveChanges = () => {
   });
 };
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-
-  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+const inviteUser = () => {
+  confirmAction({
+    header: "Who do you want to invite?",
+    icon: "pi pi-user",
+    severity: "contrast",
+    acceptLabel: "Save",
+    rejectLabel: "Close",
+    showToastOnAccept: false,
+    showToastOnReject: false,
+    showMessage: false,
+    component: markRaw(InviteUsers),
+    accept: async () => {
+      await fetchUsers();
+    },
+  });
 };
 
 const exportCSV = () => {
