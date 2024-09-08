@@ -2,7 +2,6 @@
   <div>
     <div class="mt-5">
       <h2 class="text-db-h2">Your account</h2>
-      <!-- TODO Add a way of accessing the update-password after the user requests one in the forgot password but restrict from accessing if not requested -->
 
       <div>
         <div
@@ -61,7 +60,7 @@
                     validation="required|email"
                     placeholder="Email"
                     v-model="userDetails.email"
-                    :disabled="userSession.provider !== 'email'"
+                    :disabled="userSession.provider !== 'email' || isLoading"
                   >
                   </FormKit>
                 </div>
@@ -189,11 +188,8 @@ definePageMeta({
 
 const { changeUserPassword, verifyPassword, terminateSession } =
   useAuthentication();
-const { updateUserAccount, updateUserEmail } = await useUser();
 const { handleSubmit } = useSubmit();
 const { addToast } = useToastService();
-const { deleteUserAccount } = useUser();
-const { emailRequestChangePage } = useRedirections();
 const userStore = useUserStore();
 userStore.fetchUser();
 const userSession = await userStore.getUser;
@@ -205,6 +201,7 @@ const userDetails = ref({
   phone: userSession?.phone,
 });
 let initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
+const isLoading = ref(false);
 
 interface FormData {
   firstname?: string;
@@ -216,26 +213,43 @@ interface FormData {
 }
 
 const onProfileSave = async (data: FormData) => {
-  const name = `${data.firstname} ${data.lastname}`;
-  const { email, phone } = data;
+  isLoading.value = true;
+  try {
+    const name = `${data.firstname} ${data.lastname}`;
+    const { email, phone } = data;
 
-  if (
-    initialUserDetails.firstname !== data.firstname ||
-    initialUserDetails.lastname !== data.lastname ||
-    initialUserDetails.phone !== data.phone
-  ) {
-    await handleSubmit(
-      updateUserAccount,
-      { name, phone },
-      "User profile successfully updated"
+    if (
+      initialUserDetails.firstname !== data.firstname ||
+      initialUserDetails.lastname !== data.lastname ||
+      initialUserDetails.phone !== data.phone
+    ) {
+      await handleSubmit(
+        userStore.updateUserAccount,
+        { name, phone },
+        "User profile successfully updated"
+      );
+    }
+
+    if (initialUserDetails.email !== data.email) {
+      await userStore.updateUserEmail(email, `${window.location.origin}`);
+      addToast(
+        "warn",
+        "Verify email change",
+        `To change the email, click on the verification link sent to ${email}`,
+        60000
+      );
+    }
+    initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    addToast(
+      "error",
+      "Profile update failed",
+      "An error occurred while updating your profile."
     );
+  } finally {
+    isLoading.value = false;
   }
-
-  if (initialUserDetails.email !== data.email) {
-    const emailChangePage = emailRequestChangePage();
-    await updateUserEmail(email, `${window.location.origin}${emailChangePage}`);
-  }
-  initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 };
 
 const onPasswordChange = async (data: FormData) => {
@@ -277,7 +291,7 @@ const confirmDeleteAccount = () => {
     severity: "danger",
     component: markRaw(PasswordActionConfirm),
     accept: async () => {
-      await deleteUserAccount();
+      await userStore.deleteUserAccount();
       addToast(
         "success",
         "Account deleted",
