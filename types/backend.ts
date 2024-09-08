@@ -6,22 +6,27 @@ export interface BackendClient {
   deleteUser(userId: string): Promise<void>;
   createUser(data: any, event: any, userSession: any): Promise<any>;
   updateUser(data: any): Promise<any>;
+  banUser(id: string, duration: string): Promise<any>;
+  sendResetPassword(email: string): Promise<any>;
+  changeUserPassword(userId: string, password: string): Promise<any>;
 
   //auth
   getCurrentUser(): Promise<any>;
+  verifyOtp(otp: string, email: string, type: string): Promise<any>;
+  inviteByEmail(email: string, userSession: any): Promise<any>;
 
   //me
   getMe(): Promise<any>;
   deleteMe(userSession: any): Promise<any>;
   updateMe(user: any, data: any): Promise<any>;
   putMe(user: any, data: any): Promise<any>;
-  updateMeEmail(user: any, body: any): Promise<any>;
   updateMePhoto(userId: any, photoUrl: any): Promise<any>;
   getMePermissions(userId: string): Promise<any>;
+  updatePassword(user: any, password: string): Promise<any>;
 
   //utils
   assignRole(userId: any, roleId: string, userSession: any): Promise<any>;
-  confirmEmail(event: any): Promise<any>;
+  // confirmEmail(event: any): Promise<any>;
 
   //storage
   uploadFile(
