@@ -52,9 +52,16 @@ export class SupabaseClient implements BackendClient {
 
     return users;
   }
-
   async getUser(userId: string): Promise<any> {
     let user = {} as any;
+
+    const { data: userAuth, error: errorAuth } =
+      await this.client.auth.admin.getUserById(userId);
+
+    if (errorAuth) {
+      throw errorAuth;
+    }
+
     let { data, error } = await this.client
       .from("users")
       .select(
@@ -75,14 +82,13 @@ export class SupabaseClient implements BackendClient {
     }
 
     if (error) {
-      // throw createError({
-      //   statusCode: 500,
-      //   statusMessage: error.message,
-      // });
       throw error;
     }
 
-    return user;
+    return {
+      ...userAuth.user, // Unwrapped authUser fields
+      ...user,
+    };
   }
   async getAuthUsers(): Promise<any[]> {
     let { data: authData, error: authError } =
@@ -107,6 +113,7 @@ export class SupabaseClient implements BackendClient {
     console.log("Creating user with email:", body.email);
     const { data, error } = await this.client.auth.admin.createUser({
       email: body.email,
+      name: body.name,
       password: body.password,
       email_confirm: true,
       user_metadata: {
@@ -153,30 +160,39 @@ export class SupabaseClient implements BackendClient {
     console.log("User creation and role assignment successful:", user);
     return user;
   }
-
   async updateUser(user: any): Promise<any> {
     const { data, error } = await this.client
       .from("users")
       .upsert({
         id: user.id,
         name: user?.name,
-        email: user?.email,
-        phone: user?.phone,
-        // name: userSession.user_metadata.full_name,
-        // email: userSession.email,
-        // phone: userSession.phone,
-        // photo: userSession.user_metadata.avatar_url,
-        // last_signin: userSession.last_sign_in_at
       })
-      .eq("id", user.id) // Make sure to update only the passed body.id
+      .eq("id", user.id)
       .select();
 
     if (error) {
       throw createError({
         statusCode: error.code,
-        statusMessage: error.message, //"Error updating user data"
+        statusMessage: error.message,
       });
     }
+
+    const { data: authUser, authError } =
+      await this.client.auth.admin.updateUserById(user.id, {
+        email: user?.email,
+        phone: user?.phone,
+        user_metadata: {
+          full_name: user?.name,
+        },
+      });
+
+    if (authError) {
+      throw createError({
+        statusCode: authError.code,
+        statusMessage: authError.message,
+      });
+    }
+
     return { message: "User updated" };
   }
   async deleteUser(userId: string): Promise<void> {
@@ -198,6 +214,41 @@ export class SupabaseClient implements BackendClient {
         statusMessage: error.message, //"Error deleting user from auth.users"
       });
     }
+  }
+  async banUser(userId: string, duration: string): Promise<any> {
+    const { data: user, error } = await this.client.auth.admin.updateUserById(
+      userId,
+      { ban_duration: duration }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return;
+  }
+  async sendResetPassword(email: string): Promise<any> {
+    const { data, error } = await this.client.auth.resetPasswordForEmail(email);
+
+    if (error) {
+      throw error;
+    }
+
+    return;
+  }
+  async changeUserPassword(userId: any, password: string): Promise<any> {
+    const { data, error } = await this.client.auth.admin.updateUserById(
+      userId,
+      {
+        password,
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return;
   }
 
   //auth
@@ -221,6 +272,33 @@ export class SupabaseClient implements BackendClient {
       provider,
     };
   }
+  async verifyOtp(token: string, email: string, type: string): Promise<any> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      email,
+      token,
+      type,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+  async inviteByEmail(email: string, userSession: any): Promise<any> {
+    const { data, error } =
+      await this.client.auth.admin.inviteUserByEmail(email);
+
+    if (error) {
+      throw createError({
+        statusCode: error.code,
+        statusMessage: error.message,
+      });
+    }
+
+    return;
+  }
+
   private async getAdditionalUserFields(userId: string) {
     if (!userId) {
       return null;
@@ -330,63 +408,7 @@ export class SupabaseClient implements BackendClient {
       });
     }
   }
-  async confirmEmail(userSession: any) {
-    const { data: publicUser, error } = await this.client
-      .from("users")
-      .select("*")
-      .eq("id", userSession.id)
-      .single();
 
-    if (error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error confirming email",
-      });
-    }
-
-    if (
-      publicUser.new_email === userSession.new_email &&
-      publicUser.new_email != null
-    ) {
-      const { data, error } = await this.client
-        .from("users")
-        .update({
-          email: publicUser.new_email,
-          new_email: null,
-        })
-        .eq("id", userSession.id);
-
-      if (error) {
-        throw createError({
-          statusCode: 500,
-          statusMessage: "Error confirming email",
-        });
-      }
-    }
-
-    //if supabase already changed the email and removed auth.users.new_email
-    if (
-      publicUser.new_email != userSession.new_email &&
-      publicUser.new_email === userSession.email
-    ) {
-      const { data, error } = await this.client
-        .from("users")
-        .update({
-          email: publicUser.new_email,
-          new_email: null,
-        })
-        .eq("id", userSession.id);
-
-      if (error) {
-        throw createError({
-          statusCode: 500,
-          statusMessage: "Error confirming email",
-        });
-      }
-    }
-
-    return { response: "Email confirmation successful" };
-  }
   private async getRoleName(roleId: number): Promise<string | null> {
     if (!roleId) return null;
 
@@ -439,33 +461,37 @@ export class SupabaseClient implements BackendClient {
       //@ts-ignore
       .update({
         name: data.name,
-        phone: data.phone,
-      })
-      .eq("id", user.id)
-      .select();
-
-    return { response: "User updated" };
-  }
-  async putMe(user: any, data: any): Promise<any> {}
-
-  async updateMeEmail(user: any, body: any): Promise<any> {
-    //update email_change and token in public.users
-    const { error } = await this.client
-      .from("users")
-      //@ts-ignore
-      .update({
-        new_email: body.email,
+        nickname: data.nickname,
       })
       .eq("id", user.id)
       .select();
 
     if (error) {
       throw createError({
-        statusCode: 500,
-        statusMessage: "Error updating user data " + error.message,
+        statusCode: error.code,
+        statusMessage: error.message,
       });
     }
+
+    const { data: authUser, authError } =
+      await this.client.auth.admin.updateUserById(user.id, {
+        phone: data?.phone,
+        user_metadata: {
+          full_name: data?.name,
+        },
+      });
+
+    if (authError) {
+      throw createError({
+        statusCode: authError.code,
+        statusMessage: authError.message,
+      });
+    }
+
+    return { response: "User updated" };
   }
+  async putMe(user: any, data: any): Promise<any> {}
+
   async updateMePhoto(userId: any, photoUrl: any): Promise<any> {
     const { error: userError } = await this.client
       .from("users")
@@ -473,10 +499,7 @@ export class SupabaseClient implements BackendClient {
       .eq("id", userId);
 
     if (userError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: userError.message,
-      });
+      throw userError;
     }
 
     return { success: true };
@@ -518,6 +541,21 @@ export class SupabaseClient implements BackendClient {
       throw error;
     }
   }
+  async updatePassword(user: any, password: string): Promise<any> {
+    const { data, error } = await this.client.auth.admin.updateUserById(
+      user.id,
+      {
+        password,
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    return;
+  }
+
   //storage
   async uploadFile(
     bucketName: string,
@@ -536,10 +574,7 @@ export class SupabaseClient implements BackendClient {
       });
 
     if (uploadError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error uploading file", //uploadError.message,
-      });
+      throw uploadError;
     }
 
     const {
@@ -548,17 +583,13 @@ export class SupabaseClient implements BackendClient {
 
     return { publicUrl };
   }
-
   async deleteFile(bucketName: string, filePath: string): Promise<any> {
     const { error: deleteError } = await this.client.storage
       .from(bucketName)
       .remove([filePath]);
 
     if (deleteError) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Error deleting file",
-      });
+      throw deleteError;
     }
 
     return { success: true };
