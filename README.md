@@ -1,69 +1,50 @@
-# Nuxt 3 Minimal Starter
+# [Nuxt 3/4](https://nuxt.com/) Starter
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Features
+
+- **TypeScript Support**: Write your code with TypeScript for better type safety and developer experience.
+- **Tailwind CSS**: Integrated Tailwind CSS for utility-first styling.
+- **Vue 3 Composition API**: Utilize the Composition API for more flexible and readable code.
+- **Pinia**: State management with Pinia,.
+- **Tests**: Unit testing with nuxt-test.
+- **i18n**: Internationalization support with vue-i18n.
+- **PWA**: Progressive Web App support.
+- **SEO**: Built-in SEO optimization.
+- **Storybook**: Component and funcionality documentation
+- **PDF Site Generator**
+- **Mail templates**
+- **Full tailwind and primevue compability and customisability**
+- **Playwright**
+- **Centralised config**
 
 ## Setup
 
-Make sure to install the dependencies:
+### Dependencies
 
-```bash
-# npm
+````bash
 npm install
 
-# pnpm
-pnpm install
+## Setup
 
-# yarn
-yarn install
-```
+### Dependencies
+```bash
+npm install
+````
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+### Development Server
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
 ```
 
-## Production
-
-Build the application for production:
+### Production
 
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
 ```
 
-Locally preview production build:
+### Preview production build:
 
 ```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Macbook
-
-## Sets the brew path on the local environemnt for the npm and node access via brew.
-
-# export PATH="/opt/homebrew/bin:$PATH"
