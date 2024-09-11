@@ -2,7 +2,7 @@
 
 export default {
   // Homepage pre-rendered at build time
-  "/": { prerender: true }, //propably need to make SSR instead of prerender
+  "/": { ssr: true },
   "/contact": { prerender: true },
   "/auth/verify": { ssr: false },
   // Admin dashboard renders only on client-side
