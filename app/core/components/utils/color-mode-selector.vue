@@ -4,6 +4,9 @@
       v-if="type === 'button'"
       @click="handleToggle"
       class="grid place-content-center"
+      :class="[
+        adjustColor ? 'text-surface-800 dark:text-surface-0' : 'text-surface-0',
+      ]"
     >
       <Icon
         v-auto-animate
@@ -24,6 +27,10 @@ const props = defineProps({
   type: {
     type: String,
     default: "button",
+  },
+  adjustColor: {
+    type: Boolean,
+    default: true,
   },
 });
 
