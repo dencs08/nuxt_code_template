@@ -152,5 +152,69 @@ export const useUsersStore = defineStore({
     async updateLocalUsers(index, data) {
       this.users[index] = data;
     },
+    async inviteUser(email) {
+      // this.loading = true;
+      try {
+        const { error } = await $fetch("/api/users/invite", {
+          method: "POST",
+          body: { email },
+        });
+        if (error) {
+          throw new CustomError("Error inviting a user", error);
+        }
+      } catch (error) {
+        throw new CustomError("Failed to invite this user", error);
+      } finally {
+        // this.loading = false;
+      }
+    },
+    async banUser(id, duration) {
+      // this.loading = true;
+      try {
+        const { error } = await $fetch("/api/users/ban", {
+          method: "POST",
+          body: { id, duration },
+        });
+        if (error) {
+          throw new CustomError("Error banning the user", error);
+        }
+      } catch (error) {
+        throw new CustomError("Failed to ban this user", error);
+      } finally {
+        // this.loading = false;
+      }
+    },
+    async sendPasswordResetEmail(email) {
+      // this.loading = true;
+      try {
+        const { error } = await $fetch("/api/users/send-reset-password", {
+          method: "POST",
+          body: { email },
+        });
+        if (error) {
+          throw new CustomError("Error sending password reset email", error);
+        }
+      } catch (error) {
+        throw new CustomError("Failed to send password reset email", error);
+      } finally {
+        // this.loading = false;
+      }
+    },
+    async changeUserPassword(id, password) {
+      // this.loading = true;
+      try {
+        const { error } = await $fetch("/api/users/change-password", {
+          method: "POST",
+          body: { id, password },
+        });
+        if (error) {
+          throw new CustomError("Error changing user password", error);
+        }
+      } catch (error) {
+        throw new CustomError("Failed to change user password", error);
+      } finally {
+        // this.loading = false;
+      }
+    },
   },
 });
