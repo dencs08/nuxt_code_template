@@ -109,6 +109,34 @@ export const routes = [
     file: "@/pages/auth/verify.vue",
     settings: { auth: false, access: "" },
   },
+  {
+    name: "auth-verify-access-token",
+    newName: "auth-verify-access-token",
+    path: "/auth/verify-access-token",
+    file: "@/pages/auth/verify-access-token.vue",
+    settings: { auth: false, access: "" },
+  },
+  {
+    name: "auth-invite",
+    newName: "auth-invite",
+    path: "/auth/invite",
+    file: "@/pages/auth/invite.vue",
+    settings: { auth: false, access: "" },
+  },
+
+  //main pages
+  {
+    name: "main",
+    newName: "main",
+    path: "/main",
+    file: "@/pages/main/index.vue",
+  },
+  {
+    name: "main-account",
+    newName: "main-account",
+    path: "/main/account",
+    file: "@/pages/main/account/index.vue",
+  },
 
   //dashboard pages
   {
@@ -126,10 +154,10 @@ export const routes = [
     settings: { auth: true },
   },
   {
-    name: "dashboard-mail-inbox",
-    newName: "dash-mail-inbox",
-    path: "/dashboard/mail/inbox",
-    file: "@/pages/dashboard/mail/inbox.vue",
+    name: "dashboard-mail-templates",
+    newName: "dash-mail-templates",
+    path: "/dashboard/mail/templates",
+    file: "@/pages/dashboard/mail/templates.vue",
     settings: { auth: true },
   },
   {
