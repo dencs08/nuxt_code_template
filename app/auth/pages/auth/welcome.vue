@@ -1,5 +1,5 @@
 <template>
-  <div class="grid place-content-center h-[80vh]">
+  <div class="grid place-content-center h-full min-h-[100vh]">
     <section class="container mx-auto">
       <div class="card flex justify-center min-w-[50vw]">
         <Stepper v-model:value="activeStep" class="basis-[50rem]" linear>
@@ -102,42 +102,43 @@
                       Setup your password
                     </div>
                     <div class="flex justify-center h-full gap-1 flex-col">
-                      <FormWrapper
-                        :zodSchema="passwordConfirmSchema"
-                        type="form"
-                        v-model="passwords"
-                        :submit-attrs="{
-                          inputClass: 'hidden',
-                        }"
-                        :incomplete-message="false"
-                        :handle-submit="
-                          (formData) => {
-                            return formData;
-                          }
-                        "
-                        @validation-change="handlePasswordValidationChange"
-                      >
-                        <div class="space-y-2">
-                          <FormKit
-                            name="password"
-                            type="primePassword"
-                            validation="required|length:6"
-                            feedback
-                            toggleMask
-                            placeholder="Password"
-                            :disabled="isSubmitted"
-                          />
-
-                          <FormKit
-                            type="primePassword"
-                            name="password_confirm"
-                            placeholder="Confirm Password"
-                            validation="required|confirm"
-                            toggleMask
-                            :disabled="isSubmitted"
-                          />
-                        </div>
-                      </FormWrapper>
+                      <ClientOnly>
+                        <FormWrapper
+                          :zodSchema="passwordConfirmSchema"
+                          type="form"
+                          v-model="passwords"
+                          :submit-attrs="{
+                            inputClass: 'hidden',
+                          }"
+                          :incomplete-message="false"
+                          :handle-submit="
+                            (formData) => {
+                              return formData;
+                            }
+                          "
+                          @validation-change="handlePasswordValidationChange"
+                        >
+                          <div class="space-y-2">
+                            <FormKit
+                              name="password"
+                              type="primePassword"
+                              validation="required|length:6"
+                              feedback
+                              toggleMask
+                              placeholder="Password"
+                              :disabled="isSubmitted"
+                            />
+                            <FormKit
+                              type="primePassword"
+                              name="password_confirm"
+                              placeholder="Confirm Password"
+                              validation="required|confirm"
+                              toggleMask
+                              :disabled="isSubmitted"
+                            />
+                          </div>
+                        </FormWrapper>
+                      </ClientOnly>
                     </div>
                   </div>
                 </div>
@@ -251,13 +252,14 @@ import { passwordConfirmSchema } from "~~/utils/schemas";
 import { z } from "zod";
 
 definePageMeta({
-  layout: "main",
+  layout: "none",
+  middleware: "is-first-login-token-active",
 });
 
 const localePath = useLocalePath();
 const userStore = useUserStore();
 const user = userStore.getUser;
-
+const { addToast } = useToastService();
 const activeStep = ref(1);
 const passwords = ref({ password: "", password_confirm: "" });
 const details = ref({ name: "", nickname: "" });
@@ -330,9 +332,16 @@ const submitData = async () => {
       isSubmitted.value = true;
       activeStep.value++;
       isCompleted.value = true;
+      addToast("success", "Success", "Account created successfully");
     } catch (error) {
       activeStep.value = 1;
       console.error("Error:", error);
+      addToast(
+        "error",
+        "Error",
+        "An error occurred, try again, if the problem persists, contact support",
+        30000
+      );
     } finally {
       isLoading.value = false;
     }
