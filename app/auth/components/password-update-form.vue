@@ -4,6 +4,7 @@ import { type PasswordConfirm } from "~~/types/passwordConfirm";
 
 const localePath = useLocalePath();
 const { addToast } = useToastService();
+const { signOut } = useAuthentication();
 
 async function handleForm(data: PasswordConfirm) {
   try {
@@ -18,12 +19,13 @@ async function handleForm(data: PasswordConfirm) {
     addToast(
       "success",
       "Password updated",
-      "You will be redirected to the dashboard in a few seconds..."
+      "Please log in to your account after redirect to the login page"
     );
-    setTimeout(() => {
-      navigateTo(localePath({ name: "dash-home" }), { replace: true });
+    setTimeout(async () => {
+      await signOut();
+      navigateTo(localePath("/login"), { replace: true });
     }, 2000);
-    return { response: "Password updated" };
+    // return { response: "Password updated" };
   } catch (e: any) {
     addToast("error", "Error updating password", e.message);
     throw new CustomError("An error occurred during the update process", e);
@@ -42,7 +44,7 @@ async function handleForm(data: PasswordConfirm) {
         :zodSchema="passwordConfirmSchema"
         :handleSubmit="handleForm"
         :reset-on-submit="true"
-        :submitAttrs="{ inputClass: 'w-full btn-primary' }"
+        :submitAttrs="{ inputClass: 'w-full btn btn-primary' }"
         submitLabel="Submit"
       >
         <div class="space-y-2 mb-3">
