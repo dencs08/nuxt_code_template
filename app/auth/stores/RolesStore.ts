@@ -19,11 +19,12 @@ export const useRolesStore = defineStore("roles", {
   },
 
   actions: {
-    async fetchRoles() {
+    async fetchRoles(force: boolean = false) {
       this.loading = true;
       this.error = null;
       try {
-        const data = await $fetch("/api/roles", { method: "GET" });
+        const query = force ? "?force=true" : "";
+        const data = await $fetch(`/api/roles${query}`, { method: "GET" });
         if (data) {
           //@ts-ignore //not sure why its not recognizing the response property on data...
           this.roles = data.response;
@@ -36,7 +37,6 @@ export const useRolesStore = defineStore("roles", {
         this.loading = false;
       }
     },
-
     async updateRole(roleId: number, accessLevel: number) {
       this.loading = true;
       this.error = null;
