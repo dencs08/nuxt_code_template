@@ -1,5 +1,3 @@
-import vue from "@vitejs/plugin-vue";
-
 // Core
 import runtimeConfig from "./config/runtime";
 import modules from "./config/modules";
@@ -29,6 +27,10 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+  nitro: {
+    appConfigFiles: ["./nitro.config.ts"],
+  },
+
   //for some reason have to be here instead of in core config
   pinia: {
     storesDirs: [
@@ -41,14 +43,6 @@ export default defineNuxtConfig({
   },
 
   ssr: true,
-  nitro: {
-    rollupConfig: {
-      plugins: [vue()],
-    },
-    // prerender: {
-    //   routes: ["/"],
-    // },
-  },
 
   extends: ["./app/core", "./app/auth", "./app/dashboard", "./app/enduser"],
 
