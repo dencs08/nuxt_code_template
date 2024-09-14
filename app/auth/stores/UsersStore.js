@@ -15,11 +15,12 @@ export const useUsersStore = defineStore({
   },
 
   actions: {
-    async fetchUsers() {
+    async fetchUsers(force = false) {
       this.loading = true;
 
       try {
-        const data = await $fetch("/api/users", { method: "GET" });
+        const query = force ? "?force=true" : "";
+        const data = await $fetch(`/api/users${query}`, { method: "GET" });
         this.users = data.response;
       } catch (error) {
         throw new CustomError(error.message, error);
