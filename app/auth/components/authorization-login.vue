@@ -11,55 +11,57 @@
 
     <div class="mt-5">
       <div>
-        <FormWrapper
-          :zod-schema="loginSchema"
-          :reset-on-submit="true"
-          :handle-submit="handleForm"
-          submit-label="Login"
-        >
-          <div class="space-y-2">
-            <div class="space-y-2 mb-5">
-              <FormKit
-                class="w-full"
-                type="primeInputText"
-                name="email"
-                validation="required|email"
-                placeholder="Email"
-              >
-              </FormKit>
-
-              <FormKit
-                class="w-full"
-                type="primePassword"
-                name="password"
-                validation="required|length:6"
-                toggleMask
-                placeholder="Password"
-              >
-              </FormKit>
-            </div>
-
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-2">
+        <ClientOnly>
+          <FormWrapper
+            :zod-schema="loginSchema"
+            :reset-on-submit="true"
+            :handle-submit="handleForm"
+            submit-label="Login"
+          >
+            <div class="space-y-2">
+              <div class="space-y-2 mb-5">
                 <FormKit
-                  type="primeCheckbox"
-                  name="remember-me"
-                  id="remember-me"
-                />
-                <label for="remember-me">Remember me</label>
+                  class="w-full"
+                  type="primeInputText"
+                  name="email"
+                  validation="required|email"
+                  placeholder="Email"
+                >
+                </FormKit>
+
+                <FormKit
+                  class="w-full"
+                  type="primePassword"
+                  name="password"
+                  validation="required|length:6"
+                  toggleMask
+                  placeholder="Password"
+                >
+                </FormKit>
               </div>
 
-              <div class="text-sm leading-6">
-                <NuxtLink
-                  :to="localePath({ name: 'lost-password' })"
-                  class="font-medium text-primary-500 hover:text-primary-600"
-                >
-                  Forgot password?
-                </NuxtLink>
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <FormKit
+                    type="primeCheckbox"
+                    name="remember-me"
+                    id="remember-me"
+                  />
+                  <label for="remember-me">Remember me</label>
+                </div>
+
+                <div class="text-sm leading-6">
+                  <NuxtLink
+                    :to="localePath({ name: 'lost-password' })"
+                    class="font-medium text-primary-500 hover:text-primary-600"
+                  >
+                    Forgot password?
+                  </NuxtLink>
+                </div>
               </div>
             </div>
-          </div>
-        </FormWrapper>
+          </FormWrapper>
+        </ClientOnly>
 
         <div class="mb-3">
           <div class="relative mt-5">
@@ -87,7 +89,7 @@
         </div>
 
         <div class="grid place-content-center">
-          <NuxtTurnstile ref="captchaToken" v-model="captchaToken" />
+          <!-- <NuxtTurnstile ref="captchaToken" v-model="captchaToken" /> -->
         </div>
       </div>
     </div>
