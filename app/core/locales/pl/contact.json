@@ -1,0 +1,13 @@
+{        
+    "contact": {
+        "meta": {
+            "title": "Tytuł strony kontaktowej po polsku",
+            "description": "Opis strony kontaktowej po polsku"
+        },
+        "content": {
+            "hero": {
+                "h1": "Nagłówek strony kontaktowej po polsku"
+            }
+        }
+    }
+}

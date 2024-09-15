@@ -1,0 +1,13 @@
+{        
+    "contact": {
+        "meta": {
+            "title": "Contact page title in English",
+            "description": "Contact page description in English"
+        },
+        "content": {
+            "hero": {
+                "h1": "Contact page header in English"
+            }
+        }
+    }
+}

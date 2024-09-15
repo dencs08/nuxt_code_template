@@ -12,17 +12,38 @@ export default {
   locales: [
     {
       code: "pl",
-      file: "pl.json",
+      files: [
+        "pl.json",
+        "./pl/utilities.json",
+        "./pl/index.json",
+        "./pl/contact.json",
+        "./pl/main.json",
+        "./pl/account.json",
+      ],
       language: "pl-PL",
     },
     {
       code: "en",
-      file: "en.json",
+      files: [
+        "en.json",
+        "./en/utilities.json",
+        "./en/index.json",
+        "./en/contact.json",
+        "./en/main.json",
+        "./en/account.json",
+      ],
       language: "en-US",
     },
     {
       code: "de",
-      file: "de.json",
+      files: [
+        "de.json",
+        "./de/utilities.json",
+        "./de/index.json",
+        "./de/contact.json",
+        "./de/main.json",
+        "./de/account.json",
+      ],
       language: "de-DE",
     },
   ],

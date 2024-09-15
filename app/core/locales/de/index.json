@@ -1,0 +1,14 @@
+{
+    "index": {
+        "meta": {
+            "title": "Startseitentitel auf Deutsch",
+            "description": "Startseitenbeschreibung auf Deutsch"
+        },
+        "content": {
+            "hero": {
+                "h1": "Startseitenüberschrift auf Deutsch",
+                "h2": "Startseitensubüberschrift auf Deutsch"
+            }
+        }
+    }
+}

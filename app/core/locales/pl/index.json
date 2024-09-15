@@ -1,0 +1,14 @@
+{
+    "index": {
+        "meta": {
+            "title": "Tytuł strony głównej po polsku",
+            "description": "Opis strony głównej po polsku"
+        },
+        "content": {
+            "hero": {
+                "h1": "Nagłówek strony głównej po polsku",
+                "h2": "Podnagłówek strony głównej po polsku"
+            }
+        }
+    }
+}

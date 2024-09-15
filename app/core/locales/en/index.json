@@ -1,0 +1,14 @@
+{
+    "index": {
+        "meta": {
+            "title": "Home page title in English",
+            "description": "Home page description in English"
+        },
+        "content": {
+            "hero": {
+                "h1": "Home page header in English",
+                "h2": "Home page subheader in English"
+            }
+        }
+    }
+}
