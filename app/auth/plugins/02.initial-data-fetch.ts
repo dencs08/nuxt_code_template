@@ -23,8 +23,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   };
 
   const fetchPermissions = async () => {
-    const { fetchPermissions } = usePermissions();
-    await fetchPermissions();
+    if (userStore.user) {
+      const { fetchPermissions } = usePermissions();
+      await fetchPermissions();
+    } else {
+      // console.log("Skipping permission fetch: User is not present");
+    }
   };
 
   const fetchRoles = async () => {
@@ -44,6 +48,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.hooks.hook("page:start", async () => {
     if (!userStore.user && !isRefetching) {
       await fetchInitialData();
+      if (userStore.user) {
+        await fetchPermissions();
+      }
     }
   });
 
