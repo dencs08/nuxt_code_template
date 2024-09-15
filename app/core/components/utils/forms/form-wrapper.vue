@@ -3,7 +3,8 @@ import { createZodPlugin } from "@formkit/zod";
 import { z, type ZodTypeAny } from "zod";
 import { reset } from "@formkit/core";
 import { v4 as uuidv4 } from "uuid";
-import { ref, reactive, watch, nextTick } from "vue";
+import { ref, reactive, watch, nextTick, toRefs } from "vue";
+import debounce from "lodash/debounce";
 
 const props = defineProps({
   handleSubmit: {
@@ -35,28 +36,10 @@ const formRef = ref<HTMLElement | null>(null);
 const defaultSchema = z.any();
 const schema = props.zodSchema || defaultSchema;
 
-function debounce(func: Function, wait: number) {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-
-  return function (this: any, ...args: any[]) {
-    const context = this;
-
-    const later = () => {
-      timeout = null;
-      func.apply(context, args);
-    };
-
-    if (timeout !== null) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(later, wait);
-  };
-}
-
 const validateForm = async () => {
   if (!formRef.value) return;
 
-  const result = await schema.safeParseAsync(data);
+  const result = await schema.safeParseAsync(formData);
   emit("validation-change", result.success);
 };
 
@@ -77,12 +60,21 @@ const resetFields = () => {
   reset(formId.value);
 };
 
-const data = reactive({ ...props.modelValue });
+const { modelValue } = toRefs(props);
+let formData = reactive({});
 
 watch(
-  data,
+  modelValue,
+  (newValue) => {
+    Object.assign(formData, newValue);
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  formData,
   () => {
-    emit("update:modelValue", data);
+    emit("update:modelValue", { ...formData });
     nextTick(() => {
       debouncedValidateForm();
     });
@@ -99,7 +91,7 @@ defineExpose({
   <FormKit
     :id="formId"
     type="form"
-    v-model="data"
+    v-model="formData"
     :submit-attrs="{
       inputClass: 'btn btn-primary btn-sm w-full',
     }"
