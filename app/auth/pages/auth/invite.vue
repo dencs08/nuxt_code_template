@@ -12,14 +12,14 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default",
+  layout: "none",
   middleware: "verify-access-token",
 });
 
 const { getUser } = useAuthentication();
 const user = await getUser();
 const localePath = useLocalePath();
-
+const { welcomePage } = useRedirections();
 watch(
   user,
   async () => {
@@ -31,11 +31,10 @@ watch(
         });
 
         setTimeout(() => {
-          navigateTo(localePath("/main/account/welcome"), {
+          navigateTo(localePath(welcomePage()), {
             replace: true,
-            external: true,
           });
-        }, 2500);
+        }, 3500);
       } catch (error) {
         console.error("Error setting verification flag:", error);
       }
