@@ -1,11 +1,15 @@
 <script setup lang="ts">
+const { t, locale } = useI18n();
+const title = computed(() => t("index.title"));
+const description = computed(() => t("index.description"));
+const localePath = useLocalePath();
+const userStore = useUserStore();
+const user = userStore.getUser;
+
 definePageMeta({
   layout: "main",
+  displayTitle: "Home",
 });
-
-const { t, locale } = useI18n();
-const title = computed(() => t("pages.index.title"));
-const description = computed(() => t("pages.index.description"));
 
 useHead({
   title: title,
@@ -22,7 +26,13 @@ useHead({
 </script>
 
 <template>
-  <div class="grid place-content-center h-screen">
-    <h1>Main!</h1>
+  <div>
+    <div class="grid place-content-center text-center">
+      <h3 class="text-lg">Hi, {{ user.email }}</h3>
+    </div>
+
+    <section>
+      <PrimevueThemer />
+    </section>
   </div>
 </template>
