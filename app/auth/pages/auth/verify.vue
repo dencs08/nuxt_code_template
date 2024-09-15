@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default",
+  layout: "none",
   middleware: "check-reset-token",
 });
 
@@ -37,9 +37,8 @@ watch(
         setTimeout(() => {
           navigateTo(localePath(passwordChangePage()), {
             replace: true,
-            external: true,
           });
-        }, 2500);
+        }, 3500);
       } catch (error) {
         console.error("Error setting verification flag:", error);
       }

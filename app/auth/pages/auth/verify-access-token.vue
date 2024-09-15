@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default",
+  layout: "none",
   middleware: "verify-access-token",
 });
 
@@ -29,7 +29,6 @@ watch(
         console.log("Navigating to main page");
         navigateTo(localePath("/main"), {
           replace: true,
-          external: true,
         });
       }, 2500);
     }
