@@ -1,4 +1,5 @@
 //use checkRoute property for checking if the current route is active (use checkRoute when you don't want to navigate to the route but just check if it's active and ensure user has the access)
+const localePath = useLocalePath();
 export const dashboardMenu = [
   {
     label: "Main",
@@ -8,8 +9,16 @@ export const dashboardMenu = [
   {
     label: "Marketing",
     icon: "pi pi-megaphone",
-    route: "dash-admin-marketing",
-    // badge: 5,
+    items: [
+      {
+        label: "Newsletter",
+        icon: "pi pi-envelope",
+        route: "dash-admin-marketing-newsletter",
+        command: () => {
+          navigateTo(localePath({ name: "dash-admin-marketing-newsletter" }));
+        },
+      },
+    ],
   },
   {
     label: "Mail",
@@ -17,10 +26,10 @@ export const dashboardMenu = [
     checkRoute: "dash-mail-inbox",
     items: [
       {
-        label: "Inbox",
+        label: "Templates",
         icon: "pi pi-inbox",
-        route: "dash-mail-inbox",
-        badge: 5,
+        route: "dash-mail-templates",
+        // badge: 5,
         // shortcut: "⌘+N",
       },
     ],
@@ -40,18 +49,24 @@ export const dashboardMenu = [
   {
     label: "Administrative",
     icon: "pi pi-home",
+    checkRoute: ["/dashboard/admin/roles", "/dashboard/admin/users"],
     items: [
       {
         label: "Users",
         icon: "pi pi-users",
         route: "dash-admin-users",
+        command: () => {
+          navigateTo(localePath({ name: "dash-admin-users" }));
+        },
       },
       {
         label: "Roles",
         icon: "pi pi-key",
         route: "dash-admin-roles",
+        command: () => {
+          navigateTo(localePath({ name: "dash-admin-roles" }));
+        },
       },
     ],
   },
-  // ... other dashboard menu items
 ];
