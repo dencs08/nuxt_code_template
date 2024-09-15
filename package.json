@@ -87,6 +87,7 @@
     "mjml": "^4.15.3",
     "nodemailer": "^6.9.15",
     "pinia": "^2.1.7",
+    "pino": "^9.4.0",
     "primelocale": "^1.0.3",
     "primevue": "^4.0.4",
     "puppeteer": "^22.12.1",
