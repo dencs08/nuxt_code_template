@@ -14,7 +14,7 @@
         <FormWrapper
           :zodSchema="registerSchema"
           :handleSubmit="handleForm"
-          :submitAttrs="{ inputClass: 'w-full btn-primary' }"
+          :submitAttrs="{ inputClass: 'w-full btn btn-primary' }"
           submitLabel="Register"
         >
           <div class="space-y-2 mb-5">
