@@ -86,7 +86,9 @@ onMounted(() => {
       process.env.NODE_ENV === "development" ||
       process.env.NODE_ENV === "dev"
     ) {
-      console.log(props.error);
+      console.error(props.error);
+    } else {
+      // console.error(props.error);
     }
   }
 });
