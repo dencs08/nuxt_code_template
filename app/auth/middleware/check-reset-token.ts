@@ -6,8 +6,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const tokenHash = to.query.token_hash as string;
   const type = to.query.type as GenericOtpType;
-  const verifiedToken = useCookie("verified_token");
-  // const redirectTo = (to.query.redirect_to as string) || '/dashboard/user/account/update-password';
   // console.log('SSR:', import.meta.server);
   // console.log('Token Hash:', tokenHash);
   // console.log('Type:', type);
@@ -27,7 +25,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (data && data.user) {
       const userStore = useUserStore();
       await userStore.setUser(data.user);
-      verifiedToken.value = tokenHash;
       console.log("User authenticated:", data.user);
 
       // console.log('User authenticated:', data.user);
