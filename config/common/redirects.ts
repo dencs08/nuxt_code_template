@@ -1,6 +1,6 @@
 // config/redirect.config.ts
 export default {
-  onPasswordChange: () => "update-password",
+  onPasswordChange: () => "/auth/update-password",
   onGeneralRedirect: () => "index",
-  onEmailRequestChange: () => "dashboard/account/confirm-email-change",
+  welcomePage: () => "/auth/welcome",
 };
