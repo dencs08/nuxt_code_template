@@ -15,9 +15,9 @@
           :zodSchema="registerSchema"
           :handleSubmit="handleForm"
           :submitAttrs="{ inputClass: 'w-full btn btn-primary' }"
-          submitLabel="Register"
+          :submitLabel="t('register')"
         >
-          <div class="space-y-2 mb-5">
+          <div class="space-y-2 mb-2">
             <FormKit
               class="w-full"
               type="primeInputText"
@@ -89,6 +89,7 @@
 <script setup lang="ts">
 import { registerSchema } from "~~/utils/schemas";
 import { type RegisterForm } from "~~/types/register";
+const { t } = useI18n();
 
 const localePath = useLocalePath();
 const { signUp } = useAuthentication();
