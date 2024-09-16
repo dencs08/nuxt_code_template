@@ -1,6 +1,7 @@
 @import "primeicons/primeicons.css";
 @import "./my-utilities.css";
 @import "./formkit-primevue.css";
+
 /* @import "./primevue.css"; */
 
 @layer tailwind-base, primevue, tailwind-utilities;
@@ -71,4 +72,12 @@ html.dark .bg-emphasis {
 
 html.dark .text-muted-color {
     @apply text-surface-300/80;
+}
+
+.p-card.p-component.custom-card {
+    @apply border border-surface-100/50;
+}
+
+html.dark .p-card.p-component.custom-card {
+    @apply border border-surface-700/60;
 }
