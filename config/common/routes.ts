@@ -175,6 +175,12 @@ export const routes = [
     settings: { auth: true },
   },
   {
+    name: "dashboard-admin-marketing-newsletter",
+    newName: "dash-admin-marketing-newsletter",
+    path: "/dashboard/admin/marketing/newsletter",
+    file: "@/pages/dashboard/admin/marketing/newsletter.vue",
+  },
+  {
     name: "dashboard-admin-analytics",
     newName: "dash-admin-analytics",
     path: "/dashboard/admin/analytics",
