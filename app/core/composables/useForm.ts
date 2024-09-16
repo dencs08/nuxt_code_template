@@ -11,7 +11,7 @@ interface FormSubmitOptions {
 export const useForm = () => {
   const isLoading = ref(false);
   const error = ref<Error | null>(null);
-  const { addToast } = useToastService();
+  const { showToast } = useToastService();
 
   const submit = async ({
     action,
@@ -29,7 +29,11 @@ export const useForm = () => {
       const result = await action();
 
       if (showSuccessToast) {
-        addToast("success", successTitle, successMessage);
+        showToast({
+          severity: "success",
+          summary: successTitle,
+          detail: successMessage,
+        });
       }
 
       return result;
@@ -42,7 +46,11 @@ export const useForm = () => {
           typeof errorMessage === "function"
             ? errorMessage(error.value)
             : errorMessage;
-        addToast("error", errorTitle, finalErrorMessage);
+        showToast({
+          severity: "error",
+          summary: errorTitle,
+          detail: finalErrorMessage,
+        });
       }
 
       throw error.value;
