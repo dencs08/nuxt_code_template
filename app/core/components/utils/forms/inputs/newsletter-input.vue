@@ -1,20 +1,22 @@
 <template>
-  <FormWrapper
-    :zodSchema="emailSchema"
-    :handleSubmit="handleSubmit"
-    :submitAttrs="{
-      inputClass: 'btn-primary btn btn-xs w-full sm:w-auto md:w-1/2',
-    }"
-    submitLabel="Send"
-  >
-    <FormKit
-      class="w-full"
-      type="primeInputText"
-      name="email"
-      validation="required|email"
-      placeholder="Email"
-    />
-  </FormWrapper>
+  <ClientOnly>
+    <FormWrapper
+      :zodSchema="emailSchema"
+      :handleSubmit="handleSubmit"
+      :submitAttrs="{
+        inputClass: 'btn-primary btn btn-xs w-full sm:w-auto md:w-1/2',
+      }"
+      submitLabel="Send"
+    >
+      <FormKit
+        class="w-full"
+        type="primeInputText"
+        name="email"
+        validation="required|email"
+        placeholder="Email"
+      />
+    </FormWrapper>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
