@@ -1,5 +1,6 @@
 import type { BackendClient } from "../types/backend";
 import type { UserAuthPublicSession } from "../types/user";
+import dayjs from "dayjs";
 
 export class SupabaseClient implements BackendClient {
   constructor(private client: any) {}
@@ -252,6 +253,15 @@ export class SupabaseClient implements BackendClient {
   }
 
   //auth
+  async getSession(): Promise<any> {
+    const { data, error } = await this.client.auth.getSession();
+
+    if (error) {
+      throw createError({ statusMessage: error.message });
+    }
+
+    return data;
+  }
   async getCurrentUser(): Promise<any[]> {
     const {
       data: { user },
@@ -942,5 +952,181 @@ export class SupabaseClient implements BackendClient {
     if (error)
       throw createError({ statusCode: 400, statusMessage: error.message });
     return { success: true, data };
+  }
+
+  //analytics
+  async getNewSignupsCount(periodStart: string): Promise<number> {
+    const { count, error } = await this.client
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", periodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getPreviousNewSignupsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number> {
+    const { count, error } = await this.client
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", previousPeriodStart)
+      .lt("created_at", currentPeriodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getTotalUsersCount(): Promise<number> {
+    const { count, error } = await this.client
+      .from("users")
+      .select("*", { count: "exact", head: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getTotalUsersCountBeforeDate(date: string): Promise<number> {
+    const { count, error } = await this.client
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .lt("created_at", date);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getPageViewsCount(periodStart: string): Promise<number> {
+    const { count, error } = await this.client
+      .from("page_views")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", periodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getPreviousPageViewsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number> {
+    const { count, error } = await this.client
+      .from("page_views")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", previousPeriodStart)
+      .lt("created_at", currentPeriodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getUniqueVisitorsCount(periodStart: string): Promise<number> {
+    const { data, error } = await this.client
+      .from("page_views")
+      .select("session_id")
+      .gte("created_at", periodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    const uniqueVisitorsSet = new Set(data.map((item: any) => item.session_id));
+    return uniqueVisitorsSet.size;
+  }
+
+  async getPreviousUniqueVisitorsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number> {
+    const { data, error } = await this.client
+      .from("page_views")
+      .select("session_id")
+      .gte("created_at", previousPeriodStart)
+      .lt("created_at", currentPeriodStart);
+
+    if (error) {
+      throw error;
+    }
+
+    const uniqueVisitorsSet = new Set(data.map((item: any) => item.session_id));
+    return uniqueVisitorsSet.size;
+  }
+
+  async getChartData(): Promise<{ [key: string]: number }> {
+    const { data, error } = await this.client
+      .from("users")
+      .select("created_at");
+
+    if (error) {
+      throw error;
+    }
+
+    const monthCounts: { [key: string]: number } = {};
+
+    data.forEach((user: any) => {
+      const month = dayjs(user.created_at).format("MMMM");
+      if (monthCounts[month]) {
+        monthCounts[month] += 1;
+      } else {
+        monthCounts[month] = 1;
+      }
+    });
+
+    // Ensure all months are included
+    const allMonths = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const chartData: { [key: string]: number } = {};
+    allMonths.forEach((month) => {
+      chartData[month] = monthCounts[month] || 0;
+    });
+
+    return chartData;
+  }
+
+  async insertPageView(pageViewData: {
+    session_id: string;
+    user_id: string | null;
+    page_url: string;
+    referrer: string;
+    created_at: string;
+  }): Promise<void> {
+    const { error } = await this.client.from("page_views").insert(pageViewData);
+
+    if (error) {
+      throw error;
+    }
   }
 }

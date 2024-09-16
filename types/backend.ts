@@ -11,6 +11,7 @@ export interface BackendClient {
   changeUserPassword(userId: string, password: string): Promise<any>;
 
   //auth
+  getSession(): Promise<any>;
   getCurrentUser(): Promise<any>;
   verifyOtp(otp: string, email: string, type: string): Promise<any>;
   inviteByEmail(email: string, userSession: any): Promise<any>;
@@ -57,4 +58,25 @@ export interface BackendClient {
   addNewsletterSubscriber(email: string): Promise<any>;
   deleteNewsletterSubscriber(email: string): Promise<any>;
   getNewsletterSubscribers(): Promise<any>;
+
+  //analytics
+  getNewSignupsCount(periodStart: string): Promise<number>;
+  getPreviousNewSignupsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number>;
+  getTotalUsersCount(): Promise<number>;
+  getTotalUsersCountBeforeDate(date: string): Promise<number>;
+  getPageViewsCount(periodStart: string): Promise<number>;
+  getPreviousPageViewsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number>;
+  getUniqueVisitorsCount(periodStart: string): Promise<number>;
+  getPreviousUniqueVisitorsCount(
+    previousPeriodStart: string,
+    currentPeriodStart: string
+  ): Promise<number>;
+  getChartData(): Promise<{ [key: string]: number }>;
+  insertPageView(data: any): Promise<void>;
 }
