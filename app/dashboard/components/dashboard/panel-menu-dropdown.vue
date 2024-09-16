@@ -11,8 +11,9 @@
         :to="item.route"
         :href="item.href"
         v-ripple
-        class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0 hover:bg-surface-400/15 px-2 py-1 rounded"
+        class="group flex items-center cursor-pointer text-surface-700 dark:text-surface-0 px-2 py-1 rounded transition duration-500"
         @click="toggleDropdown(item)"
+        exact-active-class="bg-surface-500/10"
       >
         <span
           :class="item.icon"
