@@ -15,7 +15,7 @@
           <FormWrapper
             :zod-schema="loginSchema"
             :reset-on-submit="true"
-            :handle-submit="handleForm"
+            :handle-submit="handleSubmit"
             submit-label="Login"
           >
             <div class="space-y-2">
@@ -109,19 +109,29 @@ import { type LoginForm } from "~~/types/login";
 
 const localePath = useLocalePath();
 const { signIn } = useAuthentication();
-const { handleSubmit } = useSubmit();
 
 //TODO cannot test if this captcha works without deploying to production - also test the supabase captcha settings and if it works (on production).
-const captchaToken = ref();
+const captchaToken = ref("");
+const { submit, isLoading, error } = useForm();
 
-async function handleForm(data: LoginForm) {
-  await handleSubmit(
-    signIn,
-    { email: data.email, password: data.password, options: { captchaToken } },
-    "Redirecting to your account...",
-    localePath(props.redirectTo),
-    true
-  );
-  captchaToken.value.reset();
-}
+const handleSubmit = async (data: LoginForm) => {
+  try {
+    await submit({
+      action: () =>
+        signIn({
+          email: data.email,
+          password: data.password,
+          options: { captchaToken: captchaToken.value },
+        }),
+      successTitle: "Login Successful",
+      successMessage: "Redirecting to your account...",
+      errorTitle: "Login Failed",
+      errorMessage: (e) => `${e.message}. Please try again.`,
+    });
+
+    navigateTo(localePath(props.redirectTo), { external: true, replace: true });
+  } catch (e) {
+    // Any additional error handling if needed
+  }
+};
 </script>
