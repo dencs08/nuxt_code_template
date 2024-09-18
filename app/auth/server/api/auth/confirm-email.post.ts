@@ -6,8 +6,8 @@ export default defineWrappedResponseHandler(async (event) => {
   const userSession = await client.getCurrentUser();
 
   try {
-    const response = await client.confirmEmail(userSession);
-    return { response };
+    // const response = await client.confirmEmail(userSession);
+    // return { response };
   } catch (err: any) {
     return {
       error: "An error occurred during the confirmation process",
