@@ -4,7 +4,7 @@
       class="container mx-auto py-32 grid place-content-center text-center"
     >
       <h1 v-motion="slideTop({ delay: 400, useOpacity: true })">
-        {{ t("pages.index.content.hero.h1") }}
+        {{ t("index.content.hero.h1") }}
       </h1>
       <h2
         class="font-body text-3xl font-bold flex flex-row gap-2 justify-center overflow-hidden"
@@ -38,6 +38,84 @@
       >
         This is a test
       </h3>
+    </section>
+
+    <section>
+      <DatePicker></DatePicker>
+    </section>
+
+    <section class="container mx-auto">
+      <div class="flex flex-col text-center items-center gap-5 justify-between">
+        <div>
+          <CommonLink to="/home">Home</CommonLink>
+          <CommonLink to="https://example.com" external underline
+            >External Link</CommonLink
+          >
+          <CommonLink to="/about" variant="primary" size="lg" bold
+            >About Us</CommonLink
+          >
+          <CommonLink to="/contact" disabled>Contact (Disabled)</CommonLink>
+          <CommonLink to="/services" variant="secondary">
+            <template #icon-left>
+              <Icon name="ic:baseline-add-circle-outline" class="w-6 h-6" />
+            </template>
+            Our Services
+          </CommonLink>
+        </div>
+        <CommonButton>button</CommonButton>
+        <div>
+          <CommonTextEmphasis>Default emphasis</CommonTextEmphasis>
+          <CommonTextEmphasis variant="secondary" size="lg"
+            >Large secondary emphasis</CommonTextEmphasis
+          >
+          <CommonTextEmphasis variant="accent" uppercase
+            >Uppercase accent emphasis</CommonTextEmphasis
+          >
+          <CommonTextEmphasis tag="p" customClass="my-custom-class"
+            >Custom paragraph emphasis</CommonTextEmphasis
+          >
+        </div>
+        <CommonTextMuted>text muted</CommonTextMuted>
+      </div>
+
+      <div>
+        <CommonTextMuted>Default muted text</CommonTextMuted>
+        <CommonTextMuted intensity="light" size="lg"
+          >Large light muted text</CommonTextMuted
+        >
+        <CommonTextMuted intensity="dark" italic
+          >Dark italic muted text</CommonTextMuted
+        >
+        <CommonTextMuted tag="p" customClass="my-custom-class"
+          >Custom paragraph muted text</CommonTextMuted
+        >
+      </div>
+
+      <div>
+        <CommonButton @click="handleClick">Click me</CommonButton>
+        <CommonButton
+          variant="secondary"
+          size="lg"
+          :loading="isLoading"
+          @click="handleAsyncClick"
+        >
+          Async Action
+        </CommonButton>
+        <CommonButton variant="outline" block>Full Width</CommonButton>
+        <CommonButton variant="text" disabled
+          >Disabled Text Button</CommonButton
+        >
+        <CommonButton>
+          <template #icon-left>
+            <Icon name="ic:baseline-add-circle-outline" class="w-6 h-6" />
+          </template>
+          With Icon
+        </CommonButton>
+      </div>
+    </section>
+
+    <section>
+      <AnimejsTest></AnimejsTest>
     </section>
 
     <section class="container mx-auto space-y-12">
@@ -89,9 +167,8 @@ const { t, locale } = useI18n();
 const route = useRoute();
 const business = useBusiness();
 
-const title = computed(() => t("pages.index.meta.title"));
-const description = computed(() => t("pages.index.meta.description"));
-
+const title = computed(() => t("index.meta.title"));
+const description = computed(() => t("index.meta.description"));
 const url = business.url.value + route.fullPath;
 
 useHead({
@@ -107,12 +184,9 @@ useHead({
     // { property: 'og:image', content: 'https://nuxt.com/social.jpg' },
   ],
 });
-const date = ref(new Date(2023, 10, 28));
 
 const { slideTop, slideLeft, slideRight, fade, slideBottom, pop } = useMotion();
-
-const heroH2Words = computed(() => t("pages.index.content.hero.h2").split(" "));
-
+const heroH2Words = computed(() => t("index.content.hero.h2").split(" "));
 const helloArraySmall = [
   "hello",
   "こんにちは",
@@ -121,7 +195,6 @@ const helloArraySmall = [
   "hola",
   "ciao",
 ];
-
 const imgArray = ref([
   {
     img: `/img/placeholder.jpg`,
@@ -142,5 +215,24 @@ const imgArray = ref([
     img: `/img/placeholder.jpg`,
   },
 ]);
-const parentValue = ref("");
+
+const isLoading = ref(false);
+
+const handleClick = () => {
+  console.log("Button clicked");
+};
+
+const handleAsyncClick = async () => {
+  isLoading.value = true;
+  await someAsyncOperation();
+  isLoading.value = false;
+};
+
+const someAsyncOperation = () => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+};
 </script>
