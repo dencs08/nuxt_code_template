@@ -16,7 +16,61 @@
           This user doesn't exist.
         </div>
         <div v-else>
-          Profile
+          <div class="flex flex-row justify-between items-center">
+            <div class="flex flex-row gap-3 items-center">
+              <Avatar
+                :image="user.photo || '/img/avatar.svg'"
+                class="mr-2"
+                size="large"
+                shape="circle"
+              />
+              <div class="space-y-1">
+                <div class="flex flex-row gap-1">
+                  <p class="text-sm font-medium">{{ user.email }}</p>
+                  <span class="text-xs">({{ user.name }})</span>
+                </div>
+                <Tag
+                  class="px-1.5 py-0.5"
+                  :value="user?.role"
+                  :severity="rolesStore.getRoleSeverity(user?.role)"
+                />
+              </div>
+            </div>
+            <div class="flex items-center gap-1">
+              <span v-if="isBanActive" class="mr-4 text-red-500">
+                Banned until:
+                {{
+                  formatDate(user.banned_until, {
+                    includeTime: true,
+                    padZeroes: false,
+                  })
+                }}
+              </span>
+              <div v-if="access75" class="space-x-1">
+                <Button
+                  severity="danger"
+                  label="Ban user"
+                  @click="banUser"
+                  size="small"
+                ></Button>
+                <Button
+                  icon="pi pi-refresh"
+                  size="small"
+                  @click="refetchUser"
+                ></Button>
+              </div>
+              <div v-if="access50">
+                <Button
+                  icon="pi pi-ellipsis-v"
+                  text
+                  severity="contrast"
+                  size="small"
+                  @click="() => (sidebarOpen = true)"
+                >
+                </Button>
+              </div>
+            </div>
+          </div>
           <div>
             <dl
               class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6"
@@ -33,7 +87,6 @@
                   <div class="text-gray-900">
                     {{ value }}
                   </div>
-                  <!-- <button class="font-semibold text-primary-600 hover:text-primary-500">Update</button> -->
                 </dd>
               </div>
             </dl>
@@ -41,31 +94,235 @@
         </div>
       </div>
     </div>
+    <Drawer v-model:visible="sidebarOpen" position="right">
+      <template #container="{ closeCallback }">
+        <div class="flex flex-col h-full">
+          <div class="flex items-center justify-between px-4 pt-4 shrink-0">
+            <span class="inline-flex items-center gap-2"> Actions </span>
+            <span>
+              <Button
+                type="button"
+                @click="closeCallback"
+                icon="pi pi-times"
+                rounded
+                text
+              ></Button>
+            </span>
+          </div>
+          <div class="px-4 space-y-1">
+            <div v-for="(section, index) in actionSections" :key="index">
+              <div :class="section.class">
+                <FormWrapper
+                  v-for="action in section.actions"
+                  :key="action.label"
+                  :icon="action.icon"
+                  :submitLabel="action.label"
+                  :submitAttrs="{ inputClass: `${action.submitClass}` }"
+                  :handle-submit="action.onClick"
+                ></FormWrapper>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </Drawer>
   </div>
 </template>
 
 <script setup lang="ts">
+import PasswordFormInput from "@/core/components/utils/forms/password-form-input.vue";
+import BanUser from "@/dashboard/components/dashboard/admin/ban-user.vue";
+
 definePageMeta({
   layout: "dashboard",
 });
-
-import { computed } from "vue";
 
 interface RouteParams {
   id: string;
 }
 
+interface Action {
+  label: string;
+  icon: string;
+  onClick: () => void;
+  props?: {
+    severity?: string;
+    text?: boolean;
+  };
+  submitClass?: string;
+}
+
+interface ActionSection {
+  class: string;
+  actions: Action[];
+}
+
 const route = useRoute();
 const params = route.params as RouteParams;
-
 const usersStore = useUsersStore();
+const { confirmAction } = useConfirmAction();
+const { addToast } = useToastService();
+const { formatDate } = useDate();
+const { hasAccess } = useRoleCheck();
+const localePath = useLocalePath();
+const rolesStore = useRolesStore();
+const sidebarOpen = ref(false);
 
+const access75 = hasAccess(75);
+const access50 = hasAccess(50);
 const user = ref<any>(null);
+
 onMounted(async () => {
-  user.value = await usersStore.fetchUser(params.id);
+  refetchUser();
 });
+
+const refetchUser = async () => {
+  user.value = await usersStore.fetchUser(params.id);
+};
 
 const userExists = computed(() => {
   return user.value && Object.keys(user.value).length > 0;
 });
+
+const isBanActive = computed(() => {
+  if (!user.value || !user.value.banned_until) return false;
+  const banUntil = new Date(user.value.banned_until);
+  const now = new Date();
+  return banUntil > now;
+});
+
+const actionSections = computed<ActionSection[]>(() => [
+  {
+    class: "space-y-1",
+    actions: [
+      {
+        label: "Send Reset Password Link",
+        icon: "pi pi-key",
+        submitClass: "btn btn-primary w-full",
+        onClick: sendResetPassword,
+      },
+    ],
+  },
+  {
+    class: "space-y-1",
+    actions: [
+      // {
+      //   label: "Permissions",
+      //   icon: "pi pi-cog",
+      //   submitClass: "btn btn-contrast",
+      //   onClick: () => {},
+      // },
+      // {
+      //   label: "Role",
+      //   icon: "pi pi-user",
+      //   submitClass: "btn btn-contrast",
+      //   onClick: () => {},
+      // },
+      {
+        label: "Change Password",
+        icon: "pi pi-key",
+        submitClass: "btn btn-contrast w-full",
+        onClick: () => {
+          changeUserPassword();
+        },
+      },
+    ],
+  },
+  {
+    class: "",
+    actions: [
+      {
+        label: "Delete User",
+        icon: "pi pi-trash",
+        submitClass: "btn btn-danger w-full",
+        onClick: (event: any) => {
+          confirmDeleteUsers(event);
+        },
+      },
+    ],
+  },
+]);
+
+const banUser = () => {
+  confirmAction({
+    message:
+      "Set the ban duration accepted using minutes(m) or hours(h) for example: 30m or 24h or 6h30m.",
+    header: "Are you sure you want to ban this user?",
+    icon: "pi pi-ban",
+    severity: "contrast",
+    acceptLabel: "Ban",
+    component: markRaw(BanUser),
+    accept: async (data: any) => {
+      addToast(
+        "success",
+        "Success",
+        `User ${user.value.email} has been banned for: ${data}.`
+      );
+      await usersStore.banUser(params.id, data);
+      refetchUser(); // Refresh user data after banning
+    },
+    reject: () => {},
+    onError(errorMessage) {
+      addToast("warn", "Error", errorMessage);
+    },
+  });
+};
+
+const sendResetPassword = async () => {
+  try {
+    await usersStore.sendPasswordResetEmail(user.value.email);
+    addToast("success", "Success", "Password reset email has been sent.");
+  } catch (error: any) {
+    addToast("error", "Error", error.message);
+  }
+};
+
+const deleteUser = async () => {
+  try {
+    await usersStore.deleteUser(params.id);
+    addToast("success", "Success", "User has been deleted.");
+  } catch (error: any) {
+    addToast("error", "Error", error.message);
+  }
+};
+
+const confirmDeleteUsers = (event: any) => {
+  confirmAction({
+    target: event.currentTarget,
+    message: "Are you sure you want to delete?",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Delete",
+    rejectLabel: "Cancel",
+    severity: "danger",
+    accept: async () => {
+      await deleteUser();
+      navigateTo(localePath("/dashboard/admin/users"));
+    },
+    reject: () => {},
+  });
+};
+
+const confirmChangePassword = () => {
+  confirmAction({
+    message: "Change the password for the user?",
+    icon: "pi pi-key",
+    acceptLabel: "Change",
+    rejectLabel: "Cancel",
+    severity: "contrast",
+    component: toRaw(PasswordFormInput),
+    accept: async (data) => {
+      await usersStore.changeUserPassword(params.id, data);
+      addToast("success", "Success", "Password has been changed.");
+    },
+    reject: () => {},
+  });
+};
+
+const changeUserPassword = async () => {
+  try {
+    await confirmChangePassword();
+  } catch (error: any) {
+    addToast("error", "Error", error.message);
+  }
+};
 </script>
