@@ -7,7 +7,7 @@
     >
       <SplitterPanel class="p-4" :size="40">
         <VirtualScroller
-          :items="templates"
+          :items="emailStore.templates"
           :itemSize="135"
           orientation="horizontal"
           class="border border-surface-200 dark:border-surface-700 rounded mb-4"
@@ -21,15 +21,15 @@
                 { 'bg-surface-0 dark:bg-surface-700': options.odd },
                 {
                   'border-2 border-primary bg-surface-100 scale-105':
-                    item.id === selectedTemplateId,
+                    item.id === emailStore.selectedTemplateId,
                 },
               ]"
               style="width: 135px"
-              @click="handleTemplateChange(item.id)"
+              @click="emailStore.handleTemplateChange(item.id)"
             >
               <div class="w-full h-[99%] overflow-hidden">
                 <iframe
-                  :srcdoc="templatePreviews[item.id] || loadingHtml"
+                  :srcdoc="emailStore.templatePreviews[item.id] || loadingHtml"
                   class="w-full h-full"
                   style="
                     pointer-events: none;
@@ -83,11 +83,11 @@
                   <FormKit
                     id="template-select"
                     type="primeSelect"
-                    :options="templateOptions"
+                    :options="emailStore.templateOptions"
                     option-label="label"
                     option-value="value"
-                    :modelValue="selectedTemplateId"
-                    @update:modelValue="handleTemplateChange"
+                    :modelValue="emailStore.selectedTemplateId"
+                    @update:modelValue="emailStore.handleTemplateChange"
                     label="Select Template"
                     placeholder="Select a template"
                     class="w-full"
@@ -95,15 +95,16 @@
                 </div>
               </div>
 
-              <div v-if="selectedTemplate" class="mb-4">
+              <div v-if="emailStore.selectedTemplate" class="mb-4">
                 <h3
-                  v-if="selectedTemplate.customFields"
+                  v-if="emailStore.selectedTemplate.customFields"
                   class="text-lg font-semibold mt-4 mb-2"
                 >
                   Customize Template
                 </h3>
                 <div
-                  v-for="(field, key) in selectedTemplate.customFields"
+                  v-for="(field, key) in emailStore.selectedTemplate
+                    .customFields"
                   :key="key"
                   class="mb-2"
                 >
@@ -111,7 +112,7 @@
                     :label="field.label"
                     :type="field.type as any"
                     :id="key as string"
-                    v-model="customValues[key]"
+                    v-model="emailStore.customValues[key]"
                     :placeholder="field.placeholder"
                     class="w-full p-2 border rounded"
                   />
@@ -122,19 +123,21 @@
           <div class="my-3 text-center">
             <Button
               label="Edit email template code"
-              @click="visible = true"
+              @click="emailStore.visible = true"
               text
               size="small"
               class="text-muted-color"
               icon="pi pi-pencil"
             />
           </div>
-          <div v-if="error" class="error mt-4 text-red-500">{{ error }}</div>
+          <div v-if="emailStore.error" class="error mt-4 text-red-500">
+            {{ emailStore.error }}
+          </div>
         </div>
       </SplitterPanel>
       <SplitterPanel v-auto-animate class="relative">
         <div
-          v-if="loading"
+          v-if="emailStore.loading"
           class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-20 transition"
         >
           <ProgressSpinner
@@ -146,7 +149,10 @@
           />
         </div>
         <div v-else class="w-full h-full">
-          <iframe :srcdoc="previewHtml" class="w-full h-full border-0"></iframe>
+          <iframe
+            :srcdoc="emailStore.previewHtml"
+            class="w-full h-full border-0"
+          ></iframe>
           <div
             v-if="isDragging"
             class="absolute inset-0 bg-transparent z-10"
@@ -157,7 +163,7 @@
       </SplitterPanel>
     </Splitter>
     <Dialog
-      v-model:visible="visible"
+      v-model:visible="emailStore.visible"
       header="Email template"
       position="left"
       :modal="false"
@@ -169,8 +175,7 @@
           <Textarea
             label="MJML Content"
             id="mjml-content"
-            :modelValue="mjmlContent"
-            @input="handleMjmlContentChange"
+            v-model="mjmlContent"
             rows="20"
             class="w-full p-2 border rounded"
             placeholder="Enter MJML content here"
@@ -182,41 +187,35 @@
 </template>
 
 <script setup lang="ts">
-import { templates, type Template } from "~~/utils/mailTemplates";
-
+import { useEmailTemplatesStore } from "~/core/stores/useMailTemplateStore";
+const emailStore = useEmailTemplatesStore();
 const {
-  sendMail,
-  updateMjmlContent,
-  loading,
-  previewLoading,
-  error,
-  previewHtml,
+  templates,
+  selectedTemplateId,
+  customValues,
+  visible,
+  templatePreviews,
   mjmlContent,
-  generatePreview,
-} = useMail(1000);
+  previewHtml,
+  loading,
+  error: storeError,
+  templateOptions,
+  selectedTemplate,
+} = storeToRefs(emailStore);
 
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 
-const selectedTemplateId = ref(templates[0].id);
-const recipients = ref("");
-const bcc = ref("");
 const isDragging = ref(false);
-const customValues = ref({});
-const visible = ref(false);
-const templatePreviews = ref<Record<string, string>>({});
-
-const templateOptions = templates.map((template) => ({
-  label: template.label,
-  value: template.id,
-}));
-
-const selectedTemplate = computed(() =>
-  templates.find((t) => t.id === selectedTemplateId.value)
-);
-
 const loadingHtml =
   '<div style="display: flex; justify-content: center; align-items: center; height: 100%; font-size: 64px;">Loading...</div>';
 
+// Local state for the component
+const recipients = ref("");
+const bcc = ref("");
+const error = ref<string | null>(null);
+const emailSent = ref(false);
+
+// Handle resize events
 const handleResizeStart = () => {
   isDragging.value = true;
   document.addEventListener("mousemove", handleMouseMove);
@@ -230,8 +229,7 @@ const handleResizeEnd = () => {
 };
 
 const handleMouseMove = (event: MouseEvent) => {
-  // This function is empty but necessary to prevent
-  // the iframe from capturing mouse events
+  // Prevent iframe from capturing mouse events
 };
 
 const handleMouseUp = () => {
@@ -242,6 +240,8 @@ const handleMouseUp = () => {
 
 onMounted(() => {
   document.addEventListener("mouseup", handleMouseUp);
+  // Initialize selected template content
+  emailStore.handleTemplateChange(selectedTemplateId.value);
 });
 
 onUnmounted(() => {
@@ -249,94 +249,64 @@ onUnmounted(() => {
   document.removeEventListener("mouseup", handleMouseUp);
 });
 
-const handleTemplateChange = (newTemplateId: string) => {
-  loading.value = true;
-  const newTemplate = templates.find((t) => t.id === newTemplateId);
-  if (newTemplate) {
-    selectedTemplateId.value = newTemplateId;
-    customValues.value = {};
-    if (newTemplate.customFields) {
-      Object.keys(newTemplate.customFields).forEach((key) => {
-        customValues.value[key] = newTemplate.customFields[key].default || "";
-      });
-    }
-    updateTemplateContent();
+// Watch for errors from the store and display toast notifications
+watch(storeError, (newError) => {
+  if (newError) {
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: newError,
+    });
+    storeError.value = null; // Reset error after displaying
   }
-};
+});
 
-const updateTemplateContent = () => {
-  if (selectedTemplate.value) {
-    let updatedContent = selectedTemplate.value.content;
-    if (selectedTemplate.value.customFields) {
-      Object.keys(customValues.value).forEach((key) => {
-        const placeholder = `{{${key}}}`;
-        updatedContent = updatedContent.replace(
-          new RegExp(placeholder, "g"),
-          customValues.value[key]
-        );
-      });
-    }
-    updateMjmlContent(updatedContent);
+// Watch for local errors and display toast notifications
+watch(error, (newError) => {
+  if (newError) {
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: newError,
+    });
+    error.value = null; // Reset error after displaying
   }
-};
+});
 
-const handleMjmlContentChange = (event: Event) => {
-  const content = (event.target as HTMLTextAreaElement).value;
-  updateMjmlContent(content);
-};
+// Watch for successful email sending and display a toast
+watch(emailSent, (sent) => {
+  if (sent) {
+    showToast({
+      severity: "success",
+      summary: "Email sent",
+      detail: "Email has been sent successfully",
+    });
+    emailSent.value = false; // Reset the flag
+  }
+});
 
-watch(customValues, updateTemplateContent, { deep: true });
+const { sendMail } = useMail(1000); // Import sendMail from the composable
 
 const handleSendEmail = async () => {
   if (!recipients.value) {
-    addToast("error", "Error", "Please enter at least one recipient");
+    error.value = "Please enter at least one recipient";
     return;
   }
 
   try {
-    const selectedTemplate = templates.find(
-      (t) => t.id === selectedTemplateId.value
-    );
+    const selectedTemplateValue = selectedTemplate.value;
     await sendMail({
       to: recipients.value,
       bcc: bcc.value,
-      subject: selectedTemplate?.label || "Email Subject",
+      subject: selectedTemplateValue?.label || "Email Subject",
       text: "This is a test email sent using MJML",
       mjmlContent: mjmlContent.value,
     });
-    addToast("success", "Success", "Email sent successfully");
+    emailSent.value = true;
     console.log("Email sent successfully");
   } catch (err) {
-    addToast("error", "Error", "Failed to send email");
+    error.value = "Failed to send email";
     console.error("Failed to send email:", err);
   }
 };
-
-const getTemplatePreview = async (template: Template) => {
-  let previewContent = template.content;
-  if (template.customFields) {
-    Object.keys(template.customFields).forEach((key) => {
-      const placeholder = `{{${key}}}`;
-      previewContent = previewContent.replace(
-        new RegExp(placeholder, "g"),
-        template.customFields[key].default || ""
-      );
-    });
-  }
-  const preview = await generatePreview(previewContent);
-  templatePreviews.value[template.id] = preview;
-};
-
-// Generate previews for all templates
-const generateAllPreviews = async () => {
-  for (const template of templates) {
-    await getTemplatePreview(template);
-  }
-};
-
-onMounted(() => {
-  generateAllPreviews();
-});
-
-handleTemplateChange(selectedTemplateId.value);
 </script>

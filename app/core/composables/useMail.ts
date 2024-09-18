@@ -48,10 +48,11 @@ export const useMail = (debounceMs = 300) => {
     try {
       const data = await $fetch("/api/mail/mjml/render", {
         method: "POST",
+        // params: { force: "true" },
         body: { mjmlContent: content },
       });
 
-      previewHtml.value = data.response.html;
+      previewHtml.value = data;
     } catch (err) {
       error.value =
         err instanceof Error ? err.message : "An unknown error occurred";
@@ -71,9 +72,10 @@ export const useMail = (debounceMs = 300) => {
     try {
       const data = await $fetch("/api/mail/mjml/render", {
         method: "POST",
+        // params: { force: "true" },
         body: { mjmlContent: content },
       });
-      return data.response.html;
+      return data;
     } catch (err) {
       console.error("Error generating preview:", err);
       return "<p>Error generating preview</p>";
