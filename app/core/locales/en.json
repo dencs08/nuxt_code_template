@@ -11,29 +11,5 @@
     "fallback": {
         "title": "Default title in English",
         "description": "Default description in English"
-    },
-    "components": {
-        "navbar": {
-            "links": []
-        },
-        "footer": {}
-    },
-    "forms": {
-        "contact": {
-            "placeholders": {
-                "firstname": "First name",
-                "lastname": "Last name",
-                "email": "Email address",
-                "message": "Message",
-                "submit": "Submit"
-            },
-            "errors": {
-                "required": "Field required",
-                "firstname": "Invalid first name",
-                "lastname": "Invalid last name",
-                "message": "Invalid message",
-                "email": "Invalid email address"
-            }
-        }
     }
 }

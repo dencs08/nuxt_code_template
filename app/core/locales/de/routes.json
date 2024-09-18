@@ -1,0 +1,18 @@
+{
+    "routes":{
+        "home": "Startseite",
+        "about": "Über uns",
+        "contact": "Kontakt",
+        "faq": "FAQ",
+        "privacyPolicy": "Datenschutzerklärung",
+        "termsOfUse": "Nutzungsbedingungen",
+        "cookiePolicy": "Cookie-Richtlinie",
+        "cookieSettings": "Cookie-Einstellungen",
+        "sections": {
+            "solutions": "Lösungen",
+            "support": "Support",
+            "company": "Unternehmen",
+            "legal": "Rechtliches"
+        }
+    }
+}

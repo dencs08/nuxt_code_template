@@ -11,29 +11,5 @@
     "fallback": {
         "title": "Domyślny tytuł w języku polskim",
         "description": "Domyślny opis w języku polskim"
-    },
-    "components": {
-        "navbar": {
-            "links": []
-        },
-        "footer": {}
-    },
-    "forms": {
-        "contact": {
-            "placeholders": {
-                "firstname": "Imię",
-                "lastname": "Nazwisko",
-                "email": "Adres e-mail",
-                "message": "Wiadomość",
-                "submit": "Wyślij"
-            },
-            "errors": {
-                "required": "Pole wymagane",
-                "firstname": "Niepoprawne imię",
-                "lastname": "Niepoprawne nazwisko",
-                "message": "Niepoprawna wiadomość",
-                "email": "Niepoprawny adres e-mail"
-            }
-        }
     }
 }

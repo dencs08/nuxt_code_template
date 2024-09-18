@@ -11,29 +11,5 @@
     "fallback": {
         "title": "Standardtitel auf Deutsch",
         "description": "Standardbeschreibung auf Deutsch"
-    },
-    "components": {
-        "navbar": {
-            "links": []
-        },
-        "footer": {}
-    },
-    "forms": {
-        "contact": {
-            "placeholders": {
-                "firstname": "Vorname",
-                "lastname": "Nachname",
-                "email": "E-Mail-Adresse",
-                "message": "Nachricht",
-                "submit": "Absenden"
-            },
-            "errors": {
-                "required": "Feld erforderlich",
-                "firstname": "Ungültiger Vorname",
-                "lastname": "Ungültiger Nachname",
-                "message": "Ungültige Nachricht",
-                "email": "Ungültige E-Mail-Adresse"
-            }
-        }
     }
 }
