@@ -1,14 +1,14 @@
 export const navbar = [
   {
-    label: "Home",
+    label: "routes.home",
     routeName: "index",
   },
   {
-    label: "Kontakt",
+    label: "routes.contact",
     routeName: "contact",
   },
   {
-    label: "FAQ",
+    label: "routes.faq",
     routeName: "faq",
   },
 ];

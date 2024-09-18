@@ -5,11 +5,12 @@ import { mainDashboardNavigation } from "@/utils/navigations/main-dashboard";
 import { navbar, social, legal, userNavbar } from "~~/config/common/menus";
 
 export function useNavigation() {
+  const { t } = useI18n();
   const localePath = useLocalePath();
 
   const navbarMenu = computed(() =>
     navbar.map((item) => ({
-      label: item.label,
+      label: t(`${item.label}`),
       route: localePath({ name: item.routeName as RoutesNamesList }),
     }))
   );
@@ -23,7 +24,7 @@ export function useNavigation() {
 
   const legalMenu = computed(() =>
     legal.map((item) => ({
-      label: item.label,
+      label: t(`${item.label}`),
       route: localePath({ name: item.routeName as RoutesNamesList }),
     }))
   );

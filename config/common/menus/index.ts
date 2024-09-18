@@ -3,3 +3,4 @@ export { dashboardMenu } from "./dashboard";
 export { navbar } from "./navbar";
 export { social } from "./social";
 export { legal } from "./legal";
+export { userNavbar } from "./user-navbar";

@@ -1,6 +1,6 @@
 export const legal = [
-  { label: "Polityka prywatności", routeName: "privacy" },
-  { label: "Warunki korzystania", routeName: "terms" },
-  { label: "Polityka ciasteczek", routeName: "cookies" },
-  { label: "Ustawienia ciasteczek", routeName: "cookies" },
+  { label: "routes.privacyPolicy", routeName: "privacy" },
+  { label: "routes.termsOfUse", routeName: "terms" },
+  { label: "routes.cookiePolicy", routeName: "cookies" },
+  { label: "routes.cookieSettings", routeName: "cookies" },
 ];
