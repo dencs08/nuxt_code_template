@@ -49,8 +49,6 @@ definePageMeta({
   layout: "dashboard",
 });
 
-import { computed } from "vue";
-
 interface RouteParams {
   id: string;
 }
