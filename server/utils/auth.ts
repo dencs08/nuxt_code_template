@@ -22,6 +22,22 @@ export async function getUserSession(event: H3Event) {
   return userSession;
 }
 
+export async function fetchUserSession(event: H3Event) {
+  // Get the backend client from the lib backend as the context one is service role
+  const client = await getBackendClient(event);
+  const userSession = await client.getSession();
+
+  if (!userSession) {
+    throw createError({
+      statusCode: 401,
+      statusMessage:
+        "Unauthorized: No active session found. User must be logged in.",
+    });
+  }
+
+  return userSession;
+}
+
 export async function checkUserRole(
   user: any,
   requiredAccessLevel: number,
