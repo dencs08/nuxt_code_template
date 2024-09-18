@@ -5,7 +5,7 @@
       <h2
         class="mt-4 text-2xl font-bold leading-9 tracking-tight text-gray-900"
       >
-        Sign in to your account
+        {{ t("auth.signInToYourAccount") }}
       </h2>
     </div>
 
@@ -25,7 +25,7 @@
                   type="primeInputText"
                   name="email"
                   validation="required|email"
-                  placeholder="Email"
+                  :placeholder="t('auth.inputFields.email')"
                 >
                 </FormKit>
 
@@ -35,7 +35,7 @@
                   name="password"
                   validation="required|length:6"
                   toggleMask
-                  placeholder="Password"
+                  :placeholder="t('auth.inputFields.password')"
                 >
                 </FormKit>
               </div>
@@ -47,7 +47,9 @@
                     name="remember-me"
                     id="remember-me"
                   />
-                  <label for="remember-me">Remember me</label>
+                  <label class="text-sm" for="remember-me">
+                    {{ t("auth.rememberMe") }}</label
+                  >
                 </div>
 
                 <div class="text-sm leading-6">
@@ -55,7 +57,7 @@
                     :to="localePath({ name: 'lost-password' })"
                     class="font-medium text-primary-500 hover:text-primary-600"
                   >
-                    Forgot password?
+                    {{ t("auth.forgotPassword") }}?
                   </NuxtLink>
                 </div>
               </div>
@@ -71,7 +73,9 @@
             <div
               class="relative flex justify-center text-sm font-medium leading-6"
             >
-              <span class="bg-gray-50 px-6 text-gray-900">Or sign in with</span>
+              <span class="bg-gray-50 px-6 text-gray-900">
+                {{ t("auth.orSignInWith") }}
+              </span>
             </div>
           </div>
 
@@ -83,8 +87,8 @@
             :to="localePath({ name: 'register' })"
             class="text-sm font-medium text-gray-600"
           >
-            Don't have an account yet?
-            <span class="text-primary-500">Create one!</span>
+            {{ t("auth.dontHaveAnAccount") }}
+            <span class="text-primary-500"> {{ t("auth.createOne") }}!</span>
           </NuxtLink>
         </div>
 
@@ -109,6 +113,7 @@ import { type LoginForm } from "~~/types/login";
 
 const localePath = useLocalePath();
 const { signIn } = useAuthentication();
+const { t } = useI18n();
 
 //TODO cannot test if this captcha works without deploying to production - also test the supabase captcha settings and if it works (on production).
 const captchaToken = ref("");

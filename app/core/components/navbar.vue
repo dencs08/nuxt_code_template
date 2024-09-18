@@ -34,31 +34,36 @@
           v-for="item in navbarMenu"
           :key="item.label"
           :to="item.route"
-          class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
+          class="text-sm font-semibold text-gray-900 cursor-pointer transition duration-1000 ease-in-out"
+          :exact-active-class="'border-b border-primary-800 dark:border-primary-200'"
         >
           {{ item.label }}
         </NuxtLink>
-        <NuxtLink :to="localePath({ name: 'login' })">
-          <template v-if="isUserLoggedIn">
-            <Icon
-              name="ic:baseline-account-circle"
-              class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition"
-            />
-            <template v-if="hasDashboardReadPermission">
-              <NuxtLink :to="localePath('/dashboard')">
+        <div class="space-x-2">
+          <ClientOnly>
+            <template v-if="isUserLoggedIn">
+              <NuxtLink :to="localePath({ name: 'login' })">
+                <Icon
+                  name="ic:baseline-account-circle"
+                  class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition"
+                />
+              </NuxtLink>
+              <NuxtLink
+                v-if="hasDashboardReadPermission"
+                :to="localePath('/dashboard')"
+              >
                 <Icon
                   name="ic:baseline-space-dashboard"
-                  class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition ml-2"
+                  class="h-6 w-6 text-primary-800/75 hover:text-primary-500 dark:text-primary-200/75 hover:dark:text-primary-400 transition"
                 />
               </NuxtLink>
             </template>
-          </template>
-          <template v-else>
-            <MyButton size="xs"> Login </MyButton>
-          </template>
-        </NuxtLink>
+            <NuxtLink v-else :to="localePath({ name: 'login' })">
+              <MyButton size="xs"> Login </MyButton>
+            </NuxtLink>
+          </ClientOnly>
+        </div>
       </div>
-      <!-- <ColorModeSelector /> -->
     </nav>
 
     <!-- Mobile -->

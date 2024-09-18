@@ -5,6 +5,7 @@ import { type EmailForm } from "~~/types/email";
 const localePath = useLocalePath();
 const { lostPassword } = useAuthentication();
 const { handleSubmit } = useSubmit();
+const { t } = useI18n();
 
 async function handleForm(data: EmailForm) {
   try {
@@ -22,8 +23,10 @@ async function handleForm(data: EmailForm) {
 <template>
   <div class="flex flex-col gap-6 h-full">
     <div>
-      <h1 class="text-clamp-3xl md:text-clamp-xl">Forgot your password?</h1>
-      <p class="text-gray-600">No worries, you can reset it here.</p>
+      <h1 class="text-clamp-3xl md:text-clamp-xl">
+        {{ t("auth.forgotYourPassword") }}
+      </h1>
+      <p class="text-gray-600">{{ t("auth.forgotYourPasswordDescription") }}</p>
     </div>
 
     <div class="space-y-3">
@@ -35,7 +38,7 @@ async function handleForm(data: EmailForm) {
             name="email"
             validation="required|email"
             validationVisibility="submit"
-            placeholder="Email"
+            :placeholder="t('auth.inputFields.email')"
           >
           </FormKit>
         </div>
@@ -49,7 +52,7 @@ async function handleForm(data: EmailForm) {
           name="ic:round-arrow-back"
           class="h-auto w-5 group-hover:-translate-x-1 transition-transform duration-150"
         />
-        <span>Back to log in</span>
+        <span>{{ t("auth.backToLogin") }}</span>
       </NuxtLink>
     </div>
   </div>

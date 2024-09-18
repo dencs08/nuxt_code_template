@@ -5,7 +5,7 @@
       <h2
         class="mt-4 text-2xl font-bold leading-9 tracking-tight text-gray-900"
       >
-        Create a new account
+        {{ t("auth.createANewAccount") }}
       </h2>
     </div>
 
@@ -23,7 +23,7 @@
               type="primeInputText"
               name="name"
               validation="required"
-              placeholder="Name"
+              :placeholder="t('auth.inputFields.name')"
             >
             </FormKit>
             <FormKit
@@ -31,7 +31,7 @@
               type="primeInputText"
               name="email"
               validation="required|email"
-              placeholder="Email"
+              :placeholder="t('auth.inputFields.email')"
             >
             </FormKit>
             <FormKit
@@ -41,7 +41,7 @@
               validation="required|length:6"
               toggleMask
               :feedback="true"
-              placeholder="Password"
+              :placeholder="t('auth.inputFields.password')"
             >
             </FormKit>
             <FormKit
@@ -50,7 +50,7 @@
               name="password_confirm"
               validation="required|confirm"
               toggleMask
-              placeholder="Repeat password"
+              :placeholder="t('auth.inputFields.confirmPassword')"
             >
             </FormKit>
           </div>
@@ -63,9 +63,9 @@
             <div
               class="relative flex justify-center text-sm font-medium leading-6"
             >
-              <span class="bg-gray-50 px-6 text-gray-900"
-                >Or continue with</span
-              >
+              <span class="bg-gray-50 px-6 text-gray-900">{{
+                t("auth.orContinueWith")
+              }}</span>
             </div>
           </div>
 
@@ -77,8 +77,8 @@
             :to="localePath({ name: 'login' })"
             class="text-sm font-medium text-gray-600"
           >
-            Already have an account?
-            <span class="text-primary-500">Sign in!</span>
+            {{ t("auth.alreadyHaveAnAccount") }}
+            <span class="text-primary-500">{{ t("auth.signIn") }}!</span>
           </NuxtLink>
         </div>
       </div>

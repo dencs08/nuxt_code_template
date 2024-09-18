@@ -35,10 +35,10 @@
         <SocialIcons class="flex mt-8 md:hidden" />
         <div class="mt-10 xl:mt-0">
           <h3 class="text-sm font-semibold leading-6 text-gray-900">
-            Newsteller
+            {{ t("newsletter.title") }}
           </h3>
           <p class="mt-2 text-sm leading-6 text-gray-600 mb-3">
-            Najnowsze wiadomości, informacje z IT, oferty pracy i kursy.
+            {{ t("newsletter.description") }}
           </p>
           <NewsletterInput />
         </div>
@@ -48,7 +48,7 @@
         class="text-center md:flex md:items-center md:justify-between pb-4 lg:pb-6"
       >
         <div class="text-xs leading-5 text-gray-500">
-          &copy; {{ currentYear }} Wszelkie prawa zastrzeżone.
+          &copy; {{ currentYear }} {{ t("copyright") }}
         </div>
         <SocialIcons class="hidden md:flex" />
       </div>
@@ -61,27 +61,27 @@ const { legalMenu } = useNavigation();
 
 const currentYear = computed(() => new Date().getFullYear());
 
-const links = ref({
-  solutions: [
-    { label: "Kategoria 1", route: "#" },
-    { label: "Kategoria 2", route: "#" },
-    { label: "Kategoria 3", route: "#" },
-    { label: "Kategoria 4", route: "#" },
-  ],
-  support: [
-    { label: "Kategoria 1", route: "#" },
-    { label: "Kategoria 2", route: "#" },
-    { label: "Kategoria 3", route: "#" },
-    { label: "Kategoria 4", route: "#" },
-  ],
-  company: [
-    { label: "Kategoria 1", route: "#" },
-    { label: "Kategoria 2", route: "#" },
-    { label: "Kategoria 3", route: "#" },
-    { label: "Kategoria 4", route: "#" },
-  ],
-  legal: [],
-});
+const { t } = useI18n();
 
-links.value.legal = legalMenu.value;
+const links = computed(() => ({
+  [t("routes.sections.solutions")]: [
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+  ],
+  [t("routes.sections.support")]: [
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+  ],
+  [t("routes.sections.company")]: [
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+    { label: t("routes.home"), route: "#" },
+  ],
+  [t("routes.sections.legal")]: legalMenu.value,
+}));
 </script>
