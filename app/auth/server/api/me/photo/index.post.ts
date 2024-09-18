@@ -1,27 +1,24 @@
 import { getBackendClient } from "~~/lib/backend";
 import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineWrappedResponseHandler(async (event, userSession) => {
   const body = await readBody(event);
-  const { photoUrl } = body;
 
-  if (!photoUrl) {
+  if (!body.photoUrl) {
     throw createError({
       statusCode: 400,
-      message: "Missing required parameters",
+      statusMessage: "Missing required parameters",
     });
   }
 
-  const client = await getBackendClient(event);
-
   try {
-    const user = await client.getMe();
-    const response = await client.updateMePhoto(user.id, photoUrl);
+    const client = await getBackendClient(event, true);
+    const response = await client.updateMePhoto(userSession.id, body.photoUrl);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw createError({
-      statusCode: 500,
-      message: (error as Error).message,
+      statusCode: error.code || 500,
+      statusMessage: error.statusMessage,
     });
   }
 }, 0);

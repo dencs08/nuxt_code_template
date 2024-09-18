@@ -1,15 +1,14 @@
-import { getBackendClient } from "../../../../../lib/backend";
-import { defineWrappedResponseHandler } from "../../../../../server/utils/defaultHandler";
+import { defineEventHandler, H3Event } from "h3";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event, true);
+export default defineEventHandler(async (event: H3Event) => {
+  const client = event.context.backendClient;
   try {
     const response = await client.getNewsletterSubscribers();
-    return response;
+    return { response };
   } catch (error) {
     throw createError({
       statusCode: 500,
       message: (error as Error).message,
     });
   }
-}, 100);
+});

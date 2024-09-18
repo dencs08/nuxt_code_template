@@ -1,22 +1,21 @@
 import { getBackendClient } from "~~/lib/backend";
 import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-//TODO check if this works
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
-  const user = await client.getCurrentUser();
-  const body = await readBody(event);
 
+export default defineWrappedResponseHandler(async (event, userSession) => {
+  const client = await getBackendClient(event);
+  const body = await readBody(event);
   try {
-    if (body.email && body.email !== user.email) {
-      if (user.provider != "email") return;
-      const response = await client.updateMeEmail(user, body);
+    if (body.email && body.email !== userSession.email) {
+      if (userSession.provider != "email") return;
+      //no need to implement as moved to the supabase funcionality and hopefuly sidebase auth will also handle it
+      return "Email ready to be updated";
     }
-    return { response: "Verification link sent" };
+    return { error: "Error" };
   } catch (err: any) {
     throw createError({
-      statusCode: 500,
+      statusCode: err.code || 500,
       statusMessage:
-        "An error occurred during the deletion process " + err.message,
+        err.message || "An error occurred during the update process",
     });
   }
 }, 0);
