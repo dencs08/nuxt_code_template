@@ -105,10 +105,10 @@ const updateBorderRadius = () => {
       borderRadius: {
         none: `0px`,
         xs: `${borderRadius.value}px`,
-        sm: `${borderRadius.value * 1.25}px`,
-        md: `${borderRadius.value * 1.5}px`,
-        lg: `${borderRadius.value * 2}px`,
-        xl: `${borderRadius.value * 2.5}px`,
+        sm: `${borderRadius.value * 1.1}px`,
+        md: `${borderRadius.value * 1.2}px`,
+        lg: `${borderRadius.value * 1.3}px`,
+        xl: `${borderRadius.value * 1.4}px`,
       },
     },
   });
