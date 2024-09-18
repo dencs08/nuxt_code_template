@@ -6,7 +6,6 @@
       :submitAttrs="{
         inputClass: 'btn-primary btn btn-xs w-full sm:w-auto md:w-1/2',
       }"
-      submitLabel="Send"
     >
       <FormKit
         class="w-full"
