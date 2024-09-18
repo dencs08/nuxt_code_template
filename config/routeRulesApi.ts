@@ -22,8 +22,15 @@ export const routeConfigs: Record<string, RouteConfig> = {
   },
   "/api/newsletter": {
     GET: { auth: true, accessLevel: 75 },
+    POST: { auth: false, accessLevel: 0 },
   },
   "/api/_content/**": {
     "*": { auth: false, accessLevel: 0 },
+  },
+  "/api/v1/analytics/page-views": {
+    POST: { auth: false, accessLevel: 0 },
+  },
+  "/api/mail/mjml/render": {
+    POST: { auth: true, accessLevel: 25 },
   },
 };
