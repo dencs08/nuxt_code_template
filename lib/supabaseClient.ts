@@ -1072,50 +1072,6 @@ export class SupabaseClient implements BackendClient {
     return uniqueVisitorsSet.size;
   }
 
-  async getChartData(): Promise<{ [key: string]: number }> {
-    const { data, error } = await this.client
-      .from("users")
-      .select("created_at");
-
-    if (error) {
-      throw error;
-    }
-
-    const monthCounts: { [key: string]: number } = {};
-
-    data.forEach((user: any) => {
-      const month = dayjs(user.created_at).format("MMMM");
-      if (monthCounts[month]) {
-        monthCounts[month] += 1;
-      } else {
-        monthCounts[month] = 1;
-      }
-    });
-
-    // Ensure all months are included
-    const allMonths = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    const chartData: { [key: string]: number } = {};
-    allMonths.forEach((month) => {
-      chartData[month] = monthCounts[month] || 0;
-    });
-
-    return chartData;
-  }
-
   async insertPageView(pageViewData: {
     session_id: string;
     user_id: string | null;
@@ -1128,5 +1084,65 @@ export class SupabaseClient implements BackendClient {
     if (error) {
       throw error;
     }
+  }
+
+  // 10. Get new signups count between two dates
+  async getNewSignupsCountBetweenDates(
+    startDate: string,
+    endDate: string
+  ): Promise<number> {
+    const { count, error } = await this.client
+      .from("users")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", startDate)
+      .lte("created_at", endDate);
+
+    if (error) {
+      console.error("Error fetching new signups between dates:", error);
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  // 11. Get page views count between two dates
+  async getPageViewsCountBetweenDates(
+    startDate: string,
+    endDate: string
+  ): Promise<number> {
+    const { count, error } = await this.client
+      .from("page_views")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", startDate)
+      .lte("created_at", endDate);
+
+    if (error) {
+      console.error("Error fetching page views between dates:", error);
+      throw error;
+    }
+
+    return count || 0;
+  }
+
+  async getUniqueVisitorsCountBetweenDates(
+    startDate: string,
+    endDate: string
+  ): Promise<number> {
+    const { data, error } = await this.client
+      .from("page_views")
+      .select("session_id", { count: "exact" })
+      .gte("created_at", startDate)
+      .lte("created_at", endDate)
+      .not("session_id", "is", null); // Ensure session_id is not null
+
+    if (error) {
+      console.error("Error fetching unique visitors between dates:", error);
+      throw error;
+    }
+
+    // Use Set to collect unique session IDs
+    const uniqueSessions = new Set(data.map((item: any) => item.session_id));
+
+    return uniqueSessions.size;
   }
 }

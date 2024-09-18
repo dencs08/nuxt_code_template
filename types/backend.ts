@@ -77,6 +77,5 @@ export interface BackendClient {
     previousPeriodStart: string,
     currentPeriodStart: string
   ): Promise<number>;
-  getChartData(): Promise<{ [key: string]: number }>;
   insertPageView(data: any): Promise<void>;
 }

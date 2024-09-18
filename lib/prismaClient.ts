@@ -37,7 +37,7 @@ export class PrismaClient implements BackendClient {
 
   //utils
   async assignRole(event: any, body: { id: string; role: string }) {}
-  async confirmEmail(event: any) {}
+  // async confirmEmail(event: any) {}
 
   //me
   async getMe(): Promise<any> {}
