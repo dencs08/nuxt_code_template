@@ -50,7 +50,7 @@ export class SupabaseAuthService implements IAuthenticationService {
 
   async resetPassword(email: string) {
     return this.client.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/dashboard/user/account/update-password`,
+      redirectTo: `${window.location.origin}/auth/update-password`,
     });
   }
 
@@ -157,8 +157,6 @@ export class SupabaseAuthService implements IAuthenticationService {
         user.role = roleName.data.name;
         delete user.user_roles;
       }
-
-      // console.log(user);
 
       return user;
     } catch (error) {
