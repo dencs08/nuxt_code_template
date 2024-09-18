@@ -193,8 +193,9 @@ const selectPermissions = (user) => {
 };
 
 onMounted(() => {
-  fetchUsers();
-  console.log(usersStore.users);
+  if (usersStore.users.length === 0) {
+    usersStore.fetchUsers();
+  }
 });
 
 const onRowEditSave = async (event) => {
@@ -204,7 +205,7 @@ const onRowEditSave = async (event) => {
 };
 
 const fetchUsers = async () => {
-  await handleSubmit(usersStore.fetchUsers, {}, "Users fetched");
+  await handleSubmit(usersStore.fetchUsers, { force: true }, "Users fetched");
   originalUsers.value = JSON.parse(JSON.stringify(users.value));
   changesMade.value = false;
 };

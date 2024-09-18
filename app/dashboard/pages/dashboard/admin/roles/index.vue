@@ -5,7 +5,7 @@
       <DataTable
         ref="dt"
         :value="rolesStore.roles"
-        :loading="rolesStore.loading"
+        :loading="showLoading"
         dataKey="id"
         tableStyle="min-width: 50rem;"
         editMode="row"
@@ -22,24 +22,20 @@
               <h1 class="text-lg font-bold">Roles</h1>
             </div>
             <div class="flex flex-row gap-1">
-              <div class="grid place-content-center">
-                <Button
-                  size="small"
-                  icon="pi pi-external-link "
-                  v-tooltip.left="'Export table to CSV'"
-                  @click="exportCSV()"
-                  aria-label="Export"
-                />
-              </div>
-              <div class="grid place-content-center">
-                <Button
-                  size="small"
-                  v-tooltip.left="'Refresh users table'"
-                  @click="fetchRoles"
-                  icon="pi pi-refresh"
-                  aria-label="Refresh"
-                />
-              </div>
+              <Button
+                size="small"
+                icon="pi pi-external-link "
+                v-tooltip.left="'Export table to CSV'"
+                @click="exportCSV()"
+                aria-label="Export"
+              />
+              <Button
+                size="small"
+                v-tooltip.left="'Refresh users table'"
+                @click="fetchRoles"
+                icon="pi pi-refresh"
+                aria-label="Refresh"
+              />
             </div>
           </div>
         </template>
@@ -86,7 +82,10 @@ definePageMeta({
 });
 const rolesStore = useRolesStore();
 const { handleSubmit } = useSubmit();
+const { addToast } = useToastService();
 const editingRows = ref([]);
+const showLoading = ref(false);
+const loadingTimeout = ref(null);
 const dt = ref();
 
 onMounted(async () => {
@@ -96,18 +95,41 @@ onMounted(async () => {
 async function updateRole(role: any) {
   try {
     await rolesStore.updateRole(role.id, role.access_level);
-    // Optionally, show a success message
   } catch (error) {
     console.error("Error updating role:", error);
-    // Optionally, show an error message to the user
   }
 }
 
 const fetchRoles = async () => {
-  await handleSubmit(rolesStore.fetchRoles, {}, "Roles fetched");
+  try {
+    await rolesStore.fetchRoles(true);
+    addToast("success", "Roles refreshed", "Roles table has been refreshed");
+  } catch (error) {
+    addToast(
+      "error",
+      "Error",
+      "An error occurred while refreshing roles table"
+    );
+  }
 };
 
 const exportCSV = () => {
   dt.value.exportCSV();
 };
+
+watch(
+  () => rolesStore.loading,
+  (newLoadingState) => {
+    if (newLoadingState) {
+      loadingTimeout.value = setTimeout(() => {
+        showLoading.value = true;
+      }, 200);
+    } else {
+      if (loadingTimeout.value) {
+        clearTimeout(loadingTimeout.value);
+      }
+      showLoading.value = false;
+    }
+  }
+);
 </script>
