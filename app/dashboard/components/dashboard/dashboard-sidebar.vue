@@ -119,16 +119,16 @@
               :popup="true"
               class="w-full md:w-56"
               :pt="{
-                submenuLabel: ['m-0 pt-0 pb-1.5 px-1.5'],
+                submenuLabel: ['!m-0 !pt-0 !pb-1.5 !px-1.5'],
               }"
             >
               <template #submenulabel="{ item }">
-                <span class="text-xs text-muted-color p-0 m-0">{{
+                <span class="text-xs text-muted-color !p-0 !m-0">{{
                   item.label
                 }}</span>
               </template>
               <template #item="{ item, props }">
-                <a class="flex items-center mt-0 p-1" v-bind="props.action">
+                <a class="flex items-center !mt-0 !p-1" v-bind="props.action">
                   <span
                     :class="item.icon"
                     class="text-surface-200 dark:text-surface-300/50"
