@@ -1,12 +1,7 @@
 import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
 import { generatedColors } from "~~/app/core/assets/primevue/generated-colors";
 import type { NumericMetricKey, MetricsData } from "~~/types/metrics";
 export const useMetricsStore = defineStore("useMetricsStore", () => {
-  const router = useRouter();
-  const { addToast } = useToastService();
-  const localePath = useLocalePath();
-
   const metricsLoaded = ref(false);
   const chartDataLoaded = ref(false);
   const metricsLoading = ref(true);
