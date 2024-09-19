@@ -98,12 +98,12 @@ export const useUserStore = defineStore({
         if (error) {
           throw new CustomError("Error deleting the account", error);
         }
+        signOut();
       } catch (error) {
         // console.error(error);
         throw new CustomError("Failed to delete the account", error);
       } finally {
         this.loading = false;
-        signOut();
       }
     },
   },
