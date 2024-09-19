@@ -48,11 +48,17 @@ const debouncedValidateForm = debounce(validateForm, props.debounceTime);
 const [zodPlugin, submitHandler] = createZodPlugin(
   schema,
   async (formData: object) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 250);
-    });
-    await props.handleSubmit(formData);
-    if (props.resetOnSubmit) resetFields();
+    try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 250);
+      });
+      await props.handleSubmit(formData);
+      if (props.resetOnSubmit) resetFields();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      // You might want to emit an event to notify the parent component of the error
+      // emit("submission-error", error);
+    }
   }
 );
 
