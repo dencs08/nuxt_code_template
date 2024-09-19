@@ -10,6 +10,12 @@ export const routeConfigs: Record<string, RouteConfig> = {
   "/api/**": {
     "*": { auth: true, accessLevel: 100 },
   },
+  "/api/me/**": {
+    "*": { auth: true, accessLevel: 0 },
+  },
+  "/api/me": {
+    "*": { auth: true, accessLevel: 0 },
+  },
   "/api/roles": {
     GET: { auth: false, accessLevel: 0 },
     PATCH: { auth: true, accessLevel: 75 },
