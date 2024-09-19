@@ -1086,7 +1086,6 @@ export class SupabaseClient implements BackendClient {
     }
   }
 
-  // 10. Get new signups count between two dates
   async getNewSignupsCountBetweenDates(
     startDate: string,
     endDate: string
@@ -1105,7 +1104,6 @@ export class SupabaseClient implements BackendClient {
     return count || 0;
   }
 
-  // 11. Get page views count between two dates
   async getPageViewsCountBetweenDates(
     startDate: string,
     endDate: string
