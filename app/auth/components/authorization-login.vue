@@ -131,7 +131,6 @@ const handleSubmit = async (data: LoginForm) => {
       successTitle: "Login Successful",
       successMessage: "Redirecting to your account...",
       errorTitle: "Login Failed",
-      errorMessage: (e) => `${e.message}. Please try again.`,
     });
 
     navigateTo(localePath(props.redirectTo), { external: true, replace: true });
