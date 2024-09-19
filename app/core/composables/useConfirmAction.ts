@@ -2,7 +2,6 @@ import { ref, markRaw } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import type { ConfirmationOptions } from "primevue/confirmationoptions";
 
-// Define a type that can be any function
 type AnyFunction = (...args: any[]) => any;
 
 interface CustomConfirmConfig {
@@ -53,6 +52,14 @@ export function useConfirmAction() {
     hideDialog();
   };
 
+  const handleError = (errorMessage: string) => {
+    if (config.value.onError) {
+      config.value.onError(errorMessage);
+    }
+    // Optionally, you might want to hide the dialog here as well
+    // hideDialog();
+  };
+
   const confirmAction = (newConfig: ConfirmConfig) => {
     if (newConfig.target) {
       confirm.require({
@@ -86,5 +93,6 @@ export function useConfirmAction() {
     showDialog,
     handleConfirm,
     handleReject,
+    handleError,
   };
 }
