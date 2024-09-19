@@ -92,7 +92,7 @@
     "pino": "^9.4.0",
     "primelocale": "^1.0.3",
     "primevue": "^4.0.4",
-    "puppeteer": "^22.12.1",
+    "puppeteer": "^22.15.0",
     "quill": "^2.0.2",
     "sass": "^1.63.6",
     "tailwindcss-primeui": "^0.3.4",
