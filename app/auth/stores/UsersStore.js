@@ -19,9 +19,9 @@ export const useUsersStore = defineStore({
       this.loading = true;
 
       try {
-        const data = await $fetch(`/api/users`, {
+        const query = force ? "?force=true" : "";
+        const data = await $fetch(`/api/users${query}`, {
           method: "GET",
-          params: { force },
         });
         this.users = data.response;
       } catch (error) {

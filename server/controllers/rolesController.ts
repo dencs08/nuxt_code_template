@@ -1,9 +1,9 @@
 import type { H3Event } from "h3";
 
-const getRolesUncached = defineCachedFunction(async (event: any) => {
+async function getRolesUncached(event: any) {
   const response = await event.context.backendClient.getRoles();
   return response;
-});
+}
 
 export const getRoles = defineCachedFunction(
   async (event: H3Event) => await getRolesUncached(event),

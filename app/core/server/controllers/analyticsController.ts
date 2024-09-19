@@ -5,7 +5,7 @@ import {
   calculatePercentageChange,
 } from "~/core/server/utils/analytics";
 
-const getChartUncached = defineCachedFunction(async (event: any) => {
+async function getChartUncached(event: any) {
   const backendClient = event.context.backendClient;
   const query = getQuery(event);
   const period = (query.period as string) || "1y";
@@ -67,7 +67,7 @@ const getChartUncached = defineCachedFunction(async (event: any) => {
       message: error.message,
     };
   }
-});
+}
 
 export const getChart = defineCachedFunction(
   async (event: H3Event) => await getChartUncached(event),
@@ -81,7 +81,7 @@ export const getChart = defineCachedFunction(
   }
 );
 
-const getMatricsUncached = defineCachedFunction(async (event: any) => {
+async function getMatricsUncached(event: any) {
   const backendClient = event.context.backendClient;
 
   const query = getQuery(event);
@@ -162,7 +162,7 @@ const getMatricsUncached = defineCachedFunction(async (event: any) => {
       message: error.message,
     };
   }
-});
+}
 
 export const getMetrics = defineCachedFunction(
   async (event: H3Event) => await getMatricsUncached(event),

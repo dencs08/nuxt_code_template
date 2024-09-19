@@ -51,5 +51,5 @@ export default defineNuxtConfig({
     // layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
-  compatibilityDate: "2024-07-23",
+  compatibilityDate: "2024-09-19",
 });

@@ -1,9 +1,7 @@
 import type { H3Event } from "h3";
 
-const getUsersUncached = defineCachedFunction(async (event: any) => {
+async function getUsersUncached(event: any) {
   const client = event.context.backendClient;
-  // const timestamp = new Date().toISOString();
-
   try {
     const authData = (await client.getAuthUsers()) as any;
 
@@ -29,30 +27,18 @@ const getUsersUncached = defineCachedFunction(async (event: any) => {
       statusMessage: "An error occurred while fetching the users",
     });
   }
-});
+}
 
 export const getUsers = defineCachedFunction(
   async (event: H3Event) => await getUsersUncached(event),
   {
-    maxAge: 60 * 60, // 1 hour
-    // swr: false,
-    // staleMaxAge: 60 * 60 * 24, // 24 hours
+    maxAge: 60 * 1, // 1 minute
+    swr: true,
+    staleMaxAge: 60 * 60 * 1, // 1 hour
     name: "getUsers",
-    // getKey: (event) => "default",
-    shouldBypassCache: async (e) => {
-      if (getQuery(e).force) {
-        const storage = useStorage("cache");
-        const handlerKeys = await storage.getKeys("nitro:handlers");
-        const functionKeys = await storage.getKeys("nitro:functions:getRoles");
-        const cacheKeys = [...handlerKeys, ...functionKeys];
-        await Promise.all(
-          cacheKeys.map((element) => storage.removeItem(element))
-        );
-        console.log(`cacheKeys: ${cacheKeys}`);
-        return true;
-      } else {
-        return false;
-      }
+    getKey: (event) => {
+      return "default";
     },
+    shouldBypassCache: async (e) => getQuery(e).force === "true",
   }
 );

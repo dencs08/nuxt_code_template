@@ -17,21 +17,21 @@ export default defineEventHandler((event) => {
         "upgrade-insecure-requests;"
     );
   } else {
-    // Production CSP (to be adjusted based on your needs)
-    res.setHeader(
-      "Content-Security-Policy",
-      "default-src 'self'; " +
-        "script-src 'self'; " +
-        "style-src 'self'; " +
-        "connect-src 'self' https://vdwtlxjkhsrwdlyapyqe.supabase.co; " +
-        "img-src 'self' data: https:; " +
-        "font-src 'self' data:; " +
-        "object-src 'none'; " +
-        "base-uri 'self'; " +
-        "form-action 'self'; " +
-        "frame-ancestors 'none'; " +
-        "upgrade-insecure-requests;"
-    );
+    // // Production CSP (to be adjusted based on your needs)
+    // res.setHeader(
+    //   "Content-Security-Policy",
+    //   "default-src 'self'; " +
+    //     "script-src 'self'; " +
+    //     "style-src 'self'; " +
+    //     "connect-src 'self' https://vdwtlxjkhsrwdlyapyqe.supabase.co; " +
+    //     "img-src 'self' data: https:; " +
+    //     "font-src 'self' data:; " +
+    //     "object-src 'none'; " +
+    //     "base-uri 'self'; " +
+    //     "form-action 'self'; " +
+    //     "frame-ancestors 'none'; " +
+    //     "upgrade-insecure-requests;"
+    // );
   }
 
   setResponseHeaders(event, {
