@@ -161,7 +161,8 @@ const route = useRoute();
 const params = route.params as RouteParams;
 const usersStore = useUsersStore();
 const { confirmAction } = useConfirmAction();
-const { addToast } = useToastService();
+const { showToast } = useToastService();
+const { submit, error } = useForm();
 const { formatDate } = useDate();
 const { hasAccess } = useRoleCheck();
 const localePath = useLocalePath();
@@ -253,37 +254,41 @@ const banUser = () => {
     acceptLabel: "Ban",
     component: markRaw(BanUser),
     accept: async (data: any) => {
-      addToast(
-        "success",
-        "Success",
-        `User ${user.value.email} has been banned for: ${data}.`
-      );
       await usersStore.banUser(params.id, data);
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: `User ${user.value.email} has been banned for: ${data}.`,
+      });
       refetchUser(); // Refresh user data after banning
     },
     reject: () => {},
     onError(errorMessage) {
-      addToast("warn", "Error", errorMessage);
+      showToast({
+        severity: "warn",
+        summary: "Error",
+        detail: errorMessage,
+      });
     },
   });
 };
 
 const sendResetPassword = async () => {
-  try {
-    await usersStore.sendPasswordResetEmail(user.value.email);
-    addToast("success", "Success", "Password reset email has been sent.");
-  } catch (error: any) {
-    addToast("error", "Error", error.message);
-  }
+  submit({
+    async action() {
+      await usersStore.sendPasswordResetEmail(user.value.email);
+    },
+    successMessage: "Password reset email has been sent",
+  });
 };
 
 const deleteUser = async () => {
-  try {
-    await usersStore.deleteUser(params.id);
-    addToast("success", "Success", "User has been deleted.");
-  } catch (error: any) {
-    addToast("error", "Error", error.message);
-  }
+  submit({
+    async action() {
+      await usersStore.deleteUser(params.id);
+    },
+    successMessage: "User has been deleted",
+  });
 };
 
 const confirmDeleteUsers = (event: any) => {
@@ -311,18 +316,22 @@ const confirmChangePassword = () => {
     severity: "contrast",
     component: toRaw(PasswordFormInput),
     accept: async (data) => {
-      await usersStore.changeUserPassword(params.id, data);
-      addToast("success", "Success", "Password has been changed.");
+      submit({
+        async action() {
+          await usersStore.changeUserPassword(params.id, data);
+        },
+        successMessage: "Password has been changed",
+      });
     },
     reject: () => {},
   });
 };
 
 const changeUserPassword = async () => {
-  try {
-    await confirmChangePassword();
-  } catch (error: any) {
-    addToast("error", "Error", error.message);
-  }
+  submit({
+    async action() {
+      await confirmChangePassword();
+    },
+  });
 };
 </script>

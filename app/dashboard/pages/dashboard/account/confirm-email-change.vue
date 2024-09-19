@@ -3,18 +3,19 @@ definePageMeta({
   layout: "dashboard",
 });
 
-const { confirmUserEmail } = useUser();
-const { addToast } = useToastService();
+// const { confirmUserEmail } = useUser();
+const { showToast } = useToastService();
+
 const localePath = useLocalePath();
 const status = ref({ completed: false, error: false, showCompleted: false });
 onMounted(async () => {
   try {
-    await confirmUserEmail();
-    addToast(
-      "success",
-      "Email change confirmed",
-      "Your email has been successfully changed"
-    );
+    // await confirmUserEmail();
+    showToast({
+      severity: "success",
+      summary: "Email change confirmed",
+      detail: "Your email has been successfully changed",
+    });
     setTimeout(() => {
       status.value.showCompleted = true;
     }, 500);
@@ -28,7 +29,11 @@ onMounted(async () => {
     }, 500);
     status.value.completed = true;
     status.value.error = true;
-    addToast("error", "Email change failed", "Your email change failed");
+    showToast({
+      severity: "error",
+      summary: "Email change failed",
+      detail: "Your email change failed",
+    });
   }
 });
 </script>
@@ -69,7 +74,7 @@ onMounted(async () => {
             <nuxt-link
               :to="localePath({ name: 'dash-account' })"
               class="text-blue-500 hover:underline"
-              @click.prevent="confirmUserEmail"
+              @click.prevent="() => {}"
               >here</nuxt-link
             >
             or contact us for help

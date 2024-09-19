@@ -9,7 +9,9 @@
       toggleMask
       :feedback="false"
     />
-    <small class="p-error" v-if="errorMessage">{{ errorMessage }}</small>
+    <small class="p-error text-red-500 ml-2" v-if="errorMessage">{{
+      errorMessage
+    }}</small>
   </div>
 </template>
 
@@ -25,12 +27,20 @@ const { verifyPassword } = useAuthentication();
 const password = ref("");
 const errorMessage = ref("");
 
+const { showToast } = useToastService();
+
 const verifyAndProceed = async () => {
   try {
     await verifyPassword(password.value);
     emit("verified", password.value);
   } catch (error: any) {
     errorMessage.value = error.message;
+    showToast({
+      severity: "error",
+      summary: "Incorrect Password",
+      detail: error.message,
+    });
+
     emit("error", error.message);
   }
 };

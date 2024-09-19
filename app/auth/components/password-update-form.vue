@@ -3,7 +3,7 @@ import { passwordConfirmSchema } from "~~/utils/schemas";
 import { type PasswordConfirm } from "~~/types/passwordConfirm";
 
 const localePath = useLocalePath();
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 const { signOut } = useAuthentication();
 
 async function handleForm(data: PasswordConfirm) {
@@ -16,18 +16,23 @@ async function handleForm(data: PasswordConfirm) {
       throw new CustomError("Error updating user data", error);
     }
 
-    addToast(
-      "success",
-      "Password updated",
-      "Please log in to your account after redirect to the login page"
-    );
+    showToast({
+      severity: "success",
+      summary: "Password updated",
+      detail: "Please log in to your account after redirect to the login page",
+    });
+
     setTimeout(async () => {
       await signOut();
       navigateTo(localePath("/login"), { replace: true });
     }, 2000);
     // return { response: "Password updated" };
   } catch (e: any) {
-    addToast("error", "Error updating password", e.message);
+    showToast({
+      severity: "error",
+      summary: "Error updating password",
+      detail: e.message,
+    });
     throw new CustomError("An error occurred during the update process", e);
   }
 }

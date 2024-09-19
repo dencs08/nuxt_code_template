@@ -13,7 +13,7 @@ export function useCustomError() {
 }
 
 export function useErrorHandler() {
-  const { addToast } = useToastService();
+  const { showToast } = useToastService();
   const { CustomError } = useCustomError();
 
   const errorHandler = () => {
@@ -23,7 +23,12 @@ export function useErrorHandler() {
         const error = event.reason;
         if (error instanceof CustomError) {
           const errorMessage = error.message;
-          addToast("error", "Error", errorMessage, 30000);
+          showToast({
+            severity: "error",
+            summary: "Error",
+            detail: errorMessage,
+            life: 30000,
+          });
         } else {
           // Do something else
         }

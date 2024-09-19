@@ -24,7 +24,7 @@ import type {
   FileUploadUploaderEvent,
 } from "primevue/fileupload";
 
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 const userStore = useUserStore();
 
 const maxFileSize = 5 * 1024 * 1024; // 5MB max file size
@@ -47,11 +47,11 @@ const handleUpload = async (event: FileUploadUploaderEvent) => {
     // Update user's photo
     await updateUserPhoto(fileUrl);
 
-    addToast(
-      "success",
-      "Avatar updated",
-      "Your photo has been uploaded and your profile has been updated successfully"
-    );
+    showToast({
+      severity: "success",
+      summary: "File uploaded",
+      detail: "Your avatar has been updated",
+    });
   } catch (error) {
     console.error("Error in handleUpload:", error);
     handleUploadError((error as Error).message);
@@ -103,6 +103,10 @@ const updateUserPhoto = async (fileUrl: string) => {
 
 const handleUploadError = (errorMessage: string) => {
   console.error("Upload error:", errorMessage);
-  addToast("error", "File upload failed", errorMessage);
+  showToast({
+    severity: "error",
+    summary: "File upload failed",
+    detail: errorMessage,
+  });
 };
 </script>

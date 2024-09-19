@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import PasswordActionConfirm from "../utils/forms/password-action-confirm.vue";
 
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 
 const { confirmAction } = useConfirmAction();
 
@@ -17,10 +17,18 @@ const standardConfirm = () => {
     message: "Are you sure you want to proceed?",
     icon: "pi pi-exclamation-triangle",
     accept: () => {
-      addToast("info", "Confirmed", "You have accepted");
+      showToast({
+        severity: "success",
+        summary: "Confirmed",
+        detail: "You have accepted",
+      });
     },
     reject: () => {
-      addToast("error", "Rejected", "You have rejected");
+      showToast({
+        severity: "error",
+        summary: "Rejected",
+        detail: "You have rejected",
+      });
     },
   });
 };
@@ -37,10 +45,18 @@ const passwordConfirm = () => {
     severity: "danger",
     component: markRaw(PasswordActionConfirm),
     accept: (password: string) => {
-      addToast("info", "Confirmed", "Password confirmed");
+      showToast({
+        severity: "success",
+        summary: "Confirmed",
+        detail: "Password confirmed",
+      });
     },
     reject: () => {
-      addToast("error", "Rejected", "Password confirmation cancelled");
+      showToast({
+        severity: "error",
+        summary: "Rejected",
+        detail: "Password confirmation cancelled",
+      });
     },
   });
 };

@@ -259,7 +259,7 @@ definePageMeta({
 const localePath = useLocalePath();
 const userStore = useUserStore();
 const user = userStore.getUser;
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 const activeStep = ref(1);
 const passwords = ref({ password: "", password_confirm: "" });
 const details = ref({ name: "", nickname: "" });
@@ -332,16 +332,21 @@ const submitData = async () => {
       isSubmitted.value = true;
       activeStep.value++;
       isCompleted.value = true;
-      addToast("success", "Success", "Account created successfully");
+      showToast({
+        severity: "success",
+        summary: "Account created",
+        detail: "Account created successfully",
+      });
     } catch (error) {
       activeStep.value = 1;
       console.error("Error:", error);
-      addToast(
-        "error",
-        "Error",
-        "An error occurred, try again, if the problem persists, contact support",
-        30000
-      );
+      showToast({
+        severity: "error",
+        summary: "Error creating account",
+        detail:
+          "An error occurred, try again, if the problem persists, contact support",
+        life: 30000,
+      });
     } finally {
       isLoading.value = false;
     }

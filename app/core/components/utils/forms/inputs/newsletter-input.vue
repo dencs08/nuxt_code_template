@@ -22,7 +22,7 @@
 import { emailSchema } from "~~/utils/schemas";
 import { type EmailForm } from "~~/types/email";
 
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 
 const handleSubmit = async (email: EmailForm) => {
   try {
@@ -32,21 +32,26 @@ const handleSubmit = async (email: EmailForm) => {
     });
 
     if (response.success) {
-      addToast(
-        "success",
-        "Success",
-        "Thank you for subscribing to our newsletter"
-      );
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: "Thank you for subscribing to our newsletter",
+      });
     }
   } catch (error: any) {
     if (error?.status === 409) {
-      addToast(
-        "error",
-        "Error",
-        "You are already subscribed to our newsletter"
-      );
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: "You are already subscribed to our newsletter",
+        life: 15000,
+      });
     } else {
-      addToast("error", "Error", "An error occurred. Please try again later");
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: "An error occurred. Please try again later",
+      });
     }
   }
 };
