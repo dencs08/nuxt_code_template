@@ -24,7 +24,7 @@ export const useRolesStore = defineStore("roles", {
       this.error = null;
       try {
         const query = force ? "?force=true" : "";
-        const data = await $fetch(`/api/roles${query}`, { method: "GET" });
+        const data = await $fetch(`/api/v1/roles${query}`, { method: "GET" });
         if (data) {
           //@ts-ignore //not sure why its not recognizing the response property on data...
           this.roles = data.response;
@@ -41,7 +41,7 @@ export const useRolesStore = defineStore("roles", {
       this.loading = true;
       this.error = null;
       try {
-        await $fetch(`/api/roles/${roleId}`, {
+        await $fetch(`/api/v1/roles/${roleId}`, {
           method: "PUT",
           body: { access_level: accessLevel },
         });
@@ -87,7 +87,7 @@ export const useRolesStore = defineStore("roles", {
     //   this.loading = true;
     //   this.error = null;
     //   try {
-    //     const newRole = await $fetch("/api/roles", {
+    //     const newRole = await $fetch("/api/v1/roles", {
     //       method: "POST",
     //       body: { name, access_level: accessLevel },
     //     });
@@ -105,7 +105,7 @@ export const useRolesStore = defineStore("roles", {
     //   this.loading = true;
     //   this.error = null;
     //   try {
-    //     await $fetch(`/api/roles/${roleId}`, {
+    //     await $fetch(`/api/v1/roles/${roleId}`, {
     //       method: "DELETE",
     //     });
     //     this.roles = this.roles.filter((role) => role.id !== roleId);

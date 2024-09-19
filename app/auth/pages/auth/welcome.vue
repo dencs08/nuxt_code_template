@@ -316,7 +316,7 @@ const submitData = async () => {
     try {
       isLoading.value = true;
 
-      const data = await $fetch("/api/me/first-login", {
+      const data = await $fetch("/api/v1/me/first-login", {
         method: "POST",
         body: {
           name: details.value.name,

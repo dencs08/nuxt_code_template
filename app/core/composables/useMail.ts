@@ -21,7 +21,7 @@ export const useMail = (debounceMs = 300) => {
     error.value = null;
 
     try {
-      const response = await useFetch("/api/mail", {
+      const response = await useFetch("/api/v1/mail", {
         method: "POST",
         body: options,
       });
@@ -46,7 +46,7 @@ export const useMail = (debounceMs = 300) => {
     previewHtml.value = null;
 
     try {
-      const data = await $fetch("/api/mail/mjml/render", {
+      const data = await $fetch("/api/v1/mail/mjml/render", {
         method: "POST",
         // params: { force: "true" },
         body: { mjmlContent: content },
@@ -70,7 +70,7 @@ export const useMail = (debounceMs = 300) => {
 
   const generatePreview = async (content: string) => {
     try {
-      const data = await $fetch("/api/mail/mjml/render", {
+      const data = await $fetch("/api/v1/mail/mjml/render", {
         method: "POST",
         // params: { force: "true" },
         body: { mjmlContent: content },

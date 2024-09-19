@@ -26,7 +26,7 @@ watch(
     if (user) {
       console.log("User found in watch");
       try {
-        await $fetch("/api/me/first-login/set-first-login-flag", {
+        await $fetch("/api/v1/me/first-login/set-first-login-flag", {
           method: "POST",
         });
 

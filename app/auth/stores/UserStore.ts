@@ -54,7 +54,7 @@ export const useUserStore = defineStore({
     async updateUserAccount(profileData: Partial<User>) {
       this.loading = true;
       try {
-        const { error } = (await $fetch("/api/me", {
+        const { error } = (await $fetch("/api/v1/me", {
           method: "PATCH",
           body: profileData,
         })) as { error?: any };
@@ -92,7 +92,7 @@ export const useUserStore = defineStore({
 
       this.loading = true;
       try {
-        const { error } = (await $fetch("/api/me", {
+        const { error } = (await $fetch("/api/v1/me", {
           method: "DELETE",
         })) as { error?: any };
         if (error) {

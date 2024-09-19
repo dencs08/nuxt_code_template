@@ -23,7 +23,7 @@ export const useMyPermissionStore = defineStore({
         }
 
         this.loading = true;
-        const data = await $fetch("/api/me/permission", {
+        const data = await $fetch("/api/v1/me/permission", {
           method: "GET",
         });
         this.setPermissions(data.response as any);

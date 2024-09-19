@@ -1,10 +1,10 @@
 <template>
   <DataTable
     ref="dt"
-    :value="usersStore?.users"
+    :value="safeUsers"
     v-model:selection="selected"
     v-model:editingRows="editingRows"
-    :loading="usersStore?.loading"
+    :loading="usersStore.loading"
     v-model:filters="filters"
     dataKey="id"
     tableStyle="min-width: 50rem;"
@@ -162,29 +162,31 @@
 import DisplayUserChanges from "@/components/dashboard/display-user-changes.vue";
 import InviteUsers from "~~/app/dashboard/components/dashboard/invite-users.vue";
 import { FilterMatchMode } from "@primevue/core/api";
-const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
+
+const usersStore = useUsersStore();
+const rolesStore = useRolesStore();
+const { users, loading } = storeToRefs(usersStore);
+const { roles } = storeToRefs(rolesStore);
 
 const { submit, error } = useForm();
-const { getRoleSeverity } = useRolesStore();
+const { getRoleSeverity } = rolesStore;
 const { hasAccess } = useRoleCheck();
 const { confirmAction } = useConfirmAction();
 const localePath = useLocalePath();
 const { formatDate } = useDate();
 
-const isAdmin = hasAccess(75);
-const isSuperAdmin = hasAccess(100);
-const usersStore = useUsersStore();
-const rolesStore = useRolesStore();
-const { roles } = storeToRefs(rolesStore);
+const isAdmin = computed(() => hasAccess(75));
+const isSuperAdmin = computed(() => hasAccess(100));
 
-const dt = ref();
+const dt = ref(null);
 const editingRows = ref([]);
-const selected = ref();
+const selected = ref([]);
 const changesMade = ref(false);
-let originalUsers = ref([]);
-const { users } = storeToRefs(usersStore);
+const originalUsers = ref([]);
+
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
 
 const emit = defineEmits(["showPermissions"]);
 
@@ -192,41 +194,72 @@ const selectPermissions = (user) => {
   emit("showPermissions", user);
 };
 
+const safeUsers = computed(() => {
+  return (users.value || []).map((user) => ({
+    ...user,
+    role: user.role || "",
+    created_at: user.created_at || "",
+  }));
+});
+
+const formatCreatedAt = (date) => {
+  if (!date) return "";
+  try {
+    return formatDate(date, { includeTime: true });
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "";
+  }
+};
+
 onMounted(() => {
-  if (usersStore.users.length === 0) {
+  if (users.value?.length === 0) {
     fetchUsers();
   } else {
-    originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
+    originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
   }
 });
 
+watch(
+  users,
+  (newUsers) => {
+    originalUsers.value = JSON.parse(JSON.stringify(newUsers || []));
+  },
+  { deep: true }
+);
+
 const onRowEditSave = async (event) => {
   let { newData, index } = event;
-  usersStore.updateLocalUsers(index, newData);
-  changesMade.value = true;
+  try {
+    await usersStore.updateUser(index, newData);
+    changesMade.value = true;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    // Handle error (e.g., show a toast notification)
+  }
 };
 
 const fetchUsers = async () => {
-  await submit({
-    action: () => usersStore.fetchUsers({ force: true }),
-    successMessage: "Users fetched",
-  });
-  originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
-  changesMade.value = false;
+  console.log("Fetching users...");
+  try {
+    await usersStore.fetchUsers(true);
+    console.log("Users after fetch:", users.value);
+    originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
+    changesMade.value = false;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    // Handle error (e.g., show a toast notification)
+  }
 };
 
 const changes = computed(() => {
   return users.value
     .map((user, index) => {
       const originalUser = originalUsers.value[index];
-      if (!originalUser) {
-        // Skip this user if there's no corresponding original user
-        return null;
-      }
+      if (!originalUser) return null;
       const changedValues = Object.entries(user)
         .filter(([key, value]) => {
           if (key === "role" || key === "role_data") {
-            // Compare role and role_data separately
             return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
           }
           return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
@@ -235,8 +268,7 @@ const changes = computed(() => {
           key,
           oldValue: originalUser[key],
           newValue: value,
-        }))
-        .filter(Boolean);
+        }));
       return { userName: user.name, email: user.email, changes: changedValues };
     })
     .filter((user) => user && user.changes.length > 0);
@@ -244,17 +276,15 @@ const changes = computed(() => {
 
 const updateUsers = async () => {
   const changedUsers = changes.value;
-  for (let i = 0; i < changedUsers.length; i++) {
-    const { userName, email, changes: userChanges } = changedUsers[i];
+  for (const { userName, email, changes: userChanges } of changedUsers) {
     const userIndex = users.value.findIndex(
       (user) => user.name === userName && user.email === email
     );
     if (userIndex !== -1) {
-      const user = users.value[userIndex];
+      const user = { ...users.value[userIndex] };
       let roleChanged = false;
       let otherChanged = false;
-      for (let j = 0; j < userChanges.length; j++) {
-        const { key, newValue } = userChanges[j];
+      for (const { key, newValue } of userChanges) {
         if (key === "role" || key === "role_data") {
           user[key] = newValue;
           roleChanged = true;
@@ -322,7 +352,7 @@ const inviteUser = () => {
     showMessage: false,
     component: markRaw(InviteUsers),
     accept: async () => {
-      await fetchUsers({ force: true });
+      await fetchUsers();
     },
   });
 };

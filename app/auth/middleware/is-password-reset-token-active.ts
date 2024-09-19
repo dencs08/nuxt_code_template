@@ -2,7 +2,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (import.meta.server) return;
   try {
-    const data = await $fetch("/api/auth/is-password-reset-token-active");
+    const data = await $fetch("/api/v1/auth/is-password-reset-token-active");
     if (!data.response.exists) {
       return navigateTo("/login");
     }

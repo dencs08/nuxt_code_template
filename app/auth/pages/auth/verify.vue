@@ -30,7 +30,7 @@ watch(
         "User found in watch, setting verification flag and redirecting to password change page"
       );
       try {
-        await $fetch("/api/me/password-update/set-verification-flag", {
+        await $fetch("/api/v1/me/password-update/set-verification-flag", {
           method: "POST",
         });
 

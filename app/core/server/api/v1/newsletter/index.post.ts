@@ -1,4 +1,4 @@
-import { getBackendClient } from "../../../../../lib/backend";
+import { getBackendClient } from "~~/lib/backend";
 import { z } from "zod";
 
 const subscriptionSchema = z.object({

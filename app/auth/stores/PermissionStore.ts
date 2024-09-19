@@ -18,7 +18,7 @@ export const usePermissionStore = defineStore({
     async fetchUserPermissions(userId: string) {
       try {
         this.loading = true;
-        const data = await $fetch("/api/permissions", {
+        const data = await $fetch("/api/v1/permissions", {
           method: "POST",
           body: { userId },
         });
@@ -34,7 +34,7 @@ export const usePermissionStore = defineStore({
     async fetchAvailablePermissions() {
       try {
         this.loading = true;
-        const data = await $fetch("/api/permissions", {
+        const data = await $fetch("/api/v1/permissions", {
           method: "GET",
         });
 
@@ -99,7 +99,7 @@ export const usePermissionStore = defineStore({
           })
         );
 
-        const response = await $fetch("/api/permissions", {
+        const response = await $fetch("/api/v1/permissions", {
           method: "PUT",
           body: { userId, permissions },
         });

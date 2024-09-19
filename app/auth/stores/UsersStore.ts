@@ -1,132 +1,167 @@
-const { CustomError } = useCustomError();
+import { defineStore } from "pinia";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  password?: string;
+  role_id?: number;
+  photo?: string;
+  phone?: string;
+}
+
+interface UserState {
+  users: User[];
+  loading: boolean;
+}
+
+export interface AddUserRequest {
+  email: string;
+  name: string;
+  password: string;
+  role_id: number;
+  photo?: string;
+}
+
+interface UpdateUserRequest {
+  id: number;
+  name?: string;
+  email?: string;
+  phone?: string;
+  photo?: string;
+}
+
+interface UpdateRoleRequest {
+  id: number;
+  role: number | string;
+  role_id?: number;
+}
 
 export const useUsersStore = defineStore({
   id: "usersStore",
 
-  state: () => ({
+  state: (): UserState => ({
     users: [],
     loading: false,
   }),
 
   getters: {
-    totalCount(state) {
+    totalCount: (state: UserState): number => {
       return state.users.length;
     },
   },
 
   actions: {
-    async fetchUsers(force = false) {
+    async fetchUsers(force: boolean = false): Promise<void> {
       this.loading = true;
 
       try {
         const query = force ? "?force=true" : "";
-        const data = await $fetch(`/api/users${query}`, {
-          method: "GET",
-        });
+        const data = await $fetch<{ response: User[] }>(
+          `/api/v1/users${query}`,
+          {
+            method: "GET",
+          }
+        );
         this.users = data.response;
       } catch (error) {
-        throw new CustomError(error.message, error);
+        throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
     },
-    async fetchUser(userId) {
+
+    async fetchUser(userId: number): Promise<User | undefined> {
       this.loading = true;
 
       try {
-        const data = await $fetch(`/api/users/${userId}`, { method: "GET" });
+        const data = await $fetch<{ response: User }>(
+          `/api/v1/users/${userId}`,
+          { method: "GET" }
+        );
         return data.response;
       } catch (error) {
-        // throw new CustomError(error.message, error);
+        // Uncomment the following line if you want to throw the error
+        // throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
     },
-    async addUser(req) {
+
+    async addUser(userData: any) {
       this.loading = true;
       try {
-        const data = await $fetch("/api/users", {
+        const response = await $fetch("/api/v1/users", {
           method: "POST",
-          body: {
-            name: req.name,
-            email: req.email,
-            password: req.password,
-            role_id: req.role_id,
-            photo: req.photo,
-          },
+          body: userData,
         });
-        this.users.push(data.response);
+
+        if (response && response.user) {
+          this.users.push(response.user);
+        }
       } catch (error) {
-        throw new CustomError("Error occured during creation process.", error);
+        console.error("Error adding user:", error);
+        throw error; // Re-throw the error to be caught by the calling component
       } finally {
         this.loading = false;
       }
     },
-    async deleteUser(userId) {
+
+    async deleteUser(userId: number): Promise<{ status: string }> {
       this.loading = true;
       try {
-        const { data } = await $fetch("/api/users", {
+        await $fetch("/api/v1/users", {
           method: "DELETE",
-          body: {
-            userId: userId,
-          },
+          body: { userId },
         });
 
         this.users = this.users.filter((user) => user.id !== userId);
         return { status: "success" };
       } catch (error) {
-        throw new CustomError(error.message, error);
+        throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
     },
-    async deleteUsers(userIds) {
+
+    async deleteUsers(userIds: number[]): Promise<{ status: string }> {
       this.loading = true;
       try {
         for (let userId of userIds) {
-          const { data } = await $fetch("/api/users", {
+          await $fetch("/api/v1/users", {
             method: "DELETE",
-            body: {
-              userId: userId,
-            },
+            body: { userId },
           });
           this.users = this.users.filter((user) => user.id !== userId);
         }
 
         return { status: "success" };
       } catch (error) {
-        throw new CustomError(error.message, error);
+        throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
     },
-    async updateUser(index, req) {
+
+    async updateUser(index: number, req: UpdateUserRequest): Promise<void> {
       this.loading = true;
       try {
         this.updateLocalUsers(index, req);
-        const { data } = await $fetch("/api/users", {
+        await $fetch("/api/v1/users", {
           method: "PATCH",
-          body: {
-            id: req.id,
-            name: req?.name,
-            email: req?.email,
-            phone: req?.phone,
-            photo: req?.photo,
-          },
+          body: req,
         });
       } catch (error) {
-        throw new CustomError(error.message, error);
+        throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
-        // return updateData.value || 'User updated successfully';
       }
     },
-    async updateRole(index, req) {
+
+    async updateRole(index: number, req: UpdateRoleRequest): Promise<void> {
       this.loading = true;
       try {
-        // Check if role is not a number
         if (typeof req.role !== "number") {
-          // Find the role ID by name from rolesStore
           const rolesStore = useRolesStore();
           const role = rolesStore.roles.find((r) => r.name === req.role);
           if (role) {
@@ -139,7 +174,7 @@ export const useUsersStore = defineStore({
         }
 
         this.updateLocalUsers(index, req);
-        const { data } = await $fetch(`/api/users/role/${req.id}`, {
+        await $fetch(`/api/v1/users/role/${req.id}`, {
           method: "POST",
           body: {
             id: req.id,
@@ -147,18 +182,19 @@ export const useUsersStore = defineStore({
           },
         });
       } catch (error) {
-        throw new CustomError(error.message, error);
+        throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
     },
-    async updateLocalUsers(index, data) {
-      this.users[index] = data;
+
+    updateLocalUsers(index: number, data: Partial<User>): void {
+      this.users[index] = { ...this.users[index], ...data };
     },
-    async inviteUser(email) {
-      // this.loading = true;
+
+    async inviteUser(email: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/users/invite", {
+        const { error } = await $fetch("/api/v1/users/invite", {
           method: "POST",
           body: { email },
         });
@@ -167,14 +203,12 @@ export const useUsersStore = defineStore({
         }
       } catch (error) {
         throw new CustomError("Failed to invite this user", error);
-      } finally {
-        // this.loading = false;
       }
     },
-    async banUser(id, duration) {
-      // this.loading = true;
+
+    async banUser(id: number, duration: number): Promise<void> {
       try {
-        const { error } = await $fetch("/api/users/ban", {
+        const { error } = await $fetch("/api/v1/users/ban", {
           method: "POST",
           body: { id, duration },
         });
@@ -183,14 +217,12 @@ export const useUsersStore = defineStore({
         }
       } catch (error) {
         throw new CustomError("Failed to ban this user", error);
-      } finally {
-        // this.loading = false;
       }
     },
-    async sendPasswordResetEmail(email) {
-      // this.loading = true;
+
+    async sendPasswordResetEmail(email: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/users/send-reset-password", {
+        const { error } = await $fetch("/api/v1/users/send-reset-password", {
           method: "POST",
           body: { email },
         });
@@ -199,14 +231,12 @@ export const useUsersStore = defineStore({
         }
       } catch (error) {
         throw new CustomError("Failed to send password reset email", error);
-      } finally {
-        // this.loading = false;
       }
     },
-    async changeUserPassword(id, password) {
-      // this.loading = true;
+
+    async changeUserPassword(id: number, password: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/users/change-password", {
+        const { error } = await $fetch("/api/v1/users/change-password", {
           method: "POST",
           body: { id, password },
         });
@@ -215,8 +245,6 @@ export const useUsersStore = defineStore({
         }
       } catch (error) {
         throw new CustomError("Failed to change user password", error);
-      } finally {
-        // this.loading = false;
       }
     },
   },

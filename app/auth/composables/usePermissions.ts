@@ -8,7 +8,7 @@ export const usePermissions = () => {
 
     try {
       loading.value = true;
-      const { data } = await useFetch("/api/me/permission");
+      const { data } = await useFetch("/api/v1/me/permission");
       permissions.value = data.value?.response || [];
     } catch (error) {
       console.error("Error fetching permissions:", error);

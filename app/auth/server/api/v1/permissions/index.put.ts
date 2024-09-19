@@ -1,5 +1,5 @@
-import { defineWrappedResponseHandler } from "../../../../../server/utils/defaultHandler";
-import { getBackendClient } from "../../../../../lib/backend";
+import { getBackendClient } from "~~/lib/backend";
+import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 
 const supportedActions = ["read", "write", "delete"];
 

@@ -79,7 +79,7 @@ const uploadFile = async (file: File): Promise<string> => {
       const result = e.target?.result;
       if (typeof result === "string") {
         const base64File = result.split(",")[1];
-        const { data, error } = await useFetch("/api/upload", {
+        const { data, error } = await useFetch("/api/v1/upload", {
           method: "POST",
           body: {
             file: base64File,

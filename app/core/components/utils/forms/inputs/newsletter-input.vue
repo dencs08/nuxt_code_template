@@ -26,7 +26,7 @@ const { showToast } = useToastService();
 
 const handleSubmit = async (email: EmailForm) => {
   try {
-    const response = await $fetch("/api/newsletter", {
+    const response = await $fetch("/api/v1/newsletter", {
       method: "POST",
       body: email,
     });

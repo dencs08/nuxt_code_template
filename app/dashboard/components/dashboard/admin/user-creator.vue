@@ -84,6 +84,7 @@
 <script setup lang="ts">
 import { userSchema } from "~~/utils/schemas";
 import type { UserForm } from "~~/types/user";
+import { useUsersStore, type AddUserRequest } from "@/auth/stores/UsersStore";
 
 const { submit, error } = useForm();
 const usersStore = useUsersStore();
@@ -95,15 +96,36 @@ const rolesOptions = computed(() =>
   roles.value.map((role) => ({ name: role.name, id: role.id }))
 );
 
-const submitForm = async (data: UserForm) => {
-  const response = await submit({
-    action: () => usersStore.addUser(data),
+const submitForm = (formData: UserForm) => {
+  console.log("Submitting new user data:", formData);
+
+  // Transform formData to match AddUserRequest interface
+  const userData: AddUserRequest = {
+    email: formData.email,
+    name: formData.name,
+    password: formData.password,
+    role_id: formData.role_id,
+    // photo is not included in the schema, so we don't need to handle it here
+  };
+
+  submit({
+    action: async () => {
+      await usersStore.addUser(userData);
+      console.log("User added to store, fetching updated user list");
+      await usersStore.fetchUsers(true);
+    },
     successMessage: "User successfully added",
     errorMessage: (e) => `${e.message}. Please try again.`,
-  });
-
-  if (response) {
-    visible.value = false;
-  }
+  })
+    .then(() => {
+      console.log("User creation successful, closing dialog");
+      visible.value = false;
+      emit("userCreated");
+    })
+    .catch((error) => {
+      console.error("Error creating user:", error);
+    });
 };
+
+const emit = defineEmits(["userCreated"]);
 </script>

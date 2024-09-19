@@ -1,4 +1,4 @@
-import { getBackendClient } from "../../../../../lib/backend";
+import { getBackendClient } from "~~/lib/backend";
 import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 
 export default defineWrappedResponseHandler(async (event) => {
