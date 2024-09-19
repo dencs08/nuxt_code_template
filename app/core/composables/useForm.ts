@@ -1,3 +1,6 @@
+import { ref } from "vue";
+import { useToastService } from "./useToastService"; // Assuming this import exists
+
 interface FormSubmitOptions {
   action: () => Promise<any>;
   successTitle?: string;
@@ -13,12 +16,22 @@ export const useForm = () => {
   const error = ref<Error | null>(null);
   const { showToast } = useToastService();
 
+  const getErrorMessage = (e: unknown): string => {
+    if (e instanceof Error) {
+      return e.message;
+    }
+    if (typeof e === "string") {
+      return e;
+    }
+    return "An unknown error occurred";
+  };
+
   const submit = async ({
     action,
     successTitle = "Success",
     errorTitle = "Error",
     successMessage = "Operation completed successfully",
-    errorMessage = "An unknown error occurred",
+    errorMessage,
     showSuccessToast = true,
     showErrorToast = true,
   }: FormSubmitOptions) => {
@@ -38,14 +51,15 @@ export const useForm = () => {
 
       return result;
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error("An unknown error occurred");
+      const actualErrorMessage = getErrorMessage(e);
+      error.value = new Error(actualErrorMessage);
 
       if (showErrorToast) {
         const finalErrorMessage =
           typeof errorMessage === "function"
             ? errorMessage(error.value)
-            : errorMessage;
+            : errorMessage || actualErrorMessage;
+
         showToast({
           severity: "error",
           summary: errorTitle,
@@ -53,6 +67,7 @@ export const useForm = () => {
         });
       }
 
+      isLoading.value = false;
       throw error.value;
     } finally {
       isLoading.value = false;
