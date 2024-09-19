@@ -24,18 +24,15 @@
 <script lang="ts" setup>
 import { emailSchema } from "~~/utils/schemas";
 const usersStore = useUsersStore();
-const { addToast } = useToastService();
+const { submit, error } = useForm();
 const handleForm = async (data: any) => {
-  try {
-    await usersStore.inviteUser(data.email);
-    addToast(
-      "success",
-      "Success",
-      `${data.email} has been invited successfully`
-    );
-  } catch (e: any) {
-    addToast("error", "Error inviting user", e.message);
-  }
+  await submit({
+    async action() {
+      await usersStore.inviteUser(data.email);
+    },
+    successMessage: `${data.email} has been invited successfully`,
+    errorTitle: "Error inviting user",
+  });
 };
 </script>
 

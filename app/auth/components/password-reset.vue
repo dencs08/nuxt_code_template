@@ -4,16 +4,19 @@ import { type EmailForm } from "~~/types/email";
 
 const localePath = useLocalePath();
 const { lostPassword } = useAuthentication();
-const { handleSubmit } = useSubmit();
+const { submit, error } = useForm();
 const { t } = useI18n();
 
 async function handleForm(data: EmailForm) {
   try {
-    const response = await handleSubmit(
-      lostPassword,
-      { email: data.email },
-      "Reset link sent"
-    );
+    await submit({
+      action: () =>
+        lostPassword({
+          email: data.email,
+        }),
+      successMessage: "Reset link sent",
+      errorMessage: (e) => `${e.message}. Please try again.`,
+    });
   } catch (error) {
     console.error(error);
   }

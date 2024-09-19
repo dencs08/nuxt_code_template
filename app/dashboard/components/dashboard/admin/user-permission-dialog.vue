@@ -110,6 +110,7 @@ const emit = defineEmits(["update:isDialogVisible", "savePermissions"]);
 const { hasAccess } = useRoleCheck();
 const { getRoleSeverity } = useRolesStore();
 const { addToast } = useToastService();
+const { submit, error } = useForm();
 
 const localDialogVisible = ref(props.isDialogVisible);
 const isCheckboxDisabled = ref(true);
@@ -131,10 +132,13 @@ const refreshPermissions = async () => {
 
 const savePermissions = async () => {
   try {
-    const response = await permissionStore.saveUserPermissions(
-      props.selectedUser.id
-    );
-    addToast("success", "Success", "Permissions saved successfully");
+    await submit({
+      async action() {
+        await permissionStore.saveUserPermissions(props.selectedUser.id);
+      },
+      successMessage: "Permissions saved successfully",
+      errorTitle: "Error saving permissions",
+    });
     emit("savePermissions");
   } catch (error) {
     console.error("Error saving permissions:", error);

@@ -124,7 +124,7 @@ const userStore = useUserStore();
 const user = userStore.getUser;
 const localePath = useLocalePath();
 const { hasAccess } = useRoleCheck();
-const { addToast } = useToastService();
+const { submit, error } = useForm();
 const { isDarkMode, toggleDarkMode } = useDarkMode();
 const isAdmin = hasAccess(75);
 const router = useRouter();
@@ -199,14 +199,14 @@ const quickActions = ref([
     icon: "ic:round-delete",
     color: "text-red-500 group-hover:text-red-600",
     action: async () => {
-      try {
-        await $fetch("/api/v1/invalidate-cache", {
-          method: "POST",
-        });
-        addToast("success", "Success", "Cache has been cleared successfully");
-      } catch {
-        addToast("error", "Error", "An error occurred while clearing cache");
-      }
+      await submit({
+        async action() {
+          await $fetch("/api/v1/invalidate-cache", {
+            method: "POST",
+          });
+        },
+        successMessage: "Cache has been cleared successfully",
+      });
     },
     loading: false,
   },

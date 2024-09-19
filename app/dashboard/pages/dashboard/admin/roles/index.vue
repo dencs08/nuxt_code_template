@@ -81,8 +81,7 @@ definePageMeta({
   layout: "dashboard",
 });
 const rolesStore = useRolesStore();
-const { handleSubmit } = useSubmit();
-const { addToast } = useToastService();
+const { submit, error } = useForm();
 const editingRows = ref([]);
 const showLoading = ref(false);
 const loadingTimeout = ref(null);
@@ -101,16 +100,11 @@ async function updateRole(role: any) {
 }
 
 const fetchRoles = async () => {
-  try {
-    await rolesStore.fetchRoles(true);
-    addToast("success", "Roles refreshed", "Roles table has been refreshed");
-  } catch (error) {
-    addToast(
-      "error",
-      "Error",
-      "An error occurred while refreshing roles table"
-    );
-  }
+  await submit({
+    action() {
+      return rolesStore.fetchRoles(true);
+    },
+  });
 };
 
 const exportCSV = () => {

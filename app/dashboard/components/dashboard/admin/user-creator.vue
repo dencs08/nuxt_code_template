@@ -85,7 +85,7 @@
 import { userSchema } from "~~/utils/schemas";
 import type { UserForm } from "~~/types/user";
 
-const { handleSubmit } = useSubmit();
+const { submit, error } = useForm();
 const usersStore = useUsersStore();
 const rolesStore = useRolesStore();
 const { roles } = storeToRefs(rolesStore);
@@ -96,13 +96,12 @@ const rolesOptions = computed(() =>
 );
 
 const submitForm = async (data: UserForm) => {
-  console.log(data);
+  const response = await submit({
+    action: () => usersStore.addUser(data),
+    successMessage: "User successfully added",
+    errorMessage: (e) => `${e.message}. Please try again.`,
+  });
 
-  const response = await handleSubmit(
-    usersStore.addUser,
-    data,
-    "User successfully added"
-  );
   if (response) {
     visible.value = false;
   }

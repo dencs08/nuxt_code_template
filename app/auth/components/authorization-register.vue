@@ -14,6 +14,7 @@
         <FormWrapper
           :zodSchema="registerSchema"
           :handleSubmit="handleForm"
+          :reset-on-submit="true"
           :submitAttrs="{ inputClass: 'w-full btn btn-primary' }"
           :submitLabel="t('register')"
         >
@@ -93,13 +94,21 @@ const { t } = useI18n();
 
 const localePath = useLocalePath();
 const { signUp } = useAuthentication();
-const { handleSubmit } = useSubmit();
+const { submit, isLoading, error } = useForm();
+const captchaToken = ref<string | null>(null);
 
 async function handleForm(data: RegisterForm) {
-  await handleSubmit(
-    signUp,
-    { email: data.email, password: data.password },
-    "Registration link sent!"
-  );
+  await submit({
+    action: () =>
+      signUp({
+        email: data.email,
+        password: data.password,
+        options: { captchaToken: captchaToken.value },
+      }),
+    successTitle: "Registration Successful",
+    successMessage: "Please check your email for a verification link.",
+    errorTitle: "Registration Failed",
+    errorMessage: (e) => `${e.message}. Please try again.`,
+  });
 }
 </script>

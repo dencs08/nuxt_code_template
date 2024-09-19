@@ -166,7 +166,7 @@ const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
-const { handleSubmit } = useSubmit();
+const { submit, error } = useForm();
 const { getRoleSeverity } = useRolesStore();
 const { hasAccess } = useRoleCheck();
 const { confirmAction } = useConfirmAction();
@@ -194,7 +194,9 @@ const selectPermissions = (user) => {
 
 onMounted(() => {
   if (usersStore.users.length === 0) {
-    usersStore.fetchUsers();
+    fetchUsers();
+  } else {
+    originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
   }
 });
 
@@ -205,8 +207,11 @@ const onRowEditSave = async (event) => {
 };
 
 const fetchUsers = async () => {
-  await handleSubmit(usersStore.fetchUsers, { force: true }, "Users fetched");
-  originalUsers.value = JSON.parse(JSON.stringify(users.value));
+  await submit({
+    action: () => usersStore.fetchUsers({ force: true }),
+    successMessage: "Users fetched",
+  });
+  originalUsers.value = JSON.parse(JSON.stringify(usersStore.users));
   changesMade.value = false;
 };
 
@@ -214,6 +219,10 @@ const changes = computed(() => {
   return users.value
     .map((user, index) => {
       const originalUser = originalUsers.value[index];
+      if (!originalUser) {
+        // Skip this user if there's no corresponding original user
+        return null;
+      }
       const changedValues = Object.entries(user)
         .filter(([key, value]) => {
           if (key === "role" || key === "role_data") {
@@ -230,7 +239,7 @@ const changes = computed(() => {
         .filter(Boolean);
       return { userName: user.name, email: user.email, changes: changedValues };
     })
-    .filter((user) => user.changes.length > 0);
+    .filter((user) => user && user.changes.length > 0);
 });
 
 const updateUsers = async () => {
@@ -276,7 +285,10 @@ const confirmDeleteUsers = (event) => {
     severity: "danger",
     accept: async () => {
       const selectedIds = selected.value.map((user) => user.id);
-      await handleSubmit(usersStore.deleteUsers, selectedIds, "Users deleted");
+      await submit({
+        action: () => usersStore.deleteUsers(selectedIds),
+        successMessage: "Users deleted",
+      });
       selected.value = [];
     },
     reject: () => {},
@@ -310,7 +322,7 @@ const inviteUser = () => {
     showMessage: false,
     component: markRaw(InviteUsers),
     accept: async () => {
-      await fetchUsers();
+      await fetchUsers({ force: true });
     },
   });
 };
