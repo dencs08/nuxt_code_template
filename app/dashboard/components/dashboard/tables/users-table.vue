@@ -1,7 +1,7 @@
 <template>
   <DataTable
     ref="dt"
-    :value="safeUsers"
+    :value="usersStore?.users"
     v-model:selection="selected"
     v-model:editingRows="editingRows"
     :loading="usersStore.loading"
@@ -77,7 +77,7 @@
             <Button
               size="small"
               v-tooltip.left="'Refresh users table'"
-              @click="fetchUsers"
+              @click="fetchUsers()"
               icon="pi pi-refresh"
               aria-label="Refresh"
               icon-class="dark:text-dark-800"
@@ -166,7 +166,6 @@ import { FilterMatchMode } from "@primevue/core/api";
 const usersStore = useUsersStore();
 const rolesStore = useRolesStore();
 const { users, loading } = storeToRefs(usersStore);
-const { roles } = storeToRefs(rolesStore);
 
 const { submit, error } = useForm();
 const { getRoleSeverity } = rolesStore;
@@ -194,31 +193,20 @@ const selectPermissions = (user) => {
   emit("showPermissions", user);
 };
 
-const safeUsers = computed(() => {
-  return (users.value || []).map((user) => ({
-    ...user,
-    role: user.role || "",
-    created_at: user.created_at || "",
-  }));
-});
-
-const formatCreatedAt = (date) => {
-  if (!date) return "";
-  try {
-    return formatDate(date, { includeTime: true });
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return "";
-  }
-};
-
 onMounted(() => {
   if (users.value?.length === 0) {
-    fetchUsers();
+    fetchUsers(false);
   } else {
     originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
   }
 });
+
+const fetchUsers = async (force = true) => {
+  submit({
+    action: () => usersStore.fetchUsers(force),
+    successMessage: "Users refreshed",
+  });
+};
 
 watch(
   users,
@@ -235,20 +223,6 @@ const onRowEditSave = async (event) => {
     changesMade.value = true;
   } catch (error) {
     console.error("Error updating user:", error);
-    // Handle error (e.g., show a toast notification)
-  }
-};
-
-const fetchUsers = async () => {
-  console.log("Fetching users...");
-  try {
-    await usersStore.fetchUsers(true);
-    console.log("Users after fetch:", users.value);
-    originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
-    changesMade.value = false;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    // Handle error (e.g., show a toast notification)
   }
 };
 

@@ -11,29 +11,3 @@ export class CustomError extends Error {
 export function useCustomError() {
   return { CustomError };
 }
-
-export function useErrorHandler() {
-  const { showToast } = useToastService();
-  const { CustomError } = useCustomError();
-
-  const errorHandler = () => {
-    onMounted(() => {
-      window.addEventListener("unhandledrejection", (event) => {
-        event.preventDefault();
-        const error = event.reason;
-        if (error instanceof CustomError) {
-          const errorMessage = error.message;
-          showToast({
-            severity: "error",
-            summary: "Error",
-            detail: errorMessage,
-            life: 30000,
-          });
-        } else {
-          // Do something else
-        }
-      });
-    });
-  };
-  return { errorHandler };
-}

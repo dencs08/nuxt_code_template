@@ -61,11 +61,15 @@ export const useUsersStore = defineStore({
           `/api/v1/users${query}`,
           {
             method: "GET",
+            retry: 0,
           }
         );
         this.users = data.response;
-      } catch (error) {
-        throw new CustomError((error as Error).message, error);
+      } catch (error: any) {
+        throw createError({
+          statusCode: error.statusCode,
+          statusMessage: error.data.statusMessage,
+        });
       } finally {
         this.loading = false;
       }

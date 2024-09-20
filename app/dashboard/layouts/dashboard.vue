@@ -38,19 +38,31 @@
   </Html>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const head = useLocaleHead({
   addDirAttribute: true,
   identifierAttribute: "id",
   addSeoAttributes: true,
 });
 
+const { showToast } = useToastService();
 const { t } = useI18n();
+const localePath = useLocalePath();
 const route = useRoute();
 const title = computed(() =>
-  t("layouts.default.title", { title: t(route.meta.title ?? "TBD") })
+  t("layouts.default.title", {
+    title: t((route.meta.title as string) ?? "TBD"),
+  })
 );
 
-const { errorHandler } = useErrorHandler();
-errorHandler();
+onErrorCaptured((error, instance, info) => {
+  showToast({
+    severity: "error",
+    summary: t("error"),
+    detail: error.message,
+  });
+
+  // Return false to prevent the error from propagating further
+  return false;
+});
 </script>
