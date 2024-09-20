@@ -57,17 +57,18 @@ export const useUsersStore = defineStore({
 
       try {
         const query = force ? "?force=true" : "";
-        const data = await $fetch<{ response: User[] }>(
+        const response = await $fetch<{ data: User[] }>(
           `/api/v1/users${query}`,
           {
             method: "GET",
             retry: 0,
           }
         );
-        this.users = data.response;
+        this.users = response.data;
       } catch (error: any) {
+        console.log(error.data);
         throw createError({
-          statusCode: error.statusCode,
+          statusCode: error.status,
           statusMessage: error.data.statusMessage,
         });
       } finally {

@@ -1,4 +1,5 @@
 import type { H3Event } from "h3";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 import { DatabaseError, BaseError } from "~~/server/utils/errors";
 
 async function getUsersUncached(event: H3Event) {
@@ -25,7 +26,7 @@ async function getUsersUncached(event: H3Event) {
 }
 
 export const getUsers = defineCachedFunction(
-  async (event: H3Event) => await getUsersUncached(event),
+  defineApiHandler(async (event: H3Event) => await getUsersUncached(event)),
   {
     maxAge: 60 * 1, // 1 minute
     swr: true,

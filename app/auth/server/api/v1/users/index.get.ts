@@ -3,5 +3,5 @@ import { getUsers } from "~~/server/controllers/usersController";
 
 export default defineEventHandler(async (event: H3Event) => {
   const response = await getUsers(event);
-  return { response };
+  return response;
 });
