@@ -1,32 +1,27 @@
 import type { H3Event } from "h3";
+import { DatabaseError, BaseError } from "~~/server/utils/errors";
 
-async function getUsersUncached(event: any) {
+async function getUsersUncached(event: H3Event) {
   const client = event.context.backendClient;
-  try {
-    const authData = (await client.getAuthUsers()) as any;
 
-    const authUsers: any[] = (authData.users as any[]).map((user) => ({
-      id: user.id,
-      email: user.email,
-    }));
+  const authData = await client.getAuthUsers();
 
-    const profileData = await client.getUsers();
+  const authUsers: any[] = authData.users.map((user: any) => ({
+    id: user.id,
+    email: user.email,
+  }));
 
-    const combinedData: any[] = (profileData as any[]).map((profile) => {
-      const authUser = authUsers.find((user) => user.id === profile.id);
-      return {
-        ...profile,
-        email: authUser ? authUser.email : null,
-      };
-    });
+  const profileData = await client.getUsers();
 
-    return combinedData;
-  } catch (err) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "An error occurred while fetching the users",
-    });
-  }
+  const combinedData: any[] = profileData.map((profile: any) => {
+    const authUser = authUsers.find((user) => user.id === profile.id);
+    return {
+      ...profile,
+      email: authUser ? authUser.email : null,
+    };
+  });
+
+  return combinedData;
 }
 
 export const getUsers = defineCachedFunction(

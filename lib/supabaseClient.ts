@@ -1,13 +1,18 @@
 import type { BackendClient } from "../types/backend";
 import type { UserAuthPublicSession } from "../types/user";
-import dayjs from "dayjs";
+import {
+  BaseError,
+  DatabaseError,
+  NotFoundError,
+} from "~~/server/utils/errors";
 
 export class SupabaseClient implements BackendClient {
   constructor(private client: any) {}
 
   //users
   async getUsers(): Promise<any[]> {
-    let { data, error } = await this.client.from("users").select(`
+    try {
+      const { data, error } = await this.client.from("users").select(`
         *,
         user_roles!inner (
           role_id,
@@ -18,41 +23,43 @@ export class SupabaseClient implements BackendClient {
         )
       `);
 
-    if (error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "An error occurred while fetching the users",
+      if (error) {
+        throw new DatabaseError(`Database error: ${error.message}`);
+      }
+
+      if (!data || data.length === 0) {
+        throw new NotFoundError("No users found");
+      }
+
+      return data.map((user: any) => {
+        const roleName = user.user_roles?.roles?.name || "No role assigned";
+        const roleData = user.user_roles
+          ? {
+              role_id: user.user_roles.role_id,
+              name: user.user_roles.roles.name,
+              access_level: user.user_roles.roles.access_level,
+            }
+          : {
+              role_id: null,
+              name: "No role assigned",
+              access_level: null,
+            };
+
+        delete user.user_roles;
+        return {
+          ...user,
+          role: roleName,
+          role_data: roleData,
+        };
       });
+    } catch (error: any) {
+      if (error instanceof BaseError) {
+        throw error;
+      }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
     }
-
-    if (!data || data.length === 0) {
-      throw createError({ statusCode: 404, statusMessage: "No users found" });
-    }
-
-    const users = data.map((user: any) => {
-      const roleName = user.user_roles?.roles?.name || "No role assigned";
-      const roleData = user.user_roles
-        ? {
-            role_id: user.user_roles.role_id,
-            name: user.user_roles.roles.name,
-            access_level: user.user_roles.roles.access_level,
-          }
-        : {
-            role_id: null,
-            name: "No role assigned",
-            access_level: null,
-          };
-
-      delete user.user_roles;
-      return {
-        ...user,
-        role: roleName,
-        role_data: roleData,
-      };
-    });
-
-    return users;
   }
+
   async getUser(userId: string): Promise<any> {
     let user = {} as any;
 
@@ -91,15 +98,22 @@ export class SupabaseClient implements BackendClient {
       ...user,
     };
   }
+
   async getAuthUsers(): Promise<any[]> {
-    let { data: authData, error: authError } =
+    const { data: authData, error: authError } =
       await this.client.auth.admin.listUsers();
+
     if (authError) {
-      throw authError;
+      throw new Error("Failed to fetch auth users", { cause: authError });
+    }
+
+    if (!authData || authData.length === 0) {
+      throw new Error("No auth users found");
     }
 
     return authData;
   }
+
   async createUser(
     body: {
       name: string;
