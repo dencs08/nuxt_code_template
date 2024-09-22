@@ -22,14 +22,6 @@
             <FormKit
               class="w-full"
               type="primeInputText"
-              name="name"
-              validation="required"
-              :placeholder="t('auth.inputFields.name')"
-            >
-            </FormKit>
-            <FormKit
-              class="w-full"
-              type="primeInputText"
               name="email"
               validation="required|email"
               :placeholder="t('auth.inputFields.email')"
