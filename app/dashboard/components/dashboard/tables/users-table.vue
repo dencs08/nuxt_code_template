@@ -195,7 +195,7 @@ const selectPermissions = (user) => {
 
 onMounted(() => {
   if (users.value?.length === 0) {
-    fetchUsers(false);
+    fetchUsers();
   } else {
     originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
   }
@@ -208,14 +208,6 @@ const fetchUsers = async (force = true) => {
   });
   originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
 };
-
-// watch(
-//   users,
-//   (newUsers) => {
-//     originalUsers.value = JSON.parse(JSON.stringify(newUsers || []));
-//   },
-//   { deep: true }
-// );
 
 const onRowEditSave = async (event) => {
   let { newData, index } = event;
