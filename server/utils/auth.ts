@@ -1,12 +1,12 @@
 import { H3Event } from "h3";
 import { getAccessLevelByRole } from "./roles";
 import { getBackendClient } from "~~/lib/backend";
-export async function getUserSession(event: H3Event) {
+export async function getUser(event: H3Event) {
   // Get the backend client from the lib backend as the context one is service role
   const client = await getBackendClient(event);
-  const userSession = await client.getCurrentUser();
+  const user = await client.getCurrentUser();
 
-  if (!userSession || !userSession.id || !userSession.email) {
+  if (!user || !user.id || !user.email) {
     throw createError({
       statusCode: 401,
       statusMessage:
@@ -14,15 +14,15 @@ export async function getUserSession(event: H3Event) {
     });
   }
 
-  if (!userSession.role) {
-    const userData = await client.getUser(userSession.id);
-    userSession.role = userData.role;
+  if (!user.role) {
+    const userData = await client.getUser(user.id);
+    user.role = userData.role;
   }
 
-  return userSession;
+  return user;
 }
 
-export async function fetchUserSession(event: H3Event) {
+export async function getUserSession(event: H3Event) {
   // Get the backend client from the lib backend as the context one is service role
   const client = await getBackendClient(event);
   const userSession = await client.getSession();
@@ -54,6 +54,6 @@ export async function checkUserRole(
 }
 
 export async function getUserRole(event: H3Event) {
-  const user = await getUserSession(event);
+  const user = await getUser(event);
   return user.role;
 }

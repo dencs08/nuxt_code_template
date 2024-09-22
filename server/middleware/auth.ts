@@ -1,5 +1,5 @@
 import { defineEventHandler, createError } from "h3";
-import { getUserSession, fetchUserSession } from "../utils/auth";
+import { getUser, getUserSession } from "../utils/auth";
 import { getAccessLevelByRole } from "../utils/roles";
 import { getRouteConfig } from "../config/routeConfig";
 
@@ -10,9 +10,9 @@ export default defineEventHandler(async (event) => {
   if (routeConfig.auth) {
     try {
       const userSession = await getUserSession(event);
-      const session = await fetchUserSession(event);
-      event.context.user = userSession;
-      event.context.userSession = session;
+      event.context.userSession = userSession.session;
+      event.context.user = userSession.session.user;
+
       if (routeConfig.accessLevel !== undefined) {
         const client = event.context.backendClient;
         if (!client) {
@@ -22,7 +22,10 @@ export default defineEventHandler(async (event) => {
           });
         }
         const roles = await client.getRoles();
-        const userAccessLevel = getAccessLevelByRole(userSession.role, roles);
+        const userAccessLevel = getAccessLevelByRole(
+          event.context.user.role,
+          roles
+        );
         if (userAccessLevel < routeConfig.accessLevel) {
           throw createError({
             statusCode: 403,
