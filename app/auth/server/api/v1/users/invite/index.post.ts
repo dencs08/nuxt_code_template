@@ -1,11 +1,10 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 import { type UserAuthPublicSession } from "~~/types/user";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
-  const server = await getBackendClient(event, true);
+export default defineApiHandler(async (event) => {
+  const server = event.context.backendClient;
+  const user = event.context.user;
   let body = await readBody(event);
 
-  const user = await server.inviteByEmail(body.email, userSession);
-  return user;
-}, 50);
+  const invitedUser = await server.inviteByEmail(body.email, user);
+  return invitedUser;
+});

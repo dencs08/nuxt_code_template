@@ -1,7 +1,7 @@
-import { defineEventHandler } from "h3";
 import { getChart } from "~/core/server/controllers/analyticsController";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const response = await getChart(event);
   return response;
 });

@@ -7,6 +7,7 @@ interface EmailOptions {
   bcc: string;
   text: string;
   html?: string;
+  signature?: string;
   mjmlContent?: string;
 }
 
@@ -46,13 +47,13 @@ export const useMail = (debounceMs = 300) => {
     previewHtml.value = null;
 
     try {
-      const data = await $fetch("/api/v1/mail/mjml/render", {
+      const response = await $fetch("/api/v1/mail/mjml/render", {
         method: "POST",
         // params: { force: "true" },
         body: { mjmlContent: content },
       });
 
-      previewHtml.value = data;
+      previewHtml.value = response.data;
     } catch (err) {
       error.value =
         err instanceof Error ? err.message : "An unknown error occurred";
@@ -70,12 +71,13 @@ export const useMail = (debounceMs = 300) => {
 
   const generatePreview = async (content: string) => {
     try {
-      const data = await $fetch("/api/v1/mail/mjml/render", {
+      const response = await $fetch("/api/v1/mail/mjml/render", {
         method: "POST",
         // params: { force: "true" },
         body: { mjmlContent: content },
       });
-      return data;
+
+      return response.data;
     } catch (err) {
       console.error("Error generating preview:", err);
       return "<p>Error generating preview</p>";

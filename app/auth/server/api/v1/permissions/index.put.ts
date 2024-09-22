@@ -1,9 +1,7 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-
+import { defineApiHandler } from "~~/server/utils/api-handler";
 const supportedActions = ["read", "write", "delete"];
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
 
   if (!body.userId || !body.permissions) {
@@ -24,7 +22,7 @@ export default defineWrappedResponseHandler(async (event) => {
     }
   }
 
-  const client = await getBackendClient(event, true);
+  const client = event.context.backendClient;
   try {
     const response = await client.updatePermissions(
       body.userId,
@@ -37,4 +35,4 @@ export default defineWrappedResponseHandler(async (event) => {
       message: error.message,
     });
   }
-}, 75);
+});

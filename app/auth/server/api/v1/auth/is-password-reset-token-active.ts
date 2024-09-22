@@ -1,12 +1,11 @@
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const storage = useStorage();
   try {
-    const isActive = await storage.getItem(
-      `user:${userSession.id}:password-reset`
-    );
-    if (!userSession || !isActive) {
+    const user = event.context.user;
+    const isActive = await storage.getItem(`user:${user.id}:password-reset`);
+    if (!user || !isActive) {
       throw createError({
         statusCode: 401,
         statusMessage: "Unauthorized",
@@ -19,4 +18,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       response: err.message,
     };
   }
-}, 0);
+});

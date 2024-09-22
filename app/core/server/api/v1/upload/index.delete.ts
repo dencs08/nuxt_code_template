@@ -1,7 +1,6 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
   const { bucketName, filePath } = body;
 
@@ -12,7 +11,7 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  const client = await getBackendClient(event);
+  const client = event.context.backendClient;
 
   try {
     const response = await client.deleteFile(bucketName, filePath);
@@ -26,4 +25,4 @@ export default defineWrappedResponseHandler(async (event) => {
         "Failed to delete file",
     });
   }
-}, 0);
+});

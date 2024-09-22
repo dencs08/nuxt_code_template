@@ -1,11 +1,11 @@
-import { getBackendClient } from "~~/lib/backend";
 import { z } from "zod";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
 const subscriptionSchema = z.object({
   email: z.string().email(),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   try {
     const body = await readBody(event);
 
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const { email } = subscriptionSchema.parse(body);
-    const client = await getBackendClient(event, true);
+    const client = event.context.backendClient;
     const response = await client.addNewsletterSubscriber(email);
     return response;
   } catch (error: any) {

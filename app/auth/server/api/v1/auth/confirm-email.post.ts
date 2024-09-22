@@ -1,9 +1,8 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
-  const userSession = await client.getCurrentUser();
+export default defineApiHandler(async (event) => {
+  const client = event.context.backendClient;
+  const user = event.context.user;
 
   try {
     // const response = await client.confirmEmail(userSession);
@@ -14,4 +13,4 @@ export default defineWrappedResponseHandler(async (event) => {
       response: err.message,
     };
   }
-}, 0);
+});

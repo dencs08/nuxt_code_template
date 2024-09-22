@@ -1,4 +1,6 @@
-export default defineEventHandler(async (event) => {
+import { defineApiHandler } from "~~/server/utils/api-handler";
+
+export default defineApiHandler(async (event) => {
   const { token } = await readBody(event);
 
   if (!token) {

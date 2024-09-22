@@ -65,9 +65,10 @@ const getNewsletter = async (force: boolean = false) => {
   loading.value = true;
   try {
     const query = force ? "?force=true" : "";
-    const data = await $fetch(`/api/v1/newsletter${query}`, { method: "GET" });
-    records.value = data.response.data;
-    console.log(data.response.data);
+    const response = await $fetch(`/api/v1/newsletter${query}`, {
+      method: "GET",
+    });
+    records.value = response.data;
   } catch (error) {
     console.log(error);
   } finally {

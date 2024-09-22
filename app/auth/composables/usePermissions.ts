@@ -9,7 +9,7 @@ export const usePermissions = () => {
     try {
       loading.value = true;
       const { data } = await useFetch("/api/v1/me/permission");
-      permissions.value = data.value?.response || [];
+      permissions.value = data.value?.data || [];
     } catch (error) {
       console.error("Error fetching permissions:", error);
       permissions.value = [];

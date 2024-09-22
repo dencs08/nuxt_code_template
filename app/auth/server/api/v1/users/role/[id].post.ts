@@ -1,9 +1,9 @@
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-import { getBackendClient } from "~~/lib/backend";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
-  const client = await getBackendClient(event, true);
+  const client = event.context.backendClient;
+  const user = event.context.user;
   const { id } = event.context.params as { id: string };
 
   if (!body.role_id || !body.id) {
@@ -19,6 +19,6 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
     });
   }
 
-  const response = await client.assignRole(body.id, body.role_id, userSession);
+  const response = await client.assignRole(body.id, body.role_id, user);
   return response;
-}, 75);
+});

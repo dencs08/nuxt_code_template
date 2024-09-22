@@ -19,15 +19,15 @@ export const useMyPermissionStore = defineStore({
         const user = userStore.getUser;
 
         if (!user) {
-          return; // Exit early if no user is present
+          return;
         }
 
         this.loading = true;
-        const data = await $fetch("/api/v1/me/permission", {
+        const response = await $fetch("/api/v1/me/permission", {
           method: "GET",
         });
-        this.setPermissions(data.response as any);
-        return data.response;
+        this.setPermissions(response.data as any);
+        return response.data;
       } catch (error: any) {
         this.clearPermissions();
         throw new CustomError(error.message, error);

@@ -1,9 +1,8 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
-  const client = await getBackendClient(event, true);
+  const client = event.context.backendClient;
 
   if (!body.id) {
     throw createError({
@@ -14,11 +13,11 @@ export default defineWrappedResponseHandler(async (event) => {
 
   try {
     await client.updateUser(body);
-    return { message: "User updated", data: body };
+    return body;
   } catch (err: any) {
     throw createError({
       statusCode: err.code,
       statusMessage: err.message,
     });
   }
-}, 75);
+});

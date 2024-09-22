@@ -8,13 +8,10 @@ const { signOut } = useAuthentication();
 
 async function handleForm(data: PasswordConfirm) {
   try {
-    const { error } = (await $fetch("/api/v1/me/password-update", {
+    const response = (await $fetch("/api/v1/me/password-update", {
       method: "POST",
       body: data,
     })) as { error?: any };
-    if (error) {
-      throw new CustomError("Error updating user data", error);
-    }
 
     showToast({
       severity: "success",

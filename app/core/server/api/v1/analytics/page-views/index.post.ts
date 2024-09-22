@@ -1,6 +1,7 @@
-import { defineEventHandler, readBody } from "h3";
+import { readBody } from "h3";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineEventHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   try {
     // Read the request body
     const body = await readBody(event);
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
       created_at: timestamp,
     });
 
-    return { success: true };
+    return;
   } catch (error) {
     console.error("Error logging page view:", error);
     event.node.res.statusCode = 500;

@@ -202,38 +202,36 @@ onMounted(() => {
 });
 
 const fetchUsers = async (force = true) => {
-  submit({
+  await submit({
     action: () => usersStore.fetchUsers(force),
     successMessage: "Users refreshed",
   });
+  originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
 };
 
-watch(
-  users,
-  (newUsers) => {
-    originalUsers.value = JSON.parse(JSON.stringify(newUsers || []));
-  },
-  { deep: true }
-);
+// watch(
+//   users,
+//   (newUsers) => {
+//     originalUsers.value = JSON.parse(JSON.stringify(newUsers || []));
+//   },
+//   { deep: true }
+// );
 
 const onRowEditSave = async (event) => {
   let { newData, index } = event;
-  try {
-    await usersStore.updateUser(index, newData);
-    changesMade.value = true;
-  } catch (error) {
-    console.error("Error updating user:", error);
-  }
+  // Just mark that changes were made and update local data
+  changesMade.value = true;
+  users.value[index] = { ...users.value[index], ...newData };
 };
 
 const changes = computed(() => {
   return users.value
     .map((user, index) => {
       const originalUser = originalUsers.value[index];
-      if (!originalUser) return null;
       const changedValues = Object.entries(user)
         .filter(([key, value]) => {
           if (key === "role" || key === "role_data") {
+            // Compare role and role_data separately
             return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
           }
           return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
@@ -242,10 +240,11 @@ const changes = computed(() => {
           key,
           oldValue: originalUser[key],
           newValue: value,
-        }));
+        }))
+        .filter(Boolean);
       return { userName: user.name, email: user.email, changes: changedValues };
     })
-    .filter((user) => user && user.changes.length > 0);
+    .filter((user) => user.changes.length > 0);
 });
 
 const updateUsers = async () => {
@@ -268,10 +267,16 @@ const updateUsers = async () => {
         }
       }
       if (otherChanged) {
-        await usersStore.updateUser(userIndex, user);
+        await submit({
+          action: async () => await usersStore.updateUser(userIndex, user),
+          successMessage: "User updated",
+        });
       }
       if (roleChanged) {
-        await usersStore.updateRole(userIndex, user);
+        await submit({
+          action: async () => await usersStore.updateRole(userIndex, user),
+          successMessage: "Role updated",
+        });
       }
     }
   }
@@ -310,6 +315,11 @@ const confirmSaveChanges = () => {
     component: markRaw(DisplayUserChanges),
     accept: async () => {
       await updateUsers();
+    },
+    reject: () => {
+      // Revert changes if user rejects
+      users.value = JSON.parse(JSON.stringify(originalUsers.value));
+      changesMade.value = false;
     },
   });
 };

@@ -1,14 +1,13 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event);
-  const user = await client.getCurrentUser();
+export default defineApiHandler(async (event) => {
+  const client = event.context.backendClient;
+  const user = event.context.user;
   const body = await readBody(event);
 
   try {
     const response = await client.putMe(user, body);
-    return { response };
+    return response;
   } catch (err: any) {
     throw createError({
       statusCode: 500,
@@ -16,4 +15,4 @@ export default defineWrappedResponseHandler(async (event) => {
         "An error occurred during the deletion process " + err.message,
     });
   }
-}, 0);
+});

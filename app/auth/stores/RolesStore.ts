@@ -24,11 +24,11 @@ export const useRolesStore = defineStore("roles", {
       this.error = null;
       try {
         const query = force ? "?force=true" : "";
-        const data = await $fetch(`/api/v1/roles${query}`, { method: "GET" });
-        if (data) {
-          //@ts-ignore //not sure why its not recognizing the response property on data...
-          this.roles = data.response;
-          // console.log("Roles fetched:", this.roles);
+        const response = await $fetch(`/api/v1/roles${query}`, {
+          method: "GET",
+        });
+        if (response.success) {
+          this.roles = response.data;
         }
       } catch (error) {
         console.error("Error fetching roles:", error);

@@ -1,6 +1,4 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-
+import { defineApiHandler } from "~~/server/utils/api-handler";
 /**
  * Determines how long a user is banned for.
  *
@@ -11,10 +9,10 @@ import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
  *
  * Setting the ban duration to 'none' lifts the ban on the user.
  */
-export default defineWrappedResponseHandler(async (event, userSession) => {
-  const server = await getBackendClient(event, true);
+export default defineApiHandler(async (event) => {
+  const server = event.context.backendClient;
   let body = await readBody(event);
 
   const user = await server.banUser(body.id, body.duration);
   return user;
-}, 75);
+});

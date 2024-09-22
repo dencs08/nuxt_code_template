@@ -1,13 +1,13 @@
 import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB max file size
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
   const { file, contentType } = body;
-  const oldPhotoUrl = userSession.photo;
+  const user = event.context.user;
+  const oldPhotoUrl = user.photo;
 
   // Validate file
   if (!file || !contentType) {
@@ -33,13 +33,13 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
     });
   }
 
-  const client = await getBackendClient(event, true);
+  const client = event.context.backendClient;
 
   try {
     // Generate a unique filename
     const fileName = `avatar_${Date.now()}.${contentType.split("/")[1]}`;
     const bucketName = "user_avatars";
-    const filePath = `${userSession.id}/${fileName}`;
+    const filePath = `${user.id}/${fileName}`;
 
     // Upload new avatar
     const uploadResponse = await client.uploadFile(
@@ -51,7 +51,7 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
     );
 
     // Update user's avatar in the database
-    await client.updateMePhoto(userSession.id, uploadResponse.publicUrl);
+    await client.updateMePhoto(user.id, uploadResponse.publicUrl);
 
     // Delete old avatar if exists
     if (oldPhotoUrl) {
@@ -61,7 +61,7 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       }
     }
 
-    return { success: true, avatarUrl: uploadResponse.publicUrl };
+    return { avatarUrl: uploadResponse.publicUrl };
   } catch (error: any) {
     console.error("Upload error:", error);
     throw createError({
@@ -70,7 +70,7 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
         error.statusMessage || error.message || "Failed to upload file",
     });
   }
-}, 0);
+});
 
 // Helper function to extract file path from URL
 function getFilePathFromUrl(url: string, bucketName: string): string | null {

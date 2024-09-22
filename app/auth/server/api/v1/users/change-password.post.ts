@@ -1,8 +1,7 @@
 import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
-  const server = await getBackendClient(event, true);
+export default defineApiHandler(async (event) => {
+  const server = event.context.backendClient;
   let body = await readBody(event);
 
   if (!body.password || !body.id) {
@@ -21,4 +20,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       statusMessage: err.message || "Error sending reset password",
     });
   }
-}, 100);
+});

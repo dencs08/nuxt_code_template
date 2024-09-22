@@ -13,10 +13,11 @@ export const useUserStore = defineStore({
       return state.user;
     },
     firstName: (state) => {
-      return state.user ? state.user.name.split(" ")[0] : null;
+      return state.user?.name ? state.user.name.split(" ")[0] : null;
     },
     lastName: (state) => {
-      const nameParts = state.user ? state.user.name.split(" ") : [];
+      if (!state.user?.name) return null;
+      const nameParts = state.user.name.split(" ");
       return nameParts.length > 1 ? nameParts[nameParts.length - 1] : null;
     },
     userRole: (state) => {
@@ -54,13 +55,10 @@ export const useUserStore = defineStore({
     async updateUserAccount(profileData: Partial<User>) {
       this.loading = true;
       try {
-        const { error } = (await $fetch("/api/v1/me", {
+        const data = (await $fetch("/api/v1/me", {
           method: "PATCH",
           body: profileData,
         })) as { error?: any };
-        if (error) {
-          throw new CustomError("Error updating user data", error);
-        }
 
         await this.fetchUser();
         return { response: "Profile updated" };
@@ -92,13 +90,13 @@ export const useUserStore = defineStore({
 
       this.loading = true;
       try {
-        const { error } = (await $fetch("/api/v1/me", {
+        const response = (await $fetch("/api/v1/me", {
           method: "DELETE",
-        })) as { error?: any };
-        if (error) {
-          throw new CustomError("Error deleting the account", error);
+        })) as { success?: boolean; error?: any };
+
+        if (response.success) {
+          await signOut();
         }
-        signOut();
       } catch (error) {
         // console.error(error);
         throw new CustomError("Failed to delete the account", error);

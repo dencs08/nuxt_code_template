@@ -1,8 +1,7 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
-  const client = await getBackendClient(event, true);
+export default defineApiHandler(async (event) => {
+  const client = event.context.backendClient;
   try {
     const response = await client.getAvailablePermissions();
     return response;
@@ -12,4 +11,4 @@ export default defineWrappedResponseHandler(async (event) => {
       message: (error as Error).message,
     });
   }
-}, 25);
+});

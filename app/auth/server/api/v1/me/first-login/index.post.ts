@@ -1,11 +1,9 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const storage = useStorage();
-  const isVerified = await storage.getItem(
-    `user:${userSession.id}:first-login`
-  );
+  const user = event.context.user;
+  const isVerified = await storage.getItem(`user:${user.id}:first-login`);
 
   if (!isVerified) {
     throw createError({
@@ -14,7 +12,7 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
     });
   }
 
-  const client = await getBackendClient(event);
+  const client = event.context.backendClient;
   const body = await readBody(event);
 
   const password = body.password;
@@ -39,17 +37,14 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
   }
 
   try {
-    const updatePasswordResponse = await client.updatePassword(
-      userSession,
-      password
-    );
+    const updatePasswordResponse = await client.updatePassword(user, password);
 
-    const updateUserResponse = await client.updateMe(userSession, {
+    const updateUserResponse = await client.updateMe(user, {
       name,
       nickname,
     });
 
-    await storage.removeItem(`user:${userSession.id}:first-login`);
+    await storage.removeItem(`user:${user.id}:first-login`);
     return "User updated successfully";
   } catch (err: any) {
     console.log(err.code, err.message);
@@ -58,4 +53,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       statusMessage: err.message,
     });
   }
-}, 0);
+});

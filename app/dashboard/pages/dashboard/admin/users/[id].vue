@@ -117,7 +117,10 @@
                   :key="action.label"
                   :icon="action.icon"
                   :submitLabel="action.label"
-                  :submitAttrs="{ inputClass: `${action.submitClass}` }"
+                  :loading="action.loading"
+                  :submitAttrs="{
+                    inputClass: `${action.submitClass}`,
+                  }"
                   :handle-submit="action.onClick"
                 ></FormWrapper>
               </div>
@@ -130,6 +133,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import PasswordFormInput from "@/core/components/utils/forms/password-form-input.vue";
 import BanUser from "@/dashboard/components/dashboard/admin/ban-user.vue";
 
@@ -150,6 +154,7 @@ interface Action {
     text?: boolean;
   };
   submitClass?: string;
+  loading?: Ref<boolean>;
 }
 
 interface ActionSection {
@@ -192,6 +197,10 @@ const isBanActive = computed(() => {
   return banUntil > now;
 });
 
+const sendResetPasswordLoading = ref(false);
+const changePasswordLoading = ref(false);
+const deleteUserLoading = ref(false);
+
 const actionSections = computed<ActionSection[]>(() => [
   {
     class: "space-y-1",
@@ -201,31 +210,19 @@ const actionSections = computed<ActionSection[]>(() => [
         icon: "pi pi-key",
         submitClass: "btn btn-primary w-full",
         onClick: sendResetPassword,
+        loading: sendResetPasswordLoading,
       },
     ],
   },
   {
     class: "space-y-1",
     actions: [
-      // {
-      //   label: "Permissions",
-      //   icon: "pi pi-cog",
-      //   submitClass: "btn btn-contrast",
-      //   onClick: () => {},
-      // },
-      // {
-      //   label: "Role",
-      //   icon: "pi pi-user",
-      //   submitClass: "btn btn-contrast",
-      //   onClick: () => {},
-      // },
       {
         label: "Change Password",
         icon: "pi pi-key",
         submitClass: "btn btn-contrast w-full",
-        onClick: () => {
-          changeUserPassword();
-        },
+        onClick: confirmChangePassword,
+        loading: changePasswordLoading,
       },
     ],
   },
@@ -239,10 +236,65 @@ const actionSections = computed<ActionSection[]>(() => [
         onClick: (event: any) => {
           confirmDeleteUsers(event);
         },
+        loading: deleteUserLoading,
       },
     ],
   },
 ]);
+
+const sendResetPassword = async () => {
+  sendResetPasswordLoading.value = true;
+  await submit({
+    async action() {
+      await usersStore.sendPasswordResetEmail(user.value.email);
+    },
+    successMessage: "Password reset email has been sent",
+    errorMessage: (error) => `Failed to send reset email: ${error.message}`,
+  }).finally(() => {
+    sendResetPasswordLoading.value = false;
+  });
+};
+
+// const changeUserPassword = async () => {
+//   changePasswordLoading.value = true;
+//   await submit({
+//     async action() {
+//       await confirmChangePassword();
+//     },
+//     successMessage: "Password has been changed",
+//     errorMessage: (error) => `Failed to change password: ${error.message}`,
+//   }).finally(() => {
+//     changePasswordLoading.value = false;
+//   });
+// };
+
+const confirmDeleteUsers = (event: any) => {
+  confirmAction({
+    target: event.currentTarget,
+    message: "Are you sure you want to delete?",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Delete",
+    rejectLabel: "Cancel",
+    severity: "danger",
+    accept: async () => {
+      deleteUserLoading.value = true;
+      await deleteUser();
+      deleteUserLoading.value = false;
+      navigateTo(localePath("/dashboard/admin/users"));
+    },
+    reject: () => {},
+  });
+};
+
+const deleteUser = async () => {
+  await submit({
+    async action() {
+      await usersStore.deleteUser(params.id);
+    },
+    successMessage: "User has been deleted",
+    errorMessage: (error) => `Failed to delete user: ${error.message}`,
+  });
+};
 
 const banUser = () => {
   confirmAction({
@@ -273,65 +325,25 @@ const banUser = () => {
   });
 };
 
-const sendResetPassword = async () => {
-  submit({
-    async action() {
-      await usersStore.sendPasswordResetEmail(user.value.email);
-    },
-    successMessage: "Password reset email has been sent",
-  });
-};
-
-const deleteUser = async () => {
-  submit({
-    async action() {
-      await usersStore.deleteUser(params.id);
-    },
-    successMessage: "User has been deleted",
-  });
-};
-
-const confirmDeleteUsers = (event: any) => {
-  confirmAction({
-    target: event.currentTarget,
-    message: "Are you sure you want to delete?",
-    icon: "pi pi-exclamation-triangle",
-    acceptLabel: "Delete",
-    rejectLabel: "Cancel",
-    severity: "danger",
-    accept: async () => {
-      await deleteUser();
-      navigateTo(localePath("/dashboard/admin/users"));
-    },
-    reject: () => {},
-  });
-};
-
 const confirmChangePassword = () => {
+  changePasswordLoading.value = true;
   confirmAction({
-    message: "Change the password for the user?",
+    message: "Enter new password for the user",
     icon: "pi pi-key",
     acceptLabel: "Change",
     rejectLabel: "Cancel",
     severity: "contrast",
     component: toRaw(PasswordFormInput),
     accept: async (data) => {
-      submit({
+      await submit({
         async action() {
           await usersStore.changeUserPassword(params.id, data);
+          changePasswordLoading.value = false;
         },
         successMessage: "Password has been changed",
       });
     },
     reject: () => {},
-  });
-};
-
-const changeUserPassword = async () => {
-  submit({
-    async action() {
-      await confirmChangePassword();
-    },
   });
 };
 </script>

@@ -130,8 +130,8 @@ const performUpload = async (file: File) => {
         if (error.value) throw error.value;
 
         // Ensure that data.value and data.value.publicUrl exist before emitting
-        if (data.value && data.value.response.publicUrl) {
-          emit("success", data.value.response.publicUrl);
+        if (data.value && data.value.data.avatarUrl) {
+          emit("success", data.value.data.avatarUrl);
         } else {
           throw new Error("Upload successful, but public URL is missing");
         }

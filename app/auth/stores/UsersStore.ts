@@ -80,11 +80,11 @@ export const useUsersStore = defineStore({
       this.loading = true;
 
       try {
-        const data = await $fetch<{ response: User }>(
+        const response = await $fetch<{ response: User }>(
           `/api/v1/users/${userId}`,
           { method: "GET" }
         );
-        return data.response;
+        return response.data;
       } catch (error) {
         // Uncomment the following line if you want to throw the error
         // throw new CustomError((error as Error).message, error);
@@ -101,8 +101,8 @@ export const useUsersStore = defineStore({
           body: userData,
         });
 
-        if (response && response.user) {
-          this.users.push(response.user);
+        if (response && response.data) {
+          this.users.push(response.data);
         }
       } catch (error) {
         console.error("Error adding user:", error);
@@ -246,8 +246,10 @@ export const useUsersStore = defineStore({
           body: { id, password },
         });
         if (error) {
+          console.log(error);
           throw new CustomError("Error changing user password", error);
         }
+        console.log("Password changed");
       } catch (error) {
         throw new CustomError("Failed to change user password", error);
       }

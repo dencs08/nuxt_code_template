@@ -1,10 +1,10 @@
-import { defineEventHandler, H3Event } from "h3";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineEventHandler(async (event: H3Event) => {
+export default defineApiHandler(async (event) => {
   const client = event.context.backendClient;
   try {
     const response = await client.getNewsletterSubscribers();
-    return { response };
+    return response;
   } catch (error) {
     throw createError({
       statusCode: 500,

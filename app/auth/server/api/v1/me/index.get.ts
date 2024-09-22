@@ -1,8 +1,8 @@
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-
-export default defineWrappedResponseHandler(async (event, userSession) => {
+import { defineApiHandler } from "~~/server/utils/api-handler";
+export default defineApiHandler(async (event) => {
   try {
-    return { response: "Account fetched", account: userSession };
+    const user = event.context.user;
+    return user;
   } catch (err: any) {
     throw createError({
       statusCode: 500,
@@ -10,4 +10,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
         "An error occurred during the fetching process " + err.message,
     });
   }
-}, 0);
+});

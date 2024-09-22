@@ -88,7 +88,7 @@ const uploadFile = async (file: File): Promise<string> => {
         });
 
         if (error.value) reject(error.value);
-        resolve(data.value.response.publicUrl);
+        resolve(data.value.data.avatarUrl);
       } else {
         reject(new Error("Failed to read file as string"));
       }

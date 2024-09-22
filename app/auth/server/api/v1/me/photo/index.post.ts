@@ -1,9 +1,8 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
-
+  const user = event.context.user;
   if (!body.photoUrl) {
     throw createError({
       statusCode: 400,
@@ -12,8 +11,8 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
   }
 
   try {
-    const client = await getBackendClient(event, true);
-    const response = await client.updateMePhoto(userSession.id, body.photoUrl);
+    const client = event.context.backendClient;
+    const response = await client.updateMePhoto(user.id, body.photoUrl);
     return response;
   } catch (error: any) {
     throw createError({
@@ -21,4 +20,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       statusMessage: error.statusMessage,
     });
   }
-}, 0);
+});

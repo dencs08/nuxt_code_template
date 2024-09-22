@@ -1,17 +1,18 @@
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
   const storage = useStorage();
+  const user = event.context.user;
 
-  if (!userSession) {
+  if (!user) {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
     });
   }
-  await storage.setItem(`user:${userSession.id}:first-login`, true, {
+  await storage.setItem(`user:${user.id}:first-login`, true, {
     ttl: 60 * 20, // TTL (timetolive) is set to 86400 seconds (24 hours)
   });
 
   return { message: "Verification flag set successfully" };
-}, 0);
+});

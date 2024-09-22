@@ -1,10 +1,9 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
-  const server = await getBackendClient(event, true);
+export default defineApiHandler(async (event) => {
+  const server = event.context.backendClient;
+
   let body = await readBody(event);
-
   if (!body.email) {
     throw createError({
       statusCode: 400,
@@ -13,12 +12,12 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
   }
 
   try {
-    const user = await server.sendResetPassword(body.email);
-    return user;
+    const response = await server.sendResetPassword(body.email);
+    return response;
   } catch (err: any) {
     throw createError({
       statusCode: err.code || 500,
       statusMessage: err.message || "Error sending reset password",
     });
   }
-}, 75);
+});

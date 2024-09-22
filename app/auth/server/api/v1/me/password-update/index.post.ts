@@ -1,11 +1,9 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event, userSession) => {
+export default defineApiHandler(async (event) => {
+  const user = event.context.user;
   const storage = useStorage();
-  const isVerified = await storage.getItem(
-    `user:${userSession.id}:password-reset`
-  );
+  const isVerified = await storage.getItem(`user:${user.id}:password-reset`);
 
   if (!isVerified) {
     throw createError({
@@ -14,7 +12,7 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
     });
   }
 
-  const client = await getBackendClient(event);
+  const client = event.context.backendClient;
   const body = await readBody(event);
 
   const password = body.password;
@@ -37,11 +35,8 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
   }
 
   try {
-    const updatePasswordResponse = await client.updatePassword(
-      userSession,
-      password
-    );
-    await storage.removeItem(`user:${userSession.id}:password-reset`);
+    const updatePasswordResponse = await client.updatePassword(user, password);
+    await storage.removeItem(`user:${user.id}:password-reset`);
     return "Password updated successfully";
   } catch (err: any) {
     console.log(err.code, err.message);
@@ -50,4 +45,4 @@ export default defineWrappedResponseHandler(async (event, userSession) => {
       statusMessage: err.message,
     });
   }
-}, 0);
+});

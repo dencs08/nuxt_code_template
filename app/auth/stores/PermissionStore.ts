@@ -18,13 +18,13 @@ export const usePermissionStore = defineStore({
     async fetchUserPermissions(userId: string) {
       try {
         this.loading = true;
-        const data = await $fetch("/api/v1/permissions", {
+        const response = await $fetch("/api/v1/permissions", {
           method: "POST",
           body: { userId },
         });
 
-        this.userPermissions[userId] = data.response;
-        return data.response;
+        this.userPermissions[userId] = response.data;
+        return response.data;
       } catch (error: any) {
         throw new CustomError(error.message, error);
       } finally {
@@ -34,12 +34,12 @@ export const usePermissionStore = defineStore({
     async fetchAvailablePermissions() {
       try {
         this.loading = true;
-        const data = await $fetch("/api/v1/permissions", {
+        const response = await $fetch("/api/v1/permissions", {
           method: "GET",
         });
 
-        this.availablePermissions = data.response;
-        return data.response;
+        this.availablePermissions = response.data;
+        return response.data;
       } catch (error: any) {
         throw new CustomError(error.message, error);
       } finally {
@@ -106,7 +106,7 @@ export const usePermissionStore = defineStore({
 
         await this.fetchUserPermissionsWithStatus(userId);
 
-        return response;
+        return response.data;
       } catch (error: any) {
         throw new CustomError(error.message, error);
       } finally {

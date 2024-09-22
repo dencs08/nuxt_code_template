@@ -69,7 +69,7 @@
                     class="w-full"
                     type="primeInputText"
                     name="phone"
-                    validation="required|number"
+                    validation="number"
                     placeholder="Phone"
                     v-model="userDetails.phone"
                   >

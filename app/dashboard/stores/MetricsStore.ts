@@ -25,40 +25,46 @@ export const useMetricsStore = defineStore("useMetricsStore", () => {
     metricsLoading.value = true;
     metricsLoaded.value = false;
     try {
-      // Specify the expected type for the API response
-      const metricsData = await $fetch<
-        | MetricsData
-        | { statusCode: number; statusMessage: string; message: any }
-      >("/api/v1/analytics", {
+      const response = await $fetch<{
+        success: boolean;
+        data:
+          | MetricsData
+          | { statusCode: number; statusMessage: string; message: any };
+      }>("/api/v1/analytics", {
         method: "GET",
         params: { period },
       });
 
-      // Check if the response matches the expected structure
-      if (
-        "newSignups" in metricsData &&
-        "totalUsers" in metricsData &&
-        "pageViews" in metricsData &&
-        "uniqueVisitors" in metricsData
-      ) {
-        // Assign only if the response is of the correct type
-        metrics.value = {
-          newSignups: metricsData.newSignups,
-          newSignupsChange: metricsData.newSignupsChange,
-          totalUsers: metricsData.totalUsers,
-          totalUsersChange: metricsData.totalUsersChange,
-          pageViews: metricsData.pageViews,
-          pageViewsChange: metricsData.pageViewsChange,
-          uniqueVisitors: metricsData.uniqueVisitors,
-          uniqueVisitorsChange: metricsData.uniqueVisitorsChange,
-        };
-        metricsLoaded.value = true;
+      if (response.success && "data" in response) {
+        const metricsData = response.data;
+        if (
+          "newSignups" in metricsData &&
+          "totalUsers" in metricsData &&
+          "pageViews" in metricsData &&
+          "uniqueVisitors" in metricsData
+        ) {
+          metrics.value = {
+            newSignups: metricsData.newSignups,
+            newSignupsChange: metricsData.newSignupsChange,
+            totalUsers: metricsData.totalUsers,
+            totalUsersChange: metricsData.totalUsersChange,
+            pageViews: metricsData.pageViews,
+            pageViewsChange: metricsData.pageViewsChange,
+            uniqueVisitors: metricsData.uniqueVisitors,
+            uniqueVisitorsChange: metricsData.uniqueVisitorsChange,
+          };
+          metricsLoaded.value = true;
+        } else {
+          console.error("Unexpected data structure:", metricsData);
+        }
       } else {
-        console.error("Unexpected response structure:", metricsData);
+        console.error(
+          "API request failed or returned unexpected structure:",
+          response
+        );
       }
     } catch (error) {
       console.error("Error fetching metrics:", error);
-      metricsLoaded.value = false;
     } finally {
       metricsLoading.value = false;
     }
@@ -69,32 +75,36 @@ export const useMetricsStore = defineStore("useMetricsStore", () => {
     chartDataLoaded.value = false;
     try {
       const response = await $fetch<{
-        months: string[];
-        signupsPerMonth: number[];
-        pageViewsPerMonth: number[];
-        uniqueVisitorsPerMonth: number[];
+        success: boolean;
+        data: {
+          months: string[];
+          signupsPerMonth: number[];
+          pageViewsPerMonth: number[];
+          uniqueVisitorsPerMonth: number[];
+        };
       }>("/api/v1/analytics/chart", {
         method: "GET",
         params: { period },
       });
 
-      // Use type assertion or runtime checks to ensure the response has the expected shape
-      if (response && "months" in response) {
-        months.value = response.months || [];
+      if (response.success && response.data && "months" in response.data) {
+        const chartData = response.data;
+
+        months.value = chartData.months || [];
         datasets.value = [
           {
             label: "User Signups",
-            data: response.signupsPerMonth || [],
+            data: chartData.signupsPerMonth || [],
             backgroundColor: generatedColors["my.surface"]["250"],
           },
           {
             label: "Unique Visitors",
-            data: response.uniqueVisitorsPerMonth || [],
+            data: chartData.uniqueVisitorsPerMonth || [],
             backgroundColor: generatedColors["my.surface"]["350"],
           },
           {
             label: "Page Views",
-            data: response.pageViewsPerMonth || [],
+            data: chartData.pageViewsPerMonth || [],
             backgroundColor: generatedColors["my.surface"]["450"],
           },
         ];
@@ -104,7 +114,6 @@ export const useMetricsStore = defineStore("useMetricsStore", () => {
       }
     } catch (error) {
       console.error("Error fetching chart data:", error);
-      chartDataLoaded.value = false;
     } finally {
       chartDataLoading.value = false;
     }

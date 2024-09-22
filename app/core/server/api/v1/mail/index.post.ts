@@ -1,8 +1,8 @@
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
 import nodemailer from "nodemailer";
 import mjml2html from "mjml";
+import { defineApiHandler } from "~~/server/utils/api-handler";
 
-export default defineWrappedResponseHandler(async (event) => {
+export default defineApiHandler(async (event) => {
   const config = useRuntimeConfig();
   const body = await readBody(event);
 
@@ -28,7 +28,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   const transporter = nodemailer.createTransport({
-    host: config.public.SMTP_HOST,
+    host: config.public.SMTP_HOST, //no idea why is giving no overload error, when entered manually in the code it works fine.
     port: config.public.SMTP_PORT,
     secure: config.public.SMTP_SECURE === "true",
     auth: {
@@ -39,7 +39,9 @@ export default defineWrappedResponseHandler(async (event) => {
 
   try {
     await transporter.sendMail({
-      from: config.public.SMTP_FROM,
+      from: body.signature
+        ? `${body.signature} <${config.public.SMTP_FROM}>`
+        : config.public.SMTP_FROM,
       bcc: body?.bcc,
       to: body.to,
       subject: body.subject,
@@ -47,7 +49,7 @@ export default defineWrappedResponseHandler(async (event) => {
       html: html,
     });
 
-    return { message: "Email sent successfully" };
+    return "Email sent successfully";
   } catch (error: any) {
     console.error("Error sending email:", error);
     throw createError({
@@ -55,4 +57,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: error.message || "Failed to send email",
     });
   }
-}, 25);
+});

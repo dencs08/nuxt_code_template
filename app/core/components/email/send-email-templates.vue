@@ -5,7 +5,7 @@
       @resizestart="handleResizeStart"
       @resizeend="handleResizeEnd"
     >
-      <SplitterPanel class="p-4" :size="40">
+      <SplitterPanel class="p-4 overflow-y-auto" :size="40">
         <VirtualScroller
           :items="emailStore.templates"
           :itemSize="135"
@@ -60,7 +60,29 @@
                     :typeahead="false"
                     id="recipients"
                     v-model="recipients"
-                    placeholder="To"
+                    name="recipients"
+                    validation="required"
+                    class="w-full"
+                  />
+                </div>
+
+                <div>
+                  <FormKit
+                    label="Title"
+                    type="primeInputText"
+                    validation="required"
+                    id="title"
+                    name="title"
+                    class="w-full"
+                  />
+                </div>
+
+                <div>
+                  <FormKit
+                    label="Signature"
+                    type="primeInputText"
+                    id="signature"
+                    name="signature"
                     class="w-full"
                   />
                 </div>
@@ -73,7 +95,6 @@
                     :typeahead="false"
                     id="bcc"
                     v-model="bcc"
-                    placeholder="BCC"
                     name="bcc"
                     class="w-full"
                   />
@@ -203,19 +224,15 @@ const {
   selectedTemplate,
 } = storeToRefs(emailStore);
 
-const { showToast } = useToastService();
-
 const isDragging = ref(false);
 const loadingHtml =
   '<div style="display: flex; justify-content: center; align-items: center; height: 100%; font-size: 64px;">Loading...</div>';
 
-// Local state for the component
 const recipients = ref("");
 const bcc = ref("");
 const error = ref<string | null>(null);
 const emailSent = ref(false);
 
-// Handle resize events
 const handleResizeStart = () => {
   isDragging.value = true;
   document.addEventListener("mousemove", handleMouseMove);
@@ -249,64 +266,31 @@ onUnmounted(() => {
   document.removeEventListener("mouseup", handleMouseUp);
 });
 
-// Watch for errors from the store and display toast notifications
-watch(storeError, (newError) => {
-  if (newError) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: newError,
-    });
-    storeError.value = null; // Reset error after displaying
-  }
-});
+const { sendMail } = useMail(1000);
+const { submit } = useForm();
 
-// Watch for local errors and display toast notifications
-watch(error, (newError) => {
-  if (newError) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: newError,
-    });
-    error.value = null; // Reset error after displaying
-  }
-});
-
-// Watch for successful email sending and display a toast
-watch(emailSent, (sent) => {
-  if (sent) {
-    showToast({
-      severity: "success",
-      summary: "Email sent",
-      detail: "Email has been sent successfully",
-    });
-    emailSent.value = false; // Reset the flag
-  }
-});
-
-const { sendMail } = useMail(1000); // Import sendMail from the composable
-
-const handleSendEmail = async () => {
+const handleSendEmail = async (data: any) => {
   if (!recipients.value) {
     error.value = "Please enter at least one recipient";
     return;
   }
 
-  try {
-    const selectedTemplateValue = selectedTemplate.value;
-    await sendMail({
-      to: recipients.value,
-      bcc: bcc.value,
-      subject: selectedTemplateValue?.label || "Email Subject",
-      text: "This is a test email sent using MJML",
-      mjmlContent: mjmlContent.value,
-    });
-    emailSent.value = true;
-    console.log("Email sent successfully");
-  } catch (err) {
-    error.value = "Failed to send email";
-    console.error("Failed to send email:", err);
-  }
+  console.log(data);
+
+  const selectedTemplateValue = selectedTemplate.value;
+  await submit({
+    action: async () => {
+      await sendMail({
+        to: recipients.value,
+        bcc: bcc.value,
+        signature: data.signature,
+        subject: data.title || selectedTemplateValue?.label || "Email Subject",
+        text: "This is a test email sent using MJML",
+        mjmlContent: mjmlContent.value,
+      });
+      emailSent.value = true;
+    },
+    successMessage: "Email sent successfully",
+  });
 };
 </script>

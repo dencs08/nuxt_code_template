@@ -1,9 +1,7 @@
-import { getBackendClient } from "~~/lib/backend";
-import { defineWrappedResponseHandler } from "~~/server/utils/defaultHandler";
-
-export default defineWrappedResponseHandler(async (event) => {
+import { defineApiHandler } from "~~/server/utils/api-handler";
+export default defineApiHandler(async (event) => {
   const body = await readBody(event);
-  const client = await getBackendClient(event, true);
+  const client = event.context.backendClient;
 
   if (!body.roleId || !body.access_level) {
     throw createError({
@@ -20,4 +18,4 @@ export default defineWrappedResponseHandler(async (event) => {
       statusMessage: err.message,
     });
   }
-}, 100);
+});
