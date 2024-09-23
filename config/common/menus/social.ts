@@ -2,17 +2,17 @@ export const social = [
   {
     label: "Facebook",
     href: "#",
-    icon: "ic:round-facebook",
+    icon: "fa6-brands:square-facebook",
   },
   {
     label: "Instagram",
     href: "#",
-    icon: "mdi:instagram",
+    icon: "fa6-brands:square-instagram",
   },
 
   {
     label: "LinkedIn",
     href: "#",
-    icon: "mdi:linkedin",
+    icon: "fa6-brands:linkedin",
   },
 ];
