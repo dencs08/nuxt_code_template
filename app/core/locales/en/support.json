@@ -1,0 +1,17 @@
+{
+    "support":{
+        "title": "Support",
+        "description": "If you have any questions, please contact us.",
+        "pageUnavailable": "Sorry the page you are looking for is not available right now.",
+        "pleaseTryAgainLater": "Please try again later.",
+        "contactUs": "Contact us"
+    },
+    "maintenance":{
+        "title": "Website is under maintenance!",
+        "description": "Sorry the page you are looking for is not available right now."
+    },
+    "workInProgress":{
+        "title": "Work in progress",
+        "description": "This page is under construction."
+    }
+}

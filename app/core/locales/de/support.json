@@ -1,0 +1,17 @@
+{
+    "support":{
+        "title": "Unterstützung",
+        "description": "Wenn Sie Fragen haben, kontaktieren Sie uns bitte.",
+        "pageUnavailable": "Entschuldigung, die Seite, die Sie suchen, ist derzeit nicht verfügbar.",
+        "pleaseTryAgainLater": "Bitte versuchen Sie es später noch einmal.",
+        "contactUs": "Kontaktieren Sie uns"
+    },
+    "maintenance":{
+        "title": "Website wird gewartet!",
+        "description": "Entschuldigung, die Seite, die Sie suchen, ist derzeit nicht verfügbar."
+    },
+    "workInProgress":{
+        "title": "Arbeiten im Gange",
+        "description": "Diese Seite befindet sich im Aufbau."
+    }
+}
