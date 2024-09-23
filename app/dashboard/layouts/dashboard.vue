@@ -63,6 +63,6 @@ onErrorCaptured((error, instance, info) => {
   });
 
   // Return false to prevent the error from propagating further
-  return false;
+  return;
 });
 </script>
