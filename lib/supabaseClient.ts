@@ -319,6 +319,27 @@ export class SupabaseClient implements BackendClient {
     }
   }
 
+  async isNicknameUnique(nickname: string): Promise<boolean> {
+    try {
+      const { data, error } = await this.client
+        .from("users")
+        .select("id")
+        .eq("nickname", nickname)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        throw new DatabaseError(`Database error: ${error.message}`);
+      }
+
+      return !data; // If no data is returned, the nickname is unique
+    } catch (error: any) {
+      if (error instanceof BaseError) {
+        throw error;
+      }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
+    }
+  }
+
   //auth
   async getSession(): Promise<any> {
     try {
@@ -478,7 +499,10 @@ export class SupabaseClient implements BackendClient {
       return user;
     } catch (error) {
       if (error instanceof Error) {
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } else {
         throw error;
       }
