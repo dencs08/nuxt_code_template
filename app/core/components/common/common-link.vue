@@ -1,8 +1,7 @@
 <template>
-  <component
-    :is="external ? 'a' : 'NuxtLink'"
-    :to="!external ? to : undefined"
-    :href="external ? to : undefined"
+  <nuxt-link
+    class="cursor-pointer"
+    :to="to"
     :target="external ? '_blank' : undefined"
     :rel="external ? 'noopener noreferrer' : undefined"
     :class="[
@@ -18,12 +17,8 @@
     ]"
     @click="handleClick"
   >
-    <slot name="icon-left"></slot>
-    <span class="common-link__text">
-      <slot></slot>
-    </span>
-    <slot name="icon-right"></slot>
-  </component>
+    <slot></slot>
+  </nuxt-link>
 </template>
 
 <script setup lang="ts">
@@ -68,7 +63,7 @@ const handleClick = (event: MouseEvent) => {
   transition: all 0.3s ease;
 
   &__text {
-    margin: 0 0.25em;
+    // margin: 0 0.25em;
   }
 
   &--underline {
@@ -97,26 +92,26 @@ const handleClick = (event: MouseEvent) => {
   }
 
   &--default {
-    color: var(--link-color, #007bff);
+    color: var(--p-primary-500);
 
     &:hover {
-      color: var(--link-hover-color, #0056b3);
+      color: var(--p-primary-600);
     }
   }
 
   &--primary {
-    color: var(--primary-color, #28a745);
+    color: var(--p-primary-500);
 
     &:hover {
-      color: var(--primary-hover-color, #218838);
+      color: var(--p-primary-600);
     }
   }
 
   &--secondary {
-    color: var(--secondary-color, #6c757d);
+    color: var(--p-secondary-500);
 
     &:hover {
-      color: var(--secondary-hover-color, #5a6268);
+      color: var(--p-secondary-600);
     }
   }
 }
