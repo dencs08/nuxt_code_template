@@ -124,6 +124,22 @@ export const routes = [
     settings: { auth: false, access: "" },
   },
 
+  //maintenance pages
+  {
+    name: "maintenance",
+    newName: "maintenance",
+    path: "/maintenance",
+    file: "@/pages/maintenance.vue",
+    settings: { auth: false, access: "" },
+  },
+  {
+    name: "work-in-progress",
+    newName: "work-in-progress",
+    path: "/work-in-progress",
+    file: "@/pages/work-in-progress.vue",
+    settings: { auth: false, access: "" },
+  },
+
   //main pages
   {
     name: "main",

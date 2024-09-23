@@ -13,5 +13,7 @@ export default {
     SMTP_PORT: process.env.SMTP_PORT,
     SMTP_SECURE: process.env.SMTP_SECURE,
     SMTP_FROM: process.env.SMTP_FROM,
+    APP_MAINTENANCE_MODE: process.env.APP_MAINTENANCE_MODE,
+    APP_WORK_IN_PROGRESS_MODE: process.env.APP_WORK_IN_PROGRESS_MODE,
   },
 };
