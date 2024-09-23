@@ -11,7 +11,7 @@ export default defineApiHandler(async (event) => {
     });
   }
   await storage.setItem(`user:${user.id}:first-login`, true, {
-    ttl: 60 * 20, // TTL (timetolive) is set to 86400 seconds (24 hours)
+    ttl: 60 * 60, // TTL (timetolive) is set to 1H
   });
 
   return { message: "Verification flag set successfully" };
