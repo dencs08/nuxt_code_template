@@ -74,6 +74,9 @@ export const routeConfigs: Record<string, RouteConfig> = {
   "/api/v1/auth/is-password-reset-token-active": {
     GET: { auth: true, accessLevel: 0 },
   },
+  "/api/v1/invalidate-cache": {
+    POST: { auth: true, accessLevel: 75 },
+  },
 
   //publicy available
   "/api/v1/validate-captcha": {
