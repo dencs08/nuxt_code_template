@@ -11,6 +11,14 @@ definePageMeta({
   displayTitle: "Home",
 });
 
+onMounted(async () => {
+  if (import.meta.server) return;
+  const response = await $fetch("/api/v1/auth/is-first-login-token-active");
+  if (response.data.exists) {
+    return navigateTo(localePath("/auth/welcome"));
+  }
+});
+
 useHead({
   title: title,
   meta: [
