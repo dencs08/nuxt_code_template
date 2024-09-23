@@ -109,7 +109,7 @@ const emit = defineEmits(["update:isDialogVisible", "savePermissions"]);
 
 const { hasAccess } = useRoleCheck();
 const { getRoleSeverity } = useRolesStore();
-const { addToast } = useToastService();
+const { showToast } = useToastService();
 const { submit, error } = useForm();
 
 const localDialogVisible = ref(props.isDialogVisible);
@@ -126,7 +126,13 @@ const userPermissions = computed(() => {
 
 const refreshPermissions = async () => {
   if (props.selectedUser) {
-    permissionStore.fetchUserPermissionsWithStatus(props.selectedUser.id);
+    submit({
+      async action() {
+        await permissionStore.fetchUserPermissions(props.selectedUser.id);
+      },
+      successMessage: "Permissions refreshed successfully",
+      errorTitle: "Error refreshing permissions",
+    });
   }
 };
 
@@ -136,7 +142,7 @@ const savePermissions = async () => {
       async action() {
         await permissionStore.saveUserPermissions(props.selectedUser.id);
       },
-      successMessage: "Permissions saved successfully",
+      showErrorToast: false,
       errorTitle: "Error saving permissions",
     });
     emit("savePermissions");
@@ -159,14 +165,22 @@ const handleDialogVisibility = (visible: boolean) => {
 
 watch(
   () => props.isDialogVisible,
-  (newVal) => {
+  async (newVal) => {
     localDialogVisible.value = newVal;
     if (
       newVal &&
       props.selectedUser &&
       !permissionStore.userPermissionsStatus[props.selectedUser.id]
     ) {
-      permissionStore.fetchUserPermissionsWithStatus(props.selectedUser.id);
+      try {
+        await permissionStore.fetchUserPermissions(props.selectedUser.id);
+      } catch (error) {
+        showToast({
+          severity: "error",
+          summary: "Error",
+          detail: "Error fetching user permissions",
+        });
+      }
     }
   }
 );
