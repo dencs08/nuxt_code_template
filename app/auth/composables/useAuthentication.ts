@@ -138,6 +138,14 @@ export function useAuthentication() {
 }
 
 const handleRequestError = (response: any): void => {
-  if (!response) throw new CustomError("Response is null or undefined");
-  if (response.error) throw new CustomError(response.error.message, response);
+  if (!response)
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Response is null or undefined",
+    });
+  if (response.error)
+    throw createError({
+      statusCode: 500,
+      statusMessage: response.error.message,
+    });
 };

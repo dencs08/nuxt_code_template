@@ -1,4 +1,3 @@
-const { CustomError } = useCustomError();
 import { type UserAuthPublicSession as User } from "~~/types/user";
 
 export const useUserStore = defineStore({
@@ -39,7 +38,10 @@ export const useUserStore = defineStore({
         const errorMessage =
           (error as { data?: { message: string } })?.data?.message ||
           "An unknown error occurred";
-        throw new CustomError(errorMessage, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: errorMessage,
+        });
       } finally {
         this.loading = false;
       }
@@ -63,7 +65,10 @@ export const useUserStore = defineStore({
         await this.fetchUser();
         return { response: "Profile updated" };
       } catch (e) {
-        throw new CustomError("An error occurred during the update process", e);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (e as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -79,7 +84,10 @@ export const useUserStore = defineStore({
         }
         return { response: "Verification link sent" };
       } catch (e) {
-        throw new CustomError("An error occurred during the update process", e);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (e as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -99,7 +107,10 @@ export const useUserStore = defineStore({
         }
       } catch (error) {
         // console.error(error);
-        throw new CustomError("Failed to delete the account", error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       } finally {
         this.loading = false;
       }

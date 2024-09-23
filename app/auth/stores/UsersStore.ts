@@ -86,8 +86,6 @@ export const useUsersStore = defineStore({
         );
         return response.data;
       } catch (error) {
-        // Uncomment the following line if you want to throw the error
-        // throw new CustomError((error as Error).message, error);
       } finally {
         this.loading = false;
       }
@@ -123,7 +121,10 @@ export const useUsersStore = defineStore({
         this.users = this.users.filter((user) => user.id !== userId);
         return { status: "success" };
       } catch (error) {
-        throw new CustomError((error as Error).message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -142,7 +143,10 @@ export const useUsersStore = defineStore({
 
         return { status: "success" };
       } catch (error) {
-        throw new CustomError((error as Error).message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -157,7 +161,10 @@ export const useUsersStore = defineStore({
           body: req,
         });
       } catch (error) {
-        throw new CustomError((error as Error).message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -187,7 +194,10 @@ export const useUsersStore = defineStore({
           },
         });
       } catch (error) {
-        throw new CustomError((error as Error).message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       } finally {
         this.loading = false;
       }
@@ -199,59 +209,59 @@ export const useUsersStore = defineStore({
 
     async inviteUser(email: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/v1/users/invite", {
+        const response = await $fetch("/api/v1/users/invite", {
           method: "POST",
           body: { email },
         });
-        if (error) {
-          throw new CustomError("Error inviting a user", error);
-        }
       } catch (error) {
-        throw new CustomError("Failed to invite this user", error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       }
     },
 
     async banUser(id: number, duration: number): Promise<void> {
       try {
-        const { error } = await $fetch("/api/v1/users/ban", {
+        const response = await $fetch("/api/v1/users/ban", {
           method: "POST",
           body: { id, duration },
         });
-        if (error) {
-          throw new CustomError("Error banning the user", error);
-        }
       } catch (error) {
-        throw new CustomError("Failed to ban this user", error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       }
     },
 
     async sendPasswordResetEmail(email: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/v1/users/send-reset-password", {
+        const response = await $fetch("/api/v1/users/send-reset-password", {
           method: "POST",
           body: { email },
         });
-        if (error) {
-          throw new CustomError("Error sending password reset email", error);
-        }
       } catch (error) {
-        throw new CustomError("Failed to send password reset email", error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       }
     },
 
     async changeUserPassword(id: number, password: string): Promise<void> {
       try {
-        const { error } = await $fetch("/api/v1/users/change-password", {
+        const response = await $fetch("/api/v1/users/change-password", {
           method: "POST",
           body: { id, password },
         });
-        if (error) {
-          console.log(error);
-          throw new CustomError("Error changing user password", error);
-        }
-        console.log("Password changed");
+
+        // console.log("Password changed");
       } catch (error) {
-        throw new CustomError("Failed to change user password", error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: (error as Error).message,
+        });
       }
     },
   },

@@ -1,5 +1,4 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const { CustomError } = useCustomError();
   const userStore = useUserStore();
   const rolesStore = useRolesStore();
 
@@ -15,7 +14,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         initialFetchDone = true;
       } catch (error: any) {
         console.error("Error fetching initial user data:", error);
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } finally {
         isRefetching = false;
       }
@@ -37,7 +39,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       console.log("Roles fetched", rolesStore.roles);
     } catch (error: any) {
       console.error("Error fetching roles:", error);
-      throw new CustomError(error.message, error);
+      throw createError({
+        statusCode: 500,
+        statusMessage: error.message,
+      });
     }
   };
 

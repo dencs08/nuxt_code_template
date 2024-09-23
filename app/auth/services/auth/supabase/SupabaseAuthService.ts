@@ -49,9 +49,7 @@ export class SupabaseAuthService implements IAuthenticationService {
   }
 
   async resetPassword(email: string) {
-    return this.client.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/update-password`,
-    });
+    return this.client.auth.resetPasswordForEmail(email);
   }
 
   async changePassword(oldPassword: string, newPassword: string) {
@@ -161,7 +159,10 @@ export class SupabaseAuthService implements IAuthenticationService {
       return user;
     } catch (error) {
       if (error instanceof Error) {
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } else {
         throw error;
       }

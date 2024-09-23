@@ -30,7 +30,10 @@ async function handleForm(data: PasswordConfirm) {
       summary: "Error updating password",
       detail: e.message,
     });
-    throw new CustomError("An error occurred during the update process", e);
+    throw createError({
+      statusCode: 500,
+      statusMessage: "An error occurred during the update process",
+    });
   }
 }
 </script>

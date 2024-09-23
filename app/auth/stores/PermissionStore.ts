@@ -1,4 +1,3 @@
-const { CustomError } = useCustomError();
 import type { Permission, GroupedPermission } from "~~/types/permissions";
 
 export const usePermissionStore = defineStore({
@@ -26,7 +25,10 @@ export const usePermissionStore = defineStore({
         this.userPermissions[userId] = response.data;
         return response.data;
       } catch (error: any) {
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } finally {
         this.loading = false;
       }
@@ -41,7 +43,10 @@ export const usePermissionStore = defineStore({
         this.availablePermissions = response.data;
         return response.data;
       } catch (error: any) {
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } finally {
         this.loading = false;
       }
@@ -108,7 +113,10 @@ export const usePermissionStore = defineStore({
 
         return response.data;
       } catch (error: any) {
-        throw new CustomError(error.message, error);
+        throw createError({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
       } finally {
         this.loading = false;
       }
