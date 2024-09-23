@@ -4,7 +4,7 @@ import { getAccessLevelByRole } from "../utils/roles";
 import { getRouteConfig } from "../config/routeConfig";
 
 export default defineEventHandler(async (event) => {
-  const url = event.node.req.url!;
+  const url = event.node.req.url!.split("?")[0];
   const method = event.node.req.method!;
   const routeConfig = getRouteConfig(url, method);
   if (routeConfig.auth) {
