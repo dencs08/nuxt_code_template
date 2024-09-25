@@ -5,3 +5,4 @@ export { default as passwordConfirmSchema } from "./passwordConfirmSchema";
 export { default as passwordUpdateOtpSchema } from "./passwordUpdateOtpSchema";
 export { default as emailSchema } from "./emailSchema";
 export { default as banDurationSchema } from "./banDurationSchema";
+export { default as uploadSchema } from "./uploadSchema";
