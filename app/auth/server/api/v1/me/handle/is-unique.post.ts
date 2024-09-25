@@ -1,15 +1,14 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+const nicknameSchema = z.object({
+  nickname: z.string(),
+});
 
 export default defineApiHandler(async (event) => {
-  const body = await readBody(event);
+  const body = await validateBody(event, { schema: nicknameSchema });
   const { nickname } = body;
-
-  if (!nickname) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Nickname is required",
-    });
-  }
 
   const backendClient = event.context.backendClient;
 

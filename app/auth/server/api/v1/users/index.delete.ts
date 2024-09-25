@@ -1,5 +1,3 @@
-import { getBackendClient } from "~~/lib/backend";
-
 export default defineApiHandler(async (event) => {
   const client = event.context.backendClient;
   const body = await readBody(event);

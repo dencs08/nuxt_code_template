@@ -1,15 +1,15 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+const resetPasswordSchema = z.object({
+  email: z.string().email(),
+});
 
 export default defineApiHandler(async (event) => {
   const server = event.context.backendClient;
 
-  let body = await readBody(event);
-  if (!body.email) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing data",
-    });
-  }
+  const body = await validateBody(event, { schema: resetPasswordSchema });
 
   try {
     const response = await server.sendResetPassword(body.email);

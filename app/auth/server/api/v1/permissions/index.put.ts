@@ -1,26 +1,21 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
 const supportedActions = ["read", "write", "delete"];
 
+const permissionsPutSchema = z.object({
+  userId: z.string(),
+  permissions: z.array(
+    z.object({
+      action: z.enum(supportedActions as [string, ...string[]]),
+      resource: z.string(),
+    })
+  ),
+});
+
 export default defineApiHandler(async (event) => {
-  const body = await readBody(event);
-
-  if (!body.userId || !body.permissions) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing required data",
-    });
-  }
-
-  for (const permission of body.permissions) {
-    for (const action in permission.action) {
-      if (!supportedActions.includes(action)) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: `Unsupported action: ${action}`,
-        });
-      }
-    }
-  }
+  const body = await validateBody(event, { schema: permissionsPutSchema });
 
   const client = event.context.backendClient;
   try {

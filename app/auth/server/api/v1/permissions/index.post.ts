@@ -1,14 +1,13 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+const permissionsSchema = z.object({
+  userId: z.string(),
+});
 
 export default defineApiHandler(async (event) => {
-  const body = await readBody(event);
-
-  if (!body.userId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing required data",
-    });
-  }
+  const body = await validateBody(event, { schema: permissionsSchema });
 
   const client = event.context.backendClient;
   try {

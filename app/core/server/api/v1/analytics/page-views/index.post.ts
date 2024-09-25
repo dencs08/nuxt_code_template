@@ -1,17 +1,19 @@
-import { readBody } from "h3";
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+const pageViewSchema = z.object({
+  session_id: z.string(),
+  page_url: z.string(),
+  referrer: z.string().optional(),
+  timestamp: z.string(),
+});
 
 export default defineApiHandler(async (event) => {
   try {
-    // Read the request body
-    const body = await readBody(event);
+    const body = await validateBody(event, { schema: pageViewSchema });
 
     const { session_id, page_url, referrer, timestamp } = body;
-
-    if (!session_id || !page_url || !timestamp) {
-      event.node.res.statusCode = 400;
-      return { error: "Missing required fields" };
-    }
 
     const backendClient = event.context.backendClient;
 

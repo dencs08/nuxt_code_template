@@ -1,14 +1,16 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+const roleSchema = z.object({
+  roleId: z.string(),
+  access_level: z.string(),
+});
+
 export default defineApiHandler(async (event) => {
-  const body = await readBody(event);
+  const body = await validateBody(event, { schema: roleSchema });
   const client = event.context.backendClient;
 
-  if (!body.roleId || !body.access_level) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing required data",
-    });
-  }
   try {
     const response = await client.updateRole(body.roleId, body.access_level);
     return response;

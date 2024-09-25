@@ -1,21 +1,27 @@
-import { getBackendClient } from "~~/lib/backend";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB max file size
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
 
+// Define the schema for the request body
+const uploadSchema = z.object({
+  file: z.string(),
+  contentType: z.string(),
+});
+
 export default defineApiHandler(async (event) => {
-  const body = await readBody(event);
+  // Validate and sanitize the request body, skipping the contentType field
+  const body = await validateBody(event, {
+    schema: uploadSchema,
+    skipFields: ["contentType", "file"],
+  });
   const { file, contentType } = body;
   const user = event.context.user;
   const oldPhotoUrl = user.photo;
 
-  // Validate file
-  if (!file || !contentType) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing file or content type",
-    });
-  }
+  // Log the contentType to debug
+  console.log("Content-Type after validation and sanitization:", contentType);
 
   // Check file size
   if (Buffer.from(file, "base64").length > MAX_FILE_SIZE) {

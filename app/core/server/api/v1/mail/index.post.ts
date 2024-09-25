@@ -1,10 +1,28 @@
 import nodemailer from "nodemailer";
 import mjml2html from "mjml";
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+// Define the schema for the request body
+const emailSchema = z.union([z.string().email(), z.array(z.string().email())]);
+
+const mailSchema = z.object({
+  to: emailSchema,
+  subject: z.string(),
+  text: z.string().optional(),
+  html: z.string().optional(),
+  mjmlContent: z.string().optional(),
+  signature: z.string().optional(),
+  bcc: emailSchema.optional(),
+});
 
 export default defineApiHandler(async (event) => {
+  const body = await validateBody(event, {
+    schema: mailSchema,
+    skipFields: ["mjmlContent"],
+  });
   const config = useRuntimeConfig();
-  const body = await readBody(event);
 
   if (
     !body.to ||

@@ -1,4 +1,12 @@
 import { defineApiHandler } from "~~/server/utils/api-handler";
+import { validateBody } from "~~/utils/validate";
+import { z } from "zod";
+
+// Define the schema for the request body
+const passwordUpdateSchema = z.object({
+  password: z.string(),
+  password_confirm: z.string(),
+});
 
 export default defineApiHandler(async (event) => {
   const user = event.context.user;
@@ -13,18 +21,10 @@ export default defineApiHandler(async (event) => {
   }
 
   const client = event.context.backendClient;
-  const body = await readBody(event);
+  const body = await validateBody(event, { schema: passwordUpdateSchema });
 
   const password = body.password;
   const password_confirm = body.password_confirm;
-
-  if (!password) {
-    console.log("Missing data");
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Missing data",
-    });
-  }
 
   if (password !== password_confirm) {
     console.log("Passwords do not match");
