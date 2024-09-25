@@ -57,7 +57,7 @@ export const routeConfigs: Record<string, RouteConfig> = {
   },
   "/api/v1/upload": {
     POST: { auth: true, accessLevel: 0 },
-    DELETE: { auth: true, accessLevel: 0 },
+    DELETE: { auth: true, accessLevel: 100 },
   },
   "/api/v1/analytics": {
     GET: { auth: true, accessLevel: 5 },
