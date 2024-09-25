@@ -201,6 +201,7 @@ export class SupabaseClient implements BackendClient {
         .upsert({
           id: user.id,
           name: user?.name,
+          nickname: user?.nickname,
         })
         .eq("id", user.id)
         .select();
