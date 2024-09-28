@@ -1,9 +1,14 @@
 export function useDate() {
   const formatDate = (
     dateString: string,
-    options: { includeTime?: boolean; padZeroes?: boolean } = {
+    options: {
+      includeTime?: boolean;
+      padZeroes?: boolean;
+      onlyTime?: boolean;
+    } = {
       includeTime: false,
       padZeroes: true,
+      onlyTime: false,
     }
   ) => {
     let date = new Date(dateString);
@@ -26,6 +31,14 @@ export function useDate() {
         ? String(date.getMinutes()).padStart(2, "0")
         : String(date.getMinutes());
       formattedDate += ` ${hours}:${minutes}`;
+    }
+
+    if (options.onlyTime) {
+      let hours = options.padZeroes
+        ? String(date.getHours()).padStart(2, "0")
+        : String(date.getHours());
+      let minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${hours}:${minutes}`;
     }
 
     return formattedDate;
