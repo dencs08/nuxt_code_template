@@ -174,7 +174,7 @@ export const routes = [
     newName: "dash-mail-templates",
     path: "/dashboard/mail/templates",
     file: "@/pages/dashboard/mail/templates.vue",
-    settings: { auth: true },
+    settings: { auth: true, access: 25 },
   },
   {
     name: "dashboard-admin-users",
@@ -215,7 +215,7 @@ export const routes = [
     newName: "dash-admin-roles",
     path: "/dashboard/admin/roles",
     file: "@/pages/dashboard/admin/roles/index.vue",
-    settings: { auth: true },
+    settings: { auth: true, access: 25 },
   },
   {
     name: "dashboard-account",
