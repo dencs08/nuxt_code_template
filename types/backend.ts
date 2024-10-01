@@ -1,8 +1,10 @@
+import type { PaginationParams } from "~~/types/pagination";
+
 export interface BackendClient {
   //users
-  getUsers(): Promise<any[]>;
+  getUsers(params: PaginationParams): Promise<any[]>;
   getUser(userId: string): Promise<any>;
-  getAuthUsers(): Promise<any[]>;
+  getAuthUsers(params: PaginationParams): Promise<any[]>;
   deleteUser(userId: string): Promise<void>;
   createUser(data: any, event: any, userSession: any): Promise<any>;
   updateUser(data: any): Promise<any>;
@@ -57,7 +59,7 @@ export interface BackendClient {
   //newsletter
   addNewsletterSubscriber(email: string): Promise<any>;
   deleteNewsletterSubscriber(email: string): Promise<any>;
-  getNewsletterSubscribers(): Promise<any>;
+  getNewsletterSubscribers(params: PaginationParams): Promise<any>;
 
   //analytics
   getNewSignupsCount(periodStart: string): Promise<number>;
