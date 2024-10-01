@@ -1,16 +1,13 @@
 <template>
-  <div v-for="(user, index) in config.message" :key="index" class="mt-4">
+  <div v-for="(item, index) in config.message" :key="index" class="mt-4">
     <div class="flex gap-1">
       <p class="font-semibold text-surface-700 dark:text-surface-50">
-        {{ user.email }}
-      </p>
-      <p class="text-xs font-light text-surface-600 dark:text-surface-100/75">
-        ({{ user.userName }}):
+        {{ item.displayName }}
       </p>
     </div>
     <ul class="list-decimal list-inside">
       <li
-        v-for="(change, i) in user.changes"
+        v-for="(change, i) in item.changes"
         :key="i"
         class="flex items-center gap-2 ml-2"
       >
