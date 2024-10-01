@@ -82,6 +82,31 @@
           <Divider class="col-span-3 my-12" />
 
           <div>
+            <h2 class="text-base font-semibold leading-7">Your user handle</h2>
+            <p class="mt-1 text-sm leading-6">
+              Update your user handle under which you will be recognized.
+            </p>
+          </div>
+
+          <div class="col-span-3 md:col-span-2">
+            <FormWrapper
+              :handleSubmit="onNicknameUpdate"
+              submit-label="Update Nickname"
+              :disabled="isLoading || !isNicknameValid"
+            >
+              <div class="space-y-3 mb-4">
+                <AppInputNickname
+                  v-model="userDetails.nickname"
+                  :isSubmitted="isLoading"
+                  @nicknameValidityChange="handleNicknameValidityChange"
+                />
+              </div>
+            </FormWrapper>
+          </div>
+
+          <Divider class="col-span-3 my-12" />
+
+          <div>
             <h2 class="text-base font-semibold leading-7">Change password</h2>
             <p class="mt-1 text-sm leading-6">
               Update your password associated with your account.
@@ -182,6 +207,7 @@
 
 <script lang="ts" setup>
 import PasswordActionConfirm from "@/core/components/utils/forms/password-action-confirm.vue";
+import AppInputNickname from "~/core/components/utils/forms/inputs/app-input-nickname.vue";
 
 const { changeUserPassword, verifyPassword, terminateSession } =
   useAuthentication();
@@ -196,6 +222,7 @@ const userDetails = ref({
   lastname: userStore.lastName,
   email: userSession?.email,
   phone: userSession?.phone,
+  nickname: userSession?.nickname || "",
 });
 let initialUserDetails = JSON.parse(JSON.stringify(userDetails.value));
 const isLoading = ref(false);
@@ -208,6 +235,41 @@ interface FormData {
   currentpassword?: string;
   password_confirm?: string;
 }
+
+const isNicknameValid = ref(true);
+
+const handleNicknameValidityChange = (isValid: boolean) => {
+  isNicknameValid.value = isValid;
+};
+
+const onNicknameUpdate = async () => {
+  if (!isNicknameValid.value) {
+    showToast({
+      severity: "error",
+      summary: "Invalid Nickname",
+      detail: "Please enter a valid and unique nickname.",
+    });
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    await submit({
+      action: () =>
+        userStore.updateUserAccount({ nickname: userDetails.value.nickname }),
+      successMessage: "Nickname successfully updated",
+    });
+  } catch (error) {
+    console.error("Error updating nickname:", error);
+    showToast({
+      severity: "error",
+      summary: "Nickname update failed",
+      detail: "An error occurred while updating your nickname.",
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const onProfileSave = async (data: FormData) => {
   isLoading.value = true;
