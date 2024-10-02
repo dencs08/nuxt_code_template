@@ -174,32 +174,12 @@
                           :disabled="isSubmitted"
                         />
 
-                        <div class="relative">
-                          <FormKit
-                            type="primeInputText"
-                            name="nickname"
-                            placeholder="nickname"
-                            validation="required|length:3"
-                            iconPrefix="pi pi-at"
-                            :disabled="isSubmitted"
-                            v-model="nickname"
-                          />
-                          <div
-                            v-if="isCheckingNickname"
-                            class="absolute right-2 top-1/2 transform -translate-y-1/2"
-                          >
-                            <i
-                              class="pi pi-spin pi-spinner"
-                              style="font-size: 1rem"
-                            ></i>
-                          </div>
-                        </div>
-                        <small
-                          v-if="!isNicknameUnique && !isCheckingNickname"
-                          class="text-red-500"
-                        >
-                          This nickname is already taken
-                        </small>
+                        <AppInputNickname
+                          v-model="details.nickname"
+                          :isSubmitted="isSubmitted"
+                          @nicknameValidityChange="handleNicknameValidityChange"
+                          ref="nicknameInput"
+                        />
                       </div>
                     </FormWrapper>
                   </div>
@@ -243,19 +223,14 @@
                 isStep2Valid &&
                 !isSubmitted &&
                 !isLoading &&
-                isNicknameUnique &&
-                !isCheckingNickname
+                isNicknameValid
               "
               label="Submit"
               icon="pi pi-check"
               iconPos="right"
               @click="submitData"
               :disabled="
-                !isStep2Valid ||
-                isSubmitted ||
-                isLoading ||
-                !isNicknameUnique ||
-                isCheckingNickname
+                !isStep2Valid || isSubmitted || isLoading || !isNicknameValid
               "
             />
             <Button
@@ -294,7 +269,6 @@ const activeStep = ref(1);
 
 const passwords = ref({ password: "", password_confirm: "" });
 const details = ref({ name: "", nickname: "" });
-const nickname = ref("");
 
 const isStep1Valid = ref(false);
 const isStep2Valid = ref(false);
@@ -302,16 +276,20 @@ const isSubmitted = ref(false);
 const isLoading = ref(false);
 const isCompleted = ref(false);
 
-const isNicknameUnique = ref(true);
-const isCheckingNickname = ref(false);
-const nicknameDebounce = ref(null);
+const isNicknameValid = ref(false);
+
+const nicknameInput = ref(null);
 
 const handlePasswordValidationChange = (isValid: boolean) => {
   isStep1Valid.value = isValid;
 };
 
+const handleNicknameValidityChange = (isValid: boolean) => {
+  isNicknameValid.value = isValid;
+};
+
 const handleDetailsValidationChange = (isValid: boolean) => {
-  isStep2Valid.value = isValid;
+  isStep2Valid.value = isValid && isNicknameValid.value;
 };
 
 const handleStepClick = (step: number, activateCallback: () => void) => {
@@ -347,57 +325,26 @@ const validateAndProceed = () => {
   }
 };
 
-const checkNicknameUniqueness = async (nickname: string) => {
-  if (!nickname) {
-    isNicknameUnique.value = true;
-    return;
-  }
-
-  isCheckingNickname.value = true;
-  isNicknameUnique.value = true;
-
-  try {
-    const { data, error } = await useFetch("/api/v1/me/handle/is-unique", {
-      method: "POST",
-      body: { nickname },
-    });
-
-    if (error.value) {
-      console.error("Error checking nickname:", error.value);
-      return;
-    }
-
-    isNicknameUnique.value = data.value.data.isUnique;
-  } catch (error) {
-    console.error("Error checking nickname:", error);
-  } finally {
-    isCheckingNickname.value = false;
-  }
-};
-
-const handleNicknameInput = () => {
-  if (nicknameDebounce.value) {
-    clearTimeout(nicknameDebounce.value);
-  }
-  nicknameDebounce.value = setTimeout(() => {
-    checkNicknameUniqueness(nickname.value);
-  }, 600);
-};
-
-watch(nickname, () => {
-  handleNicknameInput();
-});
-
 const submitData = async () => {
   if (
     isStep2Valid.value &&
     !isSubmitted.value &&
     !isLoading.value &&
-    isNicknameUnique.value &&
-    !isCheckingNickname.value
+    isNicknameValid.value
   ) {
     try {
       isLoading.value = true;
+
+      // Trigger blur event on nickname input to show error if needed
+      if (nicknameInput.value) {
+        nicknameInput.value.$el.querySelector("input").blur();
+      }
+
+      // Check if nickname is still valid after blur
+      if (!isNicknameValid.value) {
+        isLoading.value = false;
+        return;
+      }
 
       const data = await $fetch("/api/v1/me/first-login", {
         method: "POST",
