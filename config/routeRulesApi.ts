@@ -32,12 +32,14 @@ export const routeConfigs: Record<string, RouteConfig> = {
     PATCH: { auth: true, accessLevel: 75 },
     PUT: { auth: true, accessLevel: 75 },
     POST: { auth: true, accessLevel: 75 },
+    DELETE: { auth: true, accessLevel: 75 },
   },
   "/api/v1/users/**": {
     GET: { auth: true, accessLevel: 10 },
     PATCH: { auth: true, accessLevel: 75 },
     PUT: { auth: true, accessLevel: 75 },
     POST: { auth: true, accessLevel: 75 },
+    DELETE: { auth: true, accessLevel: 75 },
   },
   "/api/v1/users/role": {
     POST: { auth: true, accessLevel: 75 },
@@ -76,6 +78,10 @@ export const routeConfigs: Record<string, RouteConfig> = {
   },
   "/api/v1/invalidate-cache": {
     POST: { auth: true, accessLevel: 75 },
+  },
+  "/api/v1/events": {
+    GET: { auth: true, accessLevel: 5 },
+    POST: { auth: true, accessLevel: 100 },
   },
 
   //publicy available
