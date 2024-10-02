@@ -8,7 +8,7 @@
     :auto="true"
     :pt="{
       root: {
-        class: '!border-0 transition duration-300',
+        class: '!border-0 transition duration-300 !bg-transparent',
       },
       header: {
         class: '!p-0 transition duration-300',
