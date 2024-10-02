@@ -73,18 +73,18 @@
           </div>
           <div>
             <dl
-              class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6"
+              class="mt-6 space-y-6 divide-y divide-surface-100 dark:divide-surface-700 border-t border-surface-200 dark:border-surface-700 text-sm leading-6"
             >
               <div v-for="(value, key) in user" :key="key" class="pt-6 sm:flex">
                 <dt
-                  class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6"
+                  class="font-medium text-surface-900 dark:text-surface-50 sm:w-64 sm:flex-none sm:pr-6"
                 >
                   {{ key }}
                 </dt>
                 <dd
                   class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto"
                 >
-                  <div class="text-gray-900">
+                  <div class="text-surface-900 dark:text-surface-50">
                     {{ value }}
                   </div>
                 </dd>
