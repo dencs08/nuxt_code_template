@@ -3,8 +3,8 @@ import { validateBody } from "~~/utils/validate";
 import { z } from "zod";
 
 const roleSchema = z.object({
-  roleId: z.string(),
-  access_level: z.string(),
+  roleId: z.number(),
+  access_level: z.number(),
 });
 
 export default defineApiHandler(async (event) => {

@@ -7,7 +7,9 @@ const permissionsSchema = z.object({
 });
 
 export default defineApiHandler(async (event) => {
-  const body = await validateBody(event, { schema: permissionsSchema });
+  const body = await validateBody(event, {
+    schema: permissionsSchema,
+  });
 
   const client = event.context.backendClient;
   try {

@@ -2,14 +2,16 @@ import { defineApiHandler } from "~~/server/utils/api-handler";
 import { validateBody } from "~~/utils/validate";
 import { z } from "zod";
 
-const supportedActions = ["read", "write", "delete"];
-
 const permissionsPutSchema = z.object({
   userId: z.string(),
   permissions: z.array(
     z.object({
-      action: z.enum(supportedActions as [string, ...string[]]),
       resource: z.string(),
+      action: z.object({
+        read: z.boolean(),
+        write: z.boolean(),
+        delete: z.boolean(),
+      }),
     })
   ),
 });

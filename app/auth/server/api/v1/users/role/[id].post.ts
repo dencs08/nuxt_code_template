@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const roleAssignSchema = z.object({
   id: z.string(),
-  role_id: z.string(),
+  role_id: z.number(),
 });
 
 export default defineApiHandler(async (event) => {
