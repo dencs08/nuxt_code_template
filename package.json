@@ -58,7 +58,8 @@
     "playwright-core": "^1.45.1",
     "prisma": "^5.17.0",
     "storybook": "^8.2.9",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "wrangler": "^3.79.0"
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
@@ -71,6 +72,7 @@
     "@nuxt/content": "^2.10.0",
     "@nuxt/fonts": "^0.7.2",
     "@nuxt/image": "^1.0.0-rc.1",
+    "@nuxthub/core": "^0.7.23",
     "@nuxtjs/apollo": "^3.0.7",
     "@nuxtjs/robots": "^4.0.0",
     "@pinia/nuxt": "^0.5.1",
