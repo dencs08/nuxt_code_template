@@ -1,104 +1,60 @@
 <template>
-  <DataTable
-    ref="dt"
-    :value="usersStore?.users"
-    v-model:selection="selected"
-    v-model:editingRows="editingRows"
+  <BaseTable
+    :items="usersStore?.users"
     :loading="usersStore.loading"
-    v-model:filters="filters"
-    dataKey="id"
-    tableStyle="min-width: 50rem;"
-    editMode="row"
-    @row-edit-save="onRowEditSave"
+    :totalRecords="usersStore.totalRecords"
+    :totalQueryRecords="usersStore.totalQueryRecords"
+    :currentPage="usersStore.currentPage"
+    :rowsPerPage="usersStore.rowsPerPage"
+    :setPage="usersStore.setPage"
+    :setRowsPerPage="usersStore.setRowsPerPage"
+    :fetchData="usersStore.fetchUsers"
+    :fetchAllData="usersStore.fetchAllUsers"
+    :resetData="usersStore.resetUsers"
     :rows="10"
-    :globalFilterFields="['name', 'email', 'phone', 'role']"
-    size="small"
-    removableSort
-    stripedRows
-    paginator
+    :lazy-threshold="10"
+    :globalFilterFields="['name', 'email', 'phone', 'role', 'nickname', 'id']"
+    :editMode="'row'"
+    @add="showUserCreator"
+    @save="handleSaveChanges"
+    @delete="handleDeleteItems"
+    @refresh="usersStore.fetchUsers({ force: true })"
+    @update:selection="handleSelectionUpdate"
+    v-model:selection="selectedUsers"
+    displayChangeNameField="email"
   >
-    <template #header>
-      <div class="flex justify-between items-center">
-        <div
-          v-auto-animate
-          v-if="isAdmin"
-          class="flex gap-2 w-full items-center"
-        >
-          <UserCreator />
-          <Button
-            size="small"
-            label="Invite"
-            severity="contrast"
-            @click="inviteUser"
-          />
-          <Button
-            size="small"
-            label="Delete"
-            severity="danger"
-            @click="confirmDeleteUsers"
-            :disabled="!selected || !selected.length"
-            v-if="selected"
-          />
-          <Button
-            size="small"
-            v-tooltip.top="'Save changes'"
-            @click="confirmSaveChanges"
-            icon="pi pi-save"
-            class="!p-2"
-            :disabled="!changesMade"
-            v-if="changesMade"
-          />
-        </div>
-        <div
-          class="flex justify-between gap-1.5"
-          :class="!isAdmin ? 'w-full' : ''"
-        >
-          <IconField class="w-full font-normal">
-            <InputIcon class="pi pi-search" />
-            <InputText
-              v-model="filters['global'].value"
-              placeholder="Search"
-              class="w-full"
-              size="small"
-            />
-          </IconField>
-          <div class="grid place-content-center">
-            <Button
-              size="small"
-              icon="pi pi-external-link"
-              v-tooltip.left="'Export table to CSV'"
-              @click="exportCSV($event)"
-              aria-label="Export"
-              severity="contrast"
-              icon-class="dark:text-dark-800"
-            />
-          </div>
-          <div class="grid place-content-center">
-            <Button
-              size="small"
-              v-tooltip.left="'Refresh users table'"
-              @click="fetchUsers()"
-              icon="pi pi-refresh"
-              aria-label="Refresh"
-              icon-class="dark:text-dark-800"
-            />
-          </div>
-        </div>
-      </div>
+    <!-- Remove UserCreator from toolbar-start -->
+    <template #toolbar-middle>
+      <Button
+        size="small"
+        label="Invite"
+        severity="contrast"
+        @click="inviteUser"
+      />
     </template>
 
-    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-    <Column field="name" header="Name" :sortable="true" style="width: 17.5%">
+    <Column field="name" header="Name" :sortable="false" style="width: 17.5%">
       <template #editor="{ data, field }">
         <InputText size="small" v-model="data[field]" />
       </template>
     </Column>
-    <Column field="email" header="Email" :sortable="true" style="width: 27.5%">
+    <Column field="email" header="Email" :sortable="false" style="width: 27.5%">
       <template #editor="{ data, field }">
         <InputText size="small" v-model="data[field]" />
       </template>
     </Column>
-    <Column field="phone" header="Phone" :sortable="true" style="width: 15%">
+    <Column
+      field="nickname"
+      header="Nickname"
+      :sortable="false"
+      class="overflow-hidden text-ellipsis whitespace-nowrap"
+      style="width: 5%"
+    >
+      <template #editor="{ data, field }">
+        <InputText size="small" v-model="data[field]" />
+      </template>
+    </Column>
+    <Column field="phone" header="Phone" :sortable="false" style="width: 15%">
       <template #editor="{ data, field }">
         <InputText size="small" v-model="data[field]" />
       </template>
@@ -106,16 +62,16 @@
     <Column
       field="created_at"
       header="Created at"
-      :sortable="true"
+      :sortable="false"
       style="width: 25%"
     >
       <template #body="{ data }">
-        <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{
-          formatDate(data.created_at, { includeTime: true })
-        }}</span>
+        <span class="overflow-hidden text-ellipsis whitespace-nowrap">
+          {{ formatDate(data.created_at, { includeTime: true }) }}
+        </span>
       </template>
     </Column>
-    <Column field="role" header="Role" :sortable="true" style="width: 15%">
+    <Column field="role" header="Role" :sortable="false" style="width: 15%">
       <template #body="{ data }">
         <Tag
           v-if="data?.role"
@@ -127,11 +83,6 @@
         <RoleDropdown v-model="data[field]" />
       </template>
     </Column>
-    <Column
-      :rowEditor="true"
-      style="width: 5%; min-width: 1rem"
-      bodyStyle="text-align:center"
-    ></Column>
     <Column style="width: 5%; min-width: 1rem" bodyStyle="text-align:center;">
       <template #body="slotProps">
         <div class="flex flex-row gap-1">
@@ -155,17 +106,23 @@
         </div>
       </template>
     </Column>
-  </DataTable>
+  </BaseTable>
+
+  <UserCreator
+    v-model:visible="userCreatorVisible"
+    @userCreated="onUserCreated"
+  />
 </template>
 
 <script setup>
-import DisplayUserChanges from "@/components/dashboard/display-user-changes.vue";
+import BaseTable from "./base-table.vue";
+import UserCreator from "@/components/dashboard/admin/user-creator.vue";
 import InviteUsers from "~~/app/dashboard/components/dashboard/invite-users.vue";
-import { FilterMatchMode } from "@primevue/core/api";
 
 const usersStore = useUsersStore();
 const rolesStore = useRolesStore();
-const { users, loading } = storeToRefs(usersStore);
+
+const users = computed(() => usersStore.users);
 
 const { submit, error } = useForm();
 const { getRoleSeverity } = rolesStore;
@@ -174,146 +131,14 @@ const { confirmAction } = useConfirmAction();
 const localePath = useLocalePath();
 const { formatDate } = useDate();
 
-const isAdmin = computed(() => hasAccess(75));
 const isSuperAdmin = computed(() => hasAccess(100));
 
+const userCreatorVisible = ref(false);
 const dt = ref(null);
-const editingRows = ref([]);
-const selected = ref([]);
-const changesMade = ref(false);
-const originalUsers = ref([]);
-
-const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
-
 const emit = defineEmits(["showPermissions"]);
 
 const selectPermissions = (user) => {
   emit("showPermissions", user);
-};
-
-onMounted(() => {
-  if (users.value?.length === 0) {
-    fetchUsers();
-  } else {
-    originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
-  }
-});
-
-const fetchUsers = async (force = true) => {
-  await submit({
-    action: () => usersStore.fetchUsers(force),
-    successMessage: "Users refreshed",
-  });
-  originalUsers.value = JSON.parse(JSON.stringify(users.value || []));
-};
-
-const onRowEditSave = async (event) => {
-  let { newData, index } = event;
-  // Just mark that changes were made and update local data
-  changesMade.value = true;
-  users.value[index] = { ...users.value[index], ...newData };
-};
-
-const changes = computed(() => {
-  return users.value
-    .map((user, index) => {
-      const originalUser = originalUsers.value[index];
-      const changedValues = Object.entries(user)
-        .filter(([key, value]) => {
-          if (key === "role" || key === "role_data") {
-            // Compare role and role_data separately
-            return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
-          }
-          return JSON.stringify(originalUser[key]) !== JSON.stringify(value);
-        })
-        .map(([key, value]) => ({
-          key,
-          oldValue: originalUser[key],
-          newValue: value,
-        }))
-        .filter(Boolean);
-      return { userName: user.name, email: user.email, changes: changedValues };
-    })
-    .filter((user) => user.changes.length > 0);
-});
-
-const updateUsers = async () => {
-  const changedUsers = changes.value;
-  for (const { userName, email, changes: userChanges } of changedUsers) {
-    const userIndex = users.value.findIndex(
-      (user) => user.name === userName && user.email === email
-    );
-    if (userIndex !== -1) {
-      const user = { ...users.value[userIndex] };
-      let roleChanged = false;
-      let otherChanged = false;
-      for (const { key, newValue } of userChanges) {
-        if (key === "role" || key === "role_data") {
-          user[key] = newValue;
-          roleChanged = true;
-        } else {
-          user[key] = newValue;
-          otherChanged = true;
-        }
-      }
-      if (otherChanged) {
-        await submit({
-          action: async () => await usersStore.updateUser(userIndex, user),
-          successMessage: "User updated",
-        });
-      }
-      if (roleChanged) {
-        await submit({
-          action: async () => await usersStore.updateRole(userIndex, user),
-          successMessage: "Role updated",
-        });
-      }
-    }
-  }
-  changesMade.value = false;
-  originalUsers.value = JSON.parse(JSON.stringify(users.value));
-};
-
-const confirmDeleteUsers = (event) => {
-  confirmAction({
-    target: event.currentTarget,
-    message: "Are you sure you want to delete?",
-    icon: "pi pi-exclamation-triangle",
-    acceptLabel: "Delete",
-    rejectLabel: "Cancel",
-    severity: "danger",
-    accept: async () => {
-      const selectedIds = selected.value.map((user) => user.id);
-      await submit({
-        action: () => usersStore.deleteUsers(selectedIds),
-        successMessage: "Users deleted",
-      });
-      selected.value = [];
-    },
-    reject: () => {},
-  });
-};
-
-const confirmSaveChanges = () => {
-  confirmAction({
-    message: changes,
-    header: "Do you want to save these changes?",
-    severity: "info",
-    showToastOnAccept: true,
-    showToastOnReject: false,
-    showMessage: false,
-    component: markRaw(DisplayUserChanges),
-    accept: async () => {
-      await updateUsers();
-    },
-    reject: () => {
-      // Revert changes if user rejects
-      users.value = JSON.parse(JSON.stringify(originalUsers.value));
-      changesMade.value = false;
-    },
-  });
 };
 
 const inviteUser = () => {
@@ -328,12 +153,67 @@ const inviteUser = () => {
     showMessage: false,
     component: markRaw(InviteUsers),
     accept: async () => {
-      await fetchUsers();
+      await usersStore.fetchUsers({ force: true });
     },
   });
 };
 
-const exportCSV = () => {
-  dt.value.exportCSV();
+const handleSaveChanges = async (changes) => {
+  for (const change of changes) {
+    const { itemIndex, itemId, changes: itemChanges } = change;
+    const user = users.value[itemIndex];
+
+    let roleChanged = false;
+    let otherChanged = false;
+    for (const { key, newValue } of itemChanges) {
+      if (key === "role" || key === "role_data") {
+        roleChanged = true;
+      } else {
+        otherChanged = true;
+      }
+    }
+
+    if (otherChanged) {
+      await submit({
+        action: async () => await usersStore.updateUser(itemIndex, user),
+        successMessage: "User updated",
+      });
+    }
+    if (roleChanged) {
+      await submit({
+        action: async () => await usersStore.updateRole(itemIndex, user),
+        successMessage: "Role updated",
+      });
+    }
+  }
+  await usersStore.fetchUsers({ force: true });
 };
+
+const handleDeleteItems = async (selectedItems) => {
+  const selectedIds = selectedItems.map((user) => user.id);
+  await submit({
+    action: () => usersStore.deleteUsers(selectedIds),
+    successMessage: "Users deleted",
+  });
+  // Clear selection after deletion
+  selectedUsers.value = [];
+};
+
+const showUserCreator = () => {
+  userCreatorVisible.value = true;
+};
+
+const onUserCreated = async () => {
+  await usersStore.fetchUsers({ force: true });
+};
+
+const selectedUsers = ref([]);
+
+const handleSelectionUpdate = (newSelection) => {
+  selectedUsers.value = newSelection;
+};
+
+onMounted(async () => {
+  await usersStore.fetchUsers({ force: true });
+});
 </script>
