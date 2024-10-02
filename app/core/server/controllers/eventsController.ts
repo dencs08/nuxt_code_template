@@ -1,31 +1,16 @@
 import type { H3Event } from "h3";
 import type { EventMetadata } from "~~/types/events";
-
-async function getEventsUncached(
-  event: H3Event,
-  options: {
-    limit?: number;
-    offset?: number;
-    sort?: string;
-    order?: string;
-  }
-) {
+import type { PaginationParams } from "~~/types/pagination";
+async function getEventsUncached(event: H3Event) {
   const client = event.context.backendClient;
+  const params = getQuery(event) as PaginationParams;
 
-  const events = await client.getEvents(options);
+  const events = await client.getEvents(params);
   return events;
 }
 
 export const getEvents = defineCachedFunction(
-  async (
-    event: H3Event,
-    options: {
-      limit?: number;
-      offset?: number;
-      sort?: string;
-      order?: string;
-    }
-  ) => await getEventsUncached(event, options),
+  async (event: H3Event) => await getEventsUncached(event),
   {
     maxAge: 60 * 1, // 1 minute
     swr: true,
