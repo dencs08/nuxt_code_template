@@ -30,7 +30,6 @@ export async function validateBody<T>(
 ): Promise<T> {
   const { schema, skipFields = [] } = options;
   const body = await readBody(event);
-
   try {
     const validatedBody = schema.parse(body);
 

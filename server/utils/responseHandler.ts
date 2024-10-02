@@ -1,9 +1,9 @@
 import { H3Event } from "h3";
 
-export interface ApiResponse<T> {
+export type ApiResponse<T> = {
   success: boolean;
-  data?: T;
-}
+  data: T;
+};
 
 export class ResponseHandler {
   static success<T>(data: T, statusCode: number = 200): ApiResponse<T> {

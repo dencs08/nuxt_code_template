@@ -34,7 +34,7 @@
       ></div>
     </div>
     <div
-      class="absolute inset-0 z-[10] bg-gradient-to-b from-black/25 via-black/90 to-black pointer-events-none h-screen"
+      class="absolute inset-0 z-[10] bg-gradient-to-b from-black/25 via-black/75 to-black pointer-events-none h-screen"
     ></div>
   </Body>
 </template>
