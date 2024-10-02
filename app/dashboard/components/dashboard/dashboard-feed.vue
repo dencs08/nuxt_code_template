@@ -1,64 +1,150 @@
 <template>
-    <ul role="list" class="space-y-6">
-        <li v-if="loading" class="space-y-2">
-            <div class="grid grid-cols-3 gap-3">
-                <div class="col-span-2 space-y-2">
-                    <AnimatedPlaceholder class="h-6 w-full rounded" />
-                    <AnimatedPlaceholder class="h-6 w-full rounded col-span-2" />
-                </div>
-                <AnimatedPlaceholder class="h-6 w-full rounded" />
+  <Card class="custom-card">
+    <template #title>
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-db-h2">Feed</h2>
+        <Button
+          icon="pi pi-refresh"
+          size="small"
+          severity="secondary"
+          @click="refreshEvents"
+        />
+      </div>
+    </template>
+    <template #content>
+      <VirtualScroller
+        :items="eventsStore.events"
+        :itemSize="60"
+        showLoader
+        :delay="75"
+        :loading="eventsStore.loading"
+        lazy
+        @lazy-load="onLazyLoad"
+        style="width: 100%; height: 450px"
+      >
+        <template #item="slotProps">
+          <div class="flex flex-row relative">
+            <div class="icon-container">
+              <div
+                class="p-1 rounded-full bg-surface-200 border border-surface-400"
+              ></div>
             </div>
-        </li>
-        <li v-if="feed?.length > 0 && !loading" v-for="( activityItem, activityItemIdx ) in  feed " :key="activityItem.id"
-            class="relative flex gap-x-4">
-            <div
-                :class="[activityItemIdx === feed.length - 1 ? 'h-6' : '-bottom-6', 'absolute left-0 top-0 flex w-6 justify-center']">
-                <div class="w-px bg-gray-200" />
+            <div class="w-full">
+              <TimelineItem
+                v-if="slotProps.item"
+                :item="slotProps.item"
+                style="height: 60px"
+              />
             </div>
-            <template v-if="activityItem.type === 'commented'">
-                <div class="relative mt-3 h-6 w-6 flex-none rounded-full bg-gray-50"></div>
-                <div class="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
-                    <div class="flex justify-between gap-x-4">
-                        <div class="py-0.5 text-xs leading-5 text-gray-500">
-                            <span class="font-medium text-gray-900">{{ activityItem.person.name }}</span> commented
-                        </div>
-                        <time :datetime="activityItem.dateTime" class="flex-none py-0.5 text-xs leading-5 text-gray-500">{{
-                            activityItem.date }}</time>
-                    </div>
-                    <p class="text-sm leading-6 text-gray-500">{{ activityItem.comment }}</p>
-                </div>
-            </template>
-            <template v-else>
-                <div class="relative flex h-6 w-6 flex-none items-center justify-center">
-                    <Icon v-if="activityItem.type === 'applied'" name="ic:round-check-circle"
-                        class="h-6 w-6 text-primary-500" aria-hidden="true" />
-                    <div v-else class="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300" />
-                </div>
-                <p class="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                    <span class="font-medium text-gray-900">
-                        <p v-if="activityItem.user">
-                            {{ activityItem.user.name }}
-                        </p>
-                        <NuxtLink v-else-if="activityItem.applicant" class="underline"
-                            :to="{ name: 'DashboardCandidate', params: { id: activityItem.applicant.id } }">
-                            {{ activityItem.applicant.name }}
-                        </NuxtLink>
-                        {{ activityItem.activity }}
-                    </span>
-                </p>
-                <time :datetime="activityItem.dateTime" class="flex-none py-0.5 text-xs leading-5 text-gray-500">{{
-                    activityItem.date }}</time>
-            </template>
-        </li>
-        <p v-if="!loading && !feed" class="text-gray-500 text-sm">Nothing here for now</p>
-    </ul>
+          </div>
+        </template>
+
+        <template v-slot:loader="{ options }">
+          <div
+            :class="[
+              'flex items-center p-2',
+              { 'bg-surface-100 dark:bg-surface-700': options.odd },
+            ]"
+            style="height: 60px"
+          >
+            <Skeleton :width="options.even ? '60%' : '50%'" height="30px" />
+          </div>
+        </template>
+      </VirtualScroller>
+    </template>
+  </Card>
 </template>
 
-<script setup>
-const { fetchFeed, feed } = useFeed();
-const loading = ref(true)
-onMounted(async () => {
-    await fetchFeed(10);
-    loading.value = false;
-})
+<script setup lang="ts">
+import { useUsersStore } from "~/auth/stores/UsersStore";
+import { useEventsStore } from "~/core/stores/EventsStore";
+import TimelineItem from "./timeline-item.vue";
+
+const props = defineProps({
+  limit: {
+    type: Number,
+    default: 15,
+  },
+});
+
+const usersStore = useUsersStore();
+const eventsStore = useEventsStore();
+
+const refreshEvents = () => {
+  eventsStore.resetEvents();
+  eventsStore.fetchEvents({ offset: 0, limit: props.limit, force: true });
+};
+
+const onLazyLoad = async (event: any) => {
+  eventsStore.loading = true;
+  const { first, last } = event;
+  await eventsStore.fetchEvents({
+    offset: first,
+    limit: last - first,
+    force: true,
+  });
+  eventsStore.loading = false;
+};
+
+onMounted(() => {
+  eventsStore.fetchEvents({ offset: 0, limit: props.limit, force: true });
+});
+
+const attemptedUserIds = new Set<number>();
+
+const ensureUsersLoaded = async () => {
+  const requiredUserIds = new Set<number>();
+  eventsStore.events.forEach((event) => {
+    if (!event || !event.metadata) return;
+
+    if (event.metadata.action_by) {
+      requiredUserIds.add(event.metadata.action_by);
+    }
+    if (event.metadata.action_on) {
+      requiredUserIds.add(event.metadata.action_on);
+    }
+  });
+
+  const missingUserIds = [...requiredUserIds].filter(
+    (id) =>
+      !usersStore.users.some((u) => u.id === id) && !attemptedUserIds.has(id)
+  );
+
+  if (missingUserIds.length > 0) {
+    await usersStore.fetchUsers({
+      force: true,
+      userIds: missingUserIds.join(","),
+    });
+
+    // Add fetched user IDs to the attemptedUserIds set
+    missingUserIds.forEach((id) => attemptedUserIds.add(id));
+  }
+};
+
+watch(() => eventsStore.events, ensureUsersLoaded, { immediate: true });
 </script>
+
+<style scoped>
+::v-deep(.p-timeline-event-opposite) {
+  display: none;
+}
+
+.icon-container {
+  position: relative;
+  z-index: -100;
+}
+
+.icon-container::after {
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  height: 70%;
+  top: 0.5rem;
+  bottom: -0.5rem;
+  left: 50%;
+  width: 1px;
+  background-color: #ccc; /* Adjust color as needed */
+  transform: translateX(-50%);
+  z-index: -100;
+}
+</style>

@@ -17,7 +17,7 @@
       </HorizontalScroller>
     </div>
     <div class="flex flex-col md:flex-row gap-2">
-      <div class="w-full md:w-2/3 lg:w-3/4 md:overflow-y-auto space-y-2">
+      <div class="w-full md:w-2/3 lg:w-4/6 md:overflow-y-auto space-y-2">
         <div>
           <Card class="custom-card">
             <template #content>
@@ -86,26 +86,8 @@
         </div>
       </div>
 
-      <div class="w-full md:w-1/3 lg:w-1/4">
-        <Card class="custom-card">
-          <template #title>
-            <h2 class="text-db-h2">Feed</h2>
-          </template>
-          <template #content>
-            <ScrollPanel class="h-full">
-              <Timeline :value="events">
-                <template #opposite="slotProps">
-                  <small class="text-surface-500 dark:text-surface-400">
-                    {{ slotProps.item.date }}
-                  </small>
-                </template>
-                <template #content="slotProps">
-                  {{ slotProps.item.status }}
-                </template>
-              </Timeline>
-            </ScrollPanel>
-          </template>
-        </Card>
+      <div class="w-full md:w-1/3 lg:w-2/6">
+        <DashboardFeed />
       </div>
     </div>
   </div>
@@ -127,7 +109,6 @@ const { hasAccess } = useRoleCheck();
 const { submit, error } = useForm();
 const { isDarkMode, toggleDarkMode } = useDarkMode();
 const isAdmin = hasAccess(75);
-const router = useRouter();
 
 onMounted(() => {
   if (!metricsStore.metricsLoaded) {
@@ -226,31 +207,6 @@ const handleAction = async (action: any, index: number) => {
     }
   }
 };
-
-const events = ref([
-  {
-    status: "Ordered",
-    date: "15/10/2020 10:30",
-    icon: "pi pi-shopping-cart",
-    color: "#9C27B0",
-  },
-  {
-    status: "Processing",
-    date: "15/10/2020 14:00",
-    icon: "pi pi-cog",
-    color: "#673AB7",
-  },
-  {
-    status: "Shipped",
-    date: "15/10/2020 16:15",
-    icon: "pi pi-shopping-cart",
-    color: "#FF9800",
-  },
-  {
-    status: "Delivered",
-    date: "16/10/2020 10:00",
-    icon: "pi pi-check",
-    color: "#607D8B",
-  },
-]);
 </script>
+
+<style scoped></style>
