@@ -2,6 +2,7 @@
 
 export default [
   //development
+  "@nuxthub/core",
   "@nuxt/devtools",
   "@nuxtjs/device",
   "nuxt-typed-router",
