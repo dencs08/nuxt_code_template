@@ -26,18 +26,6 @@ export function mainDashboardNavigation() {
       return routeMatch.settings.access;
     }
 
-    const pathSegments = routeName.split("-").filter(Boolean);
-    const reversedSegments = pathSegments.reverse();
-
-    for (const segment of reversedSegments) {
-      const roleMatch = roles.value.find(
-        (role) => segment.toLowerCase() === role.name.toLowerCase()
-      );
-      if (roleMatch) {
-        return roleMatch.access_level;
-      }
-    }
-
     return 0; // Default to lowest access level
   };
 
