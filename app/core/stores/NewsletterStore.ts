@@ -68,6 +68,12 @@ export const useNewsletterStore = defineStore("newsletterStore", () => {
     rowsPerPage.value = rows;
   }
 
+  function resetNewsletters() {
+    items.value = [];
+    totalRecords.value = 0;
+    totalQueryRecords.value = 0;
+  }
+
   return {
     items,
     totalRecords,
@@ -79,5 +85,6 @@ export const useNewsletterStore = defineStore("newsletterStore", () => {
     fetchAllNewsletters,
     setPage,
     setRowsPerPage,
+    resetNewsletters,
   };
 });

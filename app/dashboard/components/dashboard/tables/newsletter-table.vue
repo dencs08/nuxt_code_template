@@ -2,10 +2,18 @@
   <div>
     <div class="mb-3"></div>
     <BaseTable
-      :store="newsletterStore"
+      :items="newsletterStore.items"
+      :loading="newsletterStore.loading"
+      :totalRecords="newsletterStore.totalRecords"
+      :totalQueryRecords="newsletterStore.totalQueryRecords"
+      :currentPage="newsletterStore.currentPage"
+      :rowsPerPage="newsletterStore.rowsPerPage"
+      :setPage="newsletterStore.setPage"
+      :setRowsPerPage="newsletterStore.setRowsPerPage"
       :fetchData="newsletterStore.fetchNewsletters"
       :fetchAllData="newsletterStore.fetchAllNewsletters"
       :globalFilterFields="['email', 'created_at']"
+      :resetData="newsletterStore.resetNewsletters"
       :rows="20"
       :showAddButton="false"
       :showDeleteButton="false"
