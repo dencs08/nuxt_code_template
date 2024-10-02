@@ -6,39 +6,57 @@ import {
   NotFoundError,
   AuthorizationError,
 } from "~~/server/utils/errors";
-
+import type { EventMetadata } from "~~/types/events";
+import type { PaginationParams, Filters } from "~~/types/pagination";
 export class SupabaseClient implements BackendClient {
   constructor(private client: any) {}
 
   //users
-  async getUsers(): Promise<any[]> {
+  async getUsers(params: PaginationParams): Promise<any> {
     try {
-      const { data, error } = await this.client.from("users").select(`
-        *,
-        user_roles!inner (
-          role_id,
-          roles (
-            name,
-            access_level
-          )
-        )
-      `);
+      const tableName = "user_with_auth";
+      const columns = [
+        "*",
+        "user_roles!inner (role_id, roles (name, access_level))",
+      ];
+
+      const searchableColumns = [
+        "id_text",
+        "name",
+        "nickname",
+        "email",
+        "phone",
+        "role_name",
+      ];
+
+      const query = await this.buildQuery(
+        params,
+        tableName,
+        columns,
+        searchableColumns
+      );
+
+      const { data: dbUsers, error, count } = await query;
 
       if (error) {
+        console.log(error);
         throw new DatabaseError(`Database error: ${error.message}`);
       }
 
-      if (!data || data.length === 0) {
+      if (!dbUsers || dbUsers.length === 0) {
         throw new NotFoundError("No users found");
       }
 
-      return data.map((user: any) => {
-        const roleName = user.user_roles?.roles?.name || "No role assigned";
-        const roleData = user.user_roles
+      const { users: authUsers } = await this.getAuthUsers(params);
+
+      // Map and combine the data
+      const users = dbUsers.map((dbUser: any) => {
+        const roleName = dbUser.user_roles?.roles?.name || "No role assigned";
+        const roleData = dbUser.user_roles
           ? {
-              role_id: user.user_roles.role_id,
-              name: user.user_roles.roles.name,
-              access_level: user.user_roles.roles.access_level,
+              role_id: dbUser.user_roles.role_id,
+              name: dbUser.user_roles.roles.name,
+              access_level: dbUser.user_roles.roles.access_level,
             }
           : {
               role_id: null,
@@ -46,17 +64,87 @@ export class SupabaseClient implements BackendClient {
               access_level: null,
             };
 
-        delete user.user_roles;
+        // Find corresponding auth user
+        const authUser = authUsers.find((au: any) => au.id === dbUser.id) || {};
+
+        delete dbUser.user_roles;
         return {
-          ...user,
+          ...dbUser,
           role: roleName,
           role_data: roleData,
+          phone: authUser.phone,
         };
       });
+
+      const { count: totalCount, error: totalCountError } = await this.client
+        .from(tableName)
+        .select("*", { count: "exact", head: true });
+
+      if (totalCountError) {
+        throw new DatabaseError(`Database error: ${totalCountError.message}`);
+      }
+
+      return {
+        data: users,
+        totalQueryRecords: count,
+        totalRecords: totalCount,
+      };
     } catch (error: any) {
       if (error instanceof BaseError) {
         throw error;
       }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
+    }
+  }
+
+  async getAuthUsers(params: PaginationParams): Promise<any> {
+    try {
+      const { data: authData, error: authError } =
+        await this.client.auth.admin.listUsers({
+          page:
+            Math.floor(
+              parseInt(params.offset?.toString() || "0", 10) /
+                parseInt(params.limit?.toString() || "10", 10)
+            ) + 1,
+          perPage: parseInt(params.limit?.toString() || "10", 10),
+        });
+
+      if (authError) {
+        throw new AuthorizationError(
+          `Authorization error: ${authError.message}`
+        );
+      }
+
+      if (!authData || authData.users.length === 0) {
+        throw new NotFoundError("No auth users found");
+      }
+
+      return {
+        users: authData.users,
+        totalQueryRecords: authData.users.length,
+        totalRecords: authData.total,
+      };
+    } catch (error: any) {
+      if (error instanceof BaseError) {
+        throw error;
+      }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
+    }
+  }
+
+  async getUsersByIds(userIds: string[]): Promise<any> {
+    try {
+      const { data, error } = await this.client
+        .from("users")
+        .select("*")
+        .in("id", userIds);
+
+      if (error) {
+        throw new DatabaseError(`Database error: ${error.message}`);
+      }
+
+      return { data };
+    } catch (error: any) {
       throw new DatabaseError(`Unexpected error: ${error.message}`);
     }
   }
@@ -109,30 +197,6 @@ export class SupabaseClient implements BackendClient {
     }
   }
 
-  async getAuthUsers(): Promise<any[]> {
-    try {
-      const { data: authData, error: authError } =
-        await this.client.auth.admin.listUsers();
-
-      if (authError) {
-        throw new AuthorizationError(
-          `Authorization error: ${authError.message}`
-        );
-      }
-
-      if (!authData || authData.length === 0) {
-        throw new NotFoundError("No auth users found");
-      }
-
-      return authData;
-    } catch (error: any) {
-      if (error instanceof BaseError) {
-        throw error;
-      }
-      throw new DatabaseError(`Unexpected error: ${error.message}`);
-    }
-  }
-
   async createUser(
     body: {
       name: string;
@@ -145,7 +209,6 @@ export class SupabaseClient implements BackendClient {
     userSession: any
   ): Promise<UserAuthPublicSession> {
     try {
-      console.log("Creating user with email:", body.email);
       const { data, error } = await this.client.auth.admin.createUser({
         email: body.email,
         name: body.name,
@@ -234,7 +297,7 @@ export class SupabaseClient implements BackendClient {
     }
   }
 
-  async deleteUser(userId: string): Promise<void> {
+  async deleteUser(userId: string): Promise<any> {
     try {
       const { data: deletedUser, error: deleteError } = await this.client
         .from("users")
@@ -252,6 +315,7 @@ export class SupabaseClient implements BackendClient {
           `Error deleting user from auth.users: ${error.message}`
         );
       }
+      return { deletedUser };
     } catch (error: any) {
       if (error instanceof BaseError) {
         throw error;
@@ -400,8 +464,6 @@ export class SupabaseClient implements BackendClient {
           delete data.session.user.user_roles;
         }
       }
-
-      // console.log("supabase client getSession", data);
 
       return data;
     } catch (error: any) {
@@ -1188,17 +1250,38 @@ export class SupabaseClient implements BackendClient {
     }
   }
 
-  async getNewsletterSubscribers(): Promise<any> {
+  async getNewsletterSubscribers(params: PaginationParams): Promise<any> {
     try {
-      const { data, error } = await this.client
-        .from("newsletter_subscribers")
-        .select("id, email, created_at")
-        .order("created_at", { ascending: false });
+      const tableName = "newsletter_subscribers";
+      const columns = ["id", "email", "created_at"];
+      const searchableColumns = ["email"];
+
+      const query = await this.buildQuery(
+        params,
+        tableName,
+        columns,
+        searchableColumns
+      );
+
+      const { data, error, count } = await query;
 
       if (error) {
         throw new DatabaseError(`Database error: ${error.message}`);
       }
-      return data;
+
+      const { count: totalCount, error: totalCountError } = await this.client
+        .from(tableName)
+        .select("*", { count: "exact", head: true });
+
+      if (totalCountError) {
+        throw new DatabaseError(`Database error: ${totalCountError.message}`);
+      }
+
+      return {
+        data,
+        totalQueryRecords: count,
+        totalRecords: totalCount,
+      };
     } catch (error: any) {
       if (error instanceof BaseError) {
         throw error;
@@ -1482,5 +1565,169 @@ export class SupabaseClient implements BackendClient {
       }
       throw new DatabaseError(`Unexpected error: ${error.message}`);
     }
+  }
+
+  //events
+  async saveEvent(
+    action: string,
+    title: string,
+    details: any,
+    metadata: EventMetadata
+  ): Promise<void> {
+    try {
+      const { error } = await this.client
+        .from("events")
+        .insert([{ action, title, details, metadata }]);
+
+      if (error) {
+        throw new DatabaseError(`Database error: ${error.message}`);
+      }
+    } catch (error: any) {
+      if (error instanceof BaseError) {
+        throw error;
+      }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
+    }
+  }
+
+  async getEvents(params: PaginationParams): Promise<any> {
+    try {
+      const tableName = "events";
+      const columns = ["*"];
+      const searchableColumns = ["action", "title", "details"];
+
+      const query = await this.buildQuery(
+        params,
+        tableName,
+        columns,
+        searchableColumns
+      );
+
+      const { data: events, error, count } = await query;
+
+      if (error) {
+        throw new DatabaseError(`Database error: ${error.message}`);
+      }
+
+      const { count: totalCount, error: totalCountError } = await this.client
+        .from(tableName)
+        .select("*", { count: "exact", head: true });
+
+      if (totalCountError) {
+        throw new DatabaseError(`Database error: ${totalCountError.message}`);
+      }
+
+      return {
+        data: events,
+        totalQueryRecords: count,
+        totalRecords: totalCount,
+      };
+    } catch (error: any) {
+      if (error instanceof BaseError) {
+        throw error;
+      }
+      throw new DatabaseError(`Unexpected error: ${error.message}`);
+    }
+  }
+
+  //utils
+  async buildQuery(
+    params: PaginationParams,
+    tableName: string,
+    columns: string[],
+    searchableColumns: string[]
+  ): Promise<any> {
+    const offset = parseInt(params.offset?.toString() || "0", 10);
+    const limit = parseInt(params.limit?.toString() || "5000", 10);
+    const sortField = params.sortField || "created_at";
+    const sortOrder = params.sortOrder === "asc";
+    const filters: Filters =
+      typeof params.filters === "string"
+        ? JSON.parse(params.filters)
+        : params.filters || {};
+
+    let query = this.client
+      .from(tableName)
+      .select(columns.join(", "), { count: "exact" });
+
+    if (filters) {
+      const filterKeys = Object.keys(filters);
+      filterKeys.forEach((key) => {
+        if (key !== "global") {
+          const column = key;
+          const { value, matchMode } = filters[column];
+
+          let filterValue = "";
+          switch (matchMode) {
+            case "contains":
+              filterValue = `%${value}%`;
+              break;
+            case "startsWith":
+              filterValue = `${value}%`;
+              break;
+            case "endsWith":
+              filterValue = `%${value}`;
+              break;
+            case "equals":
+              filterValue = `${value}`;
+              break;
+            default:
+              filterValue = `%${value}%`;
+          }
+
+          if (column === "id") {
+            // Cast id to text in the filter condition
+            query = query.filter(`id::text`, "ilike", filterValue);
+          } else {
+            query = query.ilike(column, filterValue);
+          }
+        }
+      });
+
+      // Apply global filter
+      if (filters.global && filters.global.value) {
+        const { value, matchMode } = filters.global;
+
+        let ilikePattern = "";
+        switch (matchMode) {
+          case "contains":
+            ilikePattern = `%${value}%`;
+            break;
+          case "startsWith":
+            ilikePattern = `${value}%`;
+            break;
+          case "endsWith":
+            ilikePattern = `%${value}`;
+            break;
+          case "equals":
+            ilikePattern = `${value}`;
+            break;
+          default:
+            ilikePattern = `%${value}%`;
+        }
+
+        // Apply global filter to searchable columns
+        const orConditions = searchableColumns
+          .map((column) => {
+            if (column === "id") {
+              // Cast id to text in the condition
+              return `id::text.ilike.${ilikePattern}`;
+            } else {
+              return `${column}.ilike.${ilikePattern}`;
+            }
+          })
+          .join(",");
+
+        query = query.or(orConditions);
+      }
+    }
+
+    // Apply sorting
+    query = query.order(sortField, { ascending: sortOrder });
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    return query;
   }
 }
