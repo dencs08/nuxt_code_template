@@ -30,7 +30,7 @@ export class SupabaseAuthService implements IAuthenticationService {
   }
 
   async signInWithOAuth(provider: OAuthProvider) {
-    return this.client.auth.signInWithOAuth({ provider });
+    return this.client.auth.signInWithOAuth({ provider, options: { redirectTo: "http://localhost:3000/login" } });
   }
 
   async signInWithOAuthWithPopup(provider: OAuthProvider) {
