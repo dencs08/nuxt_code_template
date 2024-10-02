@@ -45,6 +45,9 @@
 <script setup>
 const route = useRoute();
 const { dashboardSubNavigation, dashboardNavigation } = useNavigation();
+import { routes } from "~~/config/common/routes";
+const { hasAccess } = useRoleCheck();
+const localePath = useLocalePath();
 
 const isRouteMatch = (itemRoute, currentPath) => {
   if (Array.isArray(itemRoute)) {
@@ -53,6 +56,46 @@ const isRouteMatch = (itemRoute, currentPath) => {
     );
   }
   return currentPath === itemRoute || currentPath.startsWith(itemRoute + "/");
+};
+
+const getAccessLevelForRoute = (input) => {
+  let routeName =
+    typeof input === "object" && input !== null ? input.route : input;
+  if (typeof routeName !== "string") {
+    return 0; // Default to lowest access level
+  }
+
+  const routeMatch = routes.find((route) => route.newName === routeName);
+  if (
+    routeMatch &&
+    routeMatch.settings &&
+    typeof routeMatch.settings.access === "number"
+  ) {
+    return routeMatch.settings.access;
+  }
+
+  return 0; // Default to lowest access level
+};
+
+const filterNavigationItems = (items) => {
+  return items.reduce((acc, item) => {
+    const accessLevel = getAccessLevelForRoute(item.checkRoute || item.route);
+    const hasItemAccess = hasAccess(accessLevel);
+
+    if (hasItemAccess || (item.items && item.items.length > 0)) {
+      let newItem = { ...item };
+      if (newItem.route) {
+        newItem.route = localePath({ name: newItem.route });
+      }
+      if (newItem.items && newItem.items.length > 0) {
+        newItem.items = filterNavigationItems(newItem.items);
+      }
+      if (hasItemAccess || newItem.items.length > 0) {
+        acc.push(newItem);
+      }
+    }
+    return acc;
+  }, []);
 };
 
 const currentSubNavigation = computed(() => {
@@ -70,7 +113,9 @@ const currentSubNavigation = computed(() => {
         );
 
       if (itemMatches || subItemMatches) {
-        return item.items && item.items.length > 1 ? item.items : [];
+        return item.items && item.items.length > 1
+          ? filterNavigationItems(item.items)
+          : [];
       }
 
       if (item.items) {
