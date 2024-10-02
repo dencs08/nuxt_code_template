@@ -128,7 +128,7 @@ const refreshPermissions = async () => {
   if (props.selectedUser) {
     submit({
       async action() {
-        await permissionStore.fetchUserPermissions(props.selectedUser.id);
+        permissionStore.fetchUserPermissionsWithStatus(props.selectedUser.id);
       },
       successMessage: "Permissions refreshed successfully",
       errorTitle: "Error refreshing permissions",
@@ -173,7 +173,7 @@ watch(
       !permissionStore.userPermissionsStatus[props.selectedUser.id]
     ) {
       try {
-        await permissionStore.fetchUserPermissions(props.selectedUser.id);
+        permissionStore.fetchUserPermissionsWithStatus(props.selectedUser.id);
       } catch (error) {
         showToast({
           severity: "error",
