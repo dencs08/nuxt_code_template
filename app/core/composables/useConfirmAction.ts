@@ -1,4 +1,4 @@
-import { ref, markRaw } from "vue";
+import { ref, markRaw, computed } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import type { ConfirmationOptions } from "primevue/confirmationoptions";
 
@@ -18,12 +18,14 @@ interface CustomConfirmConfig {
   accept?: AnyFunction;
   reject?: AnyFunction;
   onError?: (errorMessage: string) => void;
+  loading?: boolean;
 }
 
 type ConfirmConfig = CustomConfirmConfig & Partial<ConfirmationOptions>;
 
 const isVisible = ref(false);
 const config = ref<CustomConfirmConfig>({} as CustomConfirmConfig);
+const isLoading = ref(false);
 
 export function useConfirmAction() {
   const confirm = useConfirm();
@@ -38,11 +40,18 @@ export function useConfirmAction() {
     config.value = {} as CustomConfirmConfig;
   };
 
-  const handleConfirm: AnyFunction = (...args: any[]) => {
+  const handleConfirm: AnyFunction = async (...args: any[]) => {
     if (config.value.accept) {
-      config.value.accept(...args);
+      isLoading.value = true;
+      try {
+        await config.value.accept(...args);
+      } finally {
+        isLoading.value = false;
+        hideDialog();
+      }
+    } else {
+      hideDialog();
     }
-    hideDialog();
   };
 
   const handleReject: AnyFunction = (...args: any[]) => {
@@ -94,5 +103,6 @@ export function useConfirmAction() {
     handleConfirm,
     handleReject,
     handleError,
+    isLoading: computed(() => isLoading.value),
   };
 }

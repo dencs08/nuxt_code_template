@@ -11,7 +11,7 @@
   >
     <template #container>
       <div
-        class="flex flex-col w-full bg-surface-0 dark:bg-surface-700 rounded-md border-surface-200 dark:border-surface-700"
+        class="flex flex-col w-full bg-surface-0 dark:bg-surface-700 rounded-md border-surface-200 dark:border-surface-700 relative"
       >
         <div class="shadow">
           <div class="px-5 py-7">
@@ -62,15 +62,24 @@
             icon="pi pi-times"
             class="bg-white/75 dark:bg-surface-600/75"
             @click="handleReject"
+            :disabled="isLoading"
           />
           <Button
             :label="config?.acceptLabel || 'Yes'"
             :severity="config?.acceptSeverity || config?.severity || 'contrast'"
-            icon="pi pi-check"
+            :icon="isLoading ? 'pi pi-spinner pi-spin' : 'pi pi-check'"
             @click="handleConfirm"
             autofocus
+            :loading="isLoading"
           />
         </div>
+      </div>
+
+      <div
+        v-if="isLoading"
+        class="absolute inset-0 bg-surface-0/70 dark:bg-surface-900/70 flex items-center justify-center rounded-md z-10 transition duration-300"
+      >
+        <ProgressSpinner class="w-16 h-16" />
       </div>
     </template>
   </Dialog>
@@ -80,6 +89,7 @@
 const props = defineProps({
   visible: Boolean,
   config: Object,
+  isLoading: Boolean,
 });
 
 const emit = defineEmits(["update:visible", "confirm", "reject", "error"]);
