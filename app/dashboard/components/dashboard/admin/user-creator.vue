@@ -5,7 +5,7 @@
     maximizable
     header="Header"
     :style="{ width: '25rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    :breakpoints="{ '1199px': '40vw', '575px': '50vw' }"
     position="bottomleft"
   >
     <template #header>
@@ -22,21 +22,21 @@
         <div class="space-y-2 mb-5">
           <FormKit
             class="w-full"
-            type="primeInputText"
+            :type="'primeInputText' as any"
             name="email"
             validation="required|email"
             placeholder="Email"
           />
           <FormKit
             class="w-full"
-            type="primeInputText"
+            :type="'primeInputText' as any"
             name="name"
             validation="required|length:3"
             placeholder="Name"
           />
           <FormKit
             class="w-full"
-            type="primePassword"
+            :type="'primePassword' as any"
             name="password"
             validation="required|length:6"
             toggleMask
@@ -45,7 +45,7 @@
           />
           <FormKit
             class="w-full"
-            type="primePassword"
+            :type="'primePassword' as any"
             name="password_confirm"
             validation="required|confirm"
             toggleMask
@@ -53,7 +53,7 @@
           />
           <FormKit
             class="w-full"
-            type="primeSelect"
+            :type="'primeSelect' as any"
             :options="rolesOptions"
             optionValue="id"
             optionLabel="name"
@@ -92,23 +92,19 @@ const rolesOptions = computed(() =>
   roles.value.map((role) => ({ name: role.name, id: role.id }))
 );
 
-const submitForm = (formData: UserForm) => {
-  console.log("Submitting new user data:", formData);
-
-  // Transform formData to match AddUserRequest interface
+const submitForm = async (formData: UserForm) => {
   const userData: AddUserRequest = {
     email: formData.email,
     name: formData.name,
     password: formData.password,
     role_id: formData.role_id,
-    // photo is not included in the schema, so we don't need to handle it here
   };
 
   submit({
     action: async () => {
       await usersStore.addUser(userData);
       console.log("User added to store, fetching updated user list");
-      await usersStore.fetchUsers(true);
+      await usersStore.fetchUsers({ force: true });
     },
     successMessage: "User successfully added",
     errorMessage: (e) => `${e.message}. Please try again.`,
