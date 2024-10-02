@@ -1,23 +1,47 @@
 <template>
   <FileUpload
-    mode="basic"
     :customUpload="true"
     @uploader="handleUpload"
     @select="handleFileSelected"
     :maxFileSize="maxFileSize"
     accept="image/*"
     :auto="true"
-    chooseLabel="Change Avatar"
     :pt="{
-      root: { class: 'flex !justify-start' },
-      chooseButton: {
-        class: 'p-button p-component p-button-outlined',
+      root: {
+        class: '!border-0 transition duration-300',
+      },
+      header: {
+        class: '!p-0 transition duration-300',
       },
     }"
-  />
+  >
+    <template
+      #header="{ chooseCallback, uploadCallback, clearCallback, files }"
+    >
+      <Button
+        @click="chooseCallback()"
+        icon="pi pi-plus"
+        severity="contrast"
+        label="Change Avatar"
+        :loading="isLoading"
+        class="transition duration-300"
+      ></Button>
+    </template>
+    <template
+      #content="{
+        files,
+        uploadedFiles,
+        removeUploadedFileCallback,
+        removeFileCallback,
+      }"
+    >
+    </template>
+    <template #empty> </template>
+  </FileUpload>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import imageCompression from "browser-image-compression";
 import type {
   FileUploadSelectEvent,
@@ -29,11 +53,14 @@ const userStore = useUserStore();
 
 const maxFileSize = 5 * 1024 * 1024; // 5MB max file size
 
+const isLoading = ref(false);
+
 const handleFileSelected = async (event: FileUploadSelectEvent) => {
   console.log("File selected:", event.files);
 };
 
 const handleUpload = async (event: FileUploadUploaderEvent) => {
+  isLoading.value = true;
   try {
     const file = event.files[0];
 
@@ -55,6 +82,8 @@ const handleUpload = async (event: FileUploadUploaderEvent) => {
   } catch (error) {
     console.error("Error in handleUpload:", error);
     handleUploadError((error as Error).message);
+  } finally {
+    isLoading.value = false;
   }
 };
 
