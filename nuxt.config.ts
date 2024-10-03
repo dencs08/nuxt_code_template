@@ -32,10 +32,8 @@ export default defineNuxtConfig({
     blob: false,
     cache: false,
     database: false,
-    storage: false,
     kv: false,
     remote: false,
-    dir: '.data/hub',
   },
 
   nitro: {
